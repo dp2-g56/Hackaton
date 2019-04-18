@@ -16,34 +16,63 @@
 	uri="http://www.springframework.org/security/tags"%>
 
 <div>
-	<a href="#"><img src="images/logo.png" alt="Acme-Shout Co., Inc."
-		style="margin-bottom: 0.5em;" /></a>
+	<a href="#"><img src="${imageURL}" height= 150px width= 500px alt="Acme Alcatraz Co., Inc." /></a>
 </div>
 
 <div>
 	<ul id="jMenu">
 		<!-- Do not forget the "fNiv" class for the first level links !! -->
-		<security:authorize access="hasRole('ADMIN')">
+		<security:authorize access="hasRole('WARDEN')">
 			<li><a class="fNiv"><spring:message
-						code="master.page.administrator" /></a>
+						code="master.page.warden" /></a>
 				<ul>
 					<li class="arrow"></li>
-					<li><a href="administrator/action-1.do"><spring:message
-								code="master.page.administrator.action.1" /></a></li>
-					<li><a href="administrator/action-2.do"><spring:message
-								code="master.page.administrator.action.2" /></a></li>
+					
 				</ul></li>
 		</security:authorize>
 
-		<security:authorize access="hasRole('CUSTOMER')">
+		<security:authorize access="hasRole('PRISONER')">
 			<li><a class="fNiv"><spring:message
-						code="master.page.customer" /></a>
+						code="master.page.prisoner" /></a>
 				<ul>
 					<li class="arrow"></li>
-					<li><a href="customer/action-1.do"><spring:message
-								code="master.page.customer.action.1" /></a></li>
-					<li><a href="customer/action-2.do"><spring:message
-								code="master.page.customer.action.2" /></a></li>
+					
+				</ul></li>
+		</security:authorize>
+		
+			<security:authorize access="hasRole('VISITOR')">
+			<li><a class="fNiv"><spring:message
+						code="master.page.visitor" /></a>
+				<ul>
+					<li class="arrow"></li>
+					
+				</ul></li>
+		</security:authorize>
+		
+		<security:authorize access="hasRole('GUARD')">
+			<li><a class="fNiv"><spring:message
+						code="master.page.guard" /></a>
+				<ul>
+					<li class="arrow"></li>
+					
+				</ul></li>
+		</security:authorize>
+		
+		<security:authorize access="hasRole('SOCIALWORKER')">
+			<li><a class="fNiv"><spring:message
+						code="master.page.socialWorker" /></a>
+				<ul>
+					<li class="arrow"></li>
+					
+				</ul></li>
+		</security:authorize>
+		
+		<security:authorize access="hasRole('SALESMAN')">
+			<li><a class="fNiv"><spring:message
+						code="master.page.salesMan" /></a>
+				<ul>
+					<li class="arrow"></li>
+					
 				</ul></li>
 		</security:authorize>
 
@@ -59,12 +88,6 @@
 			</a>
 				<ul>
 					<li class="arrow"></li>
-					<li><a href="profile/action-1.do"><spring:message
-								code="master.page.profile.action.1" /></a></li>
-					<li><a href="profile/action-2.do"><spring:message
-								code="master.page.profile.action.2" /></a></li>
-					<li><a href="profile/action-3.do"><spring:message
-								code="master.page.profile.action.3" /></a></li>
 					<li><a href="j_spring_security_logout"><spring:message
 								code="master.page.logout" /> </a></li>
 				</ul></li>

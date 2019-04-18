@@ -1,0 +1,74 @@
+
+package services;
+
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+import org.springframework.validation.Validator;
+
+import repositories.WardenRepository;
+import security.Authority;
+import security.LoginService;
+import security.UserAccount;
+import domain.Warden;
+
+@Service
+@Transactional
+public class WardenService {
+
+	@Autowired
+	private WardenRepository		wardenRepository;
+
+	@Autowired
+	private ConfigurationService	configurationService;
+
+	@Autowired
+	private Validator				validator;
+
+
+	// ----------------------------------------CRUD
+	// METHODS--------------------------
+	// ------------------------------------------------------------------------------
+
+	public Warden save(Warden Warden) {
+		return this.wardenRepository.save(Warden);
+	}
+
+	// -----------------------------------------SECURITY-----------------------------
+	// ------------------------------------------------------------------------------
+
+	/**
+	 * LoggedWarden now contains the security of loggedAsWarden
+	 * 
+	 * @return
+	 */
+	public Warden loggedWarden() {
+		UserAccount userAccount;
+		userAccount = LoginService.getPrincipal();
+		List<Authority> authorities = (List<Authority>) userAccount.getAuthorities();
+		Assert.isTrue(authorities.get(0).toString().equals("Warden"));
+		return this.wardenRepository.getWardenByUsername(userAccount.getUsername());
+	}
+
+	public void loggedAsWarden() {
+		UserAccount userAccount;
+		userAccount = LoginService.getPrincipal();
+		List<Authority> authorities = (List<Authority>) userAccount.getAuthorities();
+		Assert.isTrue(authorities.get(0).toString().equals("Warden"));
+
+	}
+
+	public void saveNewWarden(Warden Warden) {
+		this.loggedAsWarden();
+		this.wardenRepository.save(Warden);
+	}
+
+	private Warden findOne(int id) {
+		return this.wardenRepository.findOne(id);
+	}
+
+}

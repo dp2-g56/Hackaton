@@ -37,8 +37,12 @@ public class Authority implements GrantedAuthority {
 
 	// Values -----------------------------------------------------------------
 
-	public static final String	ADMIN		= "ADMIN";
-	public static final String	CUSTOMER	= "CUSTOMER";
+	public static final String	WARDEN			= "WARDEN";
+	public static final String	PRISONER		= "PRISONER";
+	public static final String	VISITOR			= "VISITOR";
+	public static final String	GUARD			= "GUARD";
+	public static final String	SOCIALWORKER	= "SOCIALWORKER";
+	public static final String	SALESMAN		= "SALESMAN";
 
 	// Attributes -------------------------------------------------------------
 
@@ -46,7 +50,7 @@ public class Authority implements GrantedAuthority {
 
 
 	@NotBlank
-	@Pattern(regexp = "^" + Authority.ADMIN + "|" + Authority.CUSTOMER + "$")
+	@Pattern(regexp = "^" + Authority.WARDEN + "|" + Authority.PRISONER + "|" + Authority.VISITOR + "|" + Authority.GUARD + "|" + Authority.SOCIALWORKER + "|" + Authority.SALESMAN + "$")
 	@Override
 	public String getAuthority() {
 		return this.authority;
@@ -63,11 +67,27 @@ public class Authority implements GrantedAuthority {
 		result = new ArrayList<Authority>();
 
 		authority = new Authority();
-		authority.setAuthority(Authority.ADMIN);
+		authority.setAuthority(Authority.WARDEN);
 		result.add(authority);
 
 		authority = new Authority();
-		authority.setAuthority(Authority.CUSTOMER);
+		authority.setAuthority(Authority.PRISONER);
+		result.add(authority);
+
+		authority = new Authority();
+		authority.setAuthority(Authority.VISITOR);
+		result.add(authority);
+
+		authority = new Authority();
+		authority.setAuthority(Authority.GUARD);
+		result.add(authority);
+
+		authority = new Authority();
+		authority.setAuthority(Authority.SOCIALWORKER);
+		result.add(authority);
+
+		authority = new Authority();
+		authority.setAuthority(Authority.SALESMAN);
 		result.add(authority);
 
 		return result;
