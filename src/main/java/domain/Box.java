@@ -7,7 +7,6 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -19,9 +18,11 @@ public class Box extends DomainEntity {
 
 	private String			name;
 	private Boolean			isSystem;
-	private Box				fatherBox;
+
 	private List<Message>	messages;
 
+
+	//There are not father boxes in this project
 
 	@NotBlank
 	public String getName() {
@@ -39,16 +40,6 @@ public class Box extends DomainEntity {
 
 	public void setIsSystem(Boolean isSystem) {
 		this.isSystem = isSystem;
-	}
-
-	@Valid
-	@ManyToOne(optional = true)
-	public Box getFatherBox() {
-		return this.fatherBox;
-	}
-
-	public void setFatherBox(Box fatherBox) {
-		this.fatherBox = fatherBox;
 	}
 
 	@Valid

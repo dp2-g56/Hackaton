@@ -17,7 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Message extends DomainEntity {
 
 	private String		sender;
-	private String		receipent;
+	private String		recipient;
 	private Date		moment;
 	private String		subject;
 	private String		body;
@@ -35,12 +35,12 @@ public class Message extends DomainEntity {
 	}
 
 	@NotBlank
-	public String getReceipent() {
-		return this.receipent;
+	public String getRecipient() {
+		return this.recipient;
 	}
 
-	public void setReceipent(String receipent) {
-		this.receipent = receipent;
+	public void setRecipient(String recipient) {
+		this.recipient = recipient;
 	}
 
 	@Past

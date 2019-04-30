@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -47,6 +48,7 @@ public class FinderActivities extends DomainEntity {
 		this.maxDate = maxDate;
 	}
 
+	@ManyToMany
 	public List<Activity> getActivities() {
 		return this.activities;
 	}

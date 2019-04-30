@@ -17,7 +17,17 @@ public class Request extends DomainEntity {
 	private String			motivation;
 	private String			rejectReason;
 	private Activity		activity;
+	private Prisoner		prisoner;
 
+
+	@ManyToOne
+	public Prisoner getPrisoner() {
+		return this.prisoner;
+	}
+
+	public void setPrisoner(Prisoner prisoner) {
+		this.prisoner = prisoner;
+	}
 
 	@NotNull
 	public ActivityStatus getStatus() {
