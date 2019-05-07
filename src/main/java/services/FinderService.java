@@ -1,12 +1,15 @@
 package services;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import domain.Finder;
 import domain.Prisoner;
@@ -25,6 +28,9 @@ public class FinderService {
 
 	@Autowired
 	private PrisonerService prisonerService;
+
+	@Autowired
+	private ConfigurationService configurationService;
 
 	// CRUDS ----------------------------------------------
 
@@ -59,6 +65,10 @@ public class FinderService {
 	public void filter(Finder finder) {
 		Visitor visitor = this.visitorService.securityAndVisitor();
 
+		Assert.notNull(finder);
+		Assert.isTrue(finder.getId() > 0);
+		Assert.isTrue(visitor.getFinder().getId() == finder.getId());
+
 		List<Prisoner> res = this.prisonerService.findAll();
 		List<Prisoner> filter = new ArrayList<>();
 
@@ -77,5 +87,49 @@ public class FinderService {
 		Finder finderRes = this.save(finder);
 		visitor.setFinder(finderRes);
 		this.visitorService.save(visitor);
+	}
+
+	public List<Prisoner> getResults(Finder finder) {
+		Visitor visitor = this.visitorService.securityAndVisitor();
+
+		Assert.notNull(finder);
+		Assert.isTrue(finder.getId() > 0);
+		Assert.isTrue(visitor.getFinder().getId() == finder.getId());
+
+		List<Prisoner> res = new ArrayList<>();
+		List<Prisoner> prisoners = finder.getPrisoners();
+
+		if (finder.getLastEdit() != null) {
+
+			// Current Date
+			Date currentDate = new Date();
+
+			Calendar calendar1 = Calendar.getInstance();
+			calendar1.setTime(currentDate);
+
+			// LastEdit Finder
+			Date lastEdit = finder.getLastEdit();
+
+			Calendar calendar2 = Calendar.getInstance();
+			calendar2.setTime(lastEdit);
+
+			Integer time = this.configurationService.getConfiguration().getTimeFinderActivities();
+
+			calendar2.add(Calendar.HOUR, time);
+
+			if (calendar2.after(calendar1)) {
+				// TODO Hay que cambiarlo
+				Integer numFinderResult = this.configurationService.getConfiguration().getMaxFinderResults();
+
+				if (prisoners.size() > numFinderResult)
+					for (int i = 0; i < numFinderResult; i++)
+						res.add(prisoners.get(i));
+				else
+					res = prisoners;
+			}
+		}
+
+		return res;
+
 	}
 }
