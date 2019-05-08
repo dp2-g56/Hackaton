@@ -14,7 +14,7 @@ import domain.Visit;
 public interface GuardRepository extends JpaRepository<Guard, Integer> {
 
 	@Query("select v from Visit v where v.date > NOW() and visitStatus = 'ACCEPTED'")
-	List<Visit> getFutureAcceptedVisits();
+	public List<Visit> getFutureAcceptedVisits();
 
 	@Query("select m from Guard m join m.userAccount u where u.username = ?1")
 	public Guard getGuardByUsername(String username);
