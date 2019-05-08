@@ -43,7 +43,7 @@ public class WardenService {
 		UserAccount userAccount;
 		userAccount = LoginService.getPrincipal();
 		List<Authority> authorities = (List<Authority>) userAccount.getAuthorities();
-		Assert.isTrue(authorities.get(0).toString().equals("Warden"));
+		Assert.isTrue(authorities.get(0).toString().equals("WARDEN"));
 		return this.wardenRepository.getWardenByUsername(userAccount.getUsername());
 	}
 
@@ -51,7 +51,7 @@ public class WardenService {
 		UserAccount userAccount;
 		userAccount = LoginService.getPrincipal();
 		List<Authority> authorities = (List<Authority>) userAccount.getAuthorities();
-		Assert.isTrue(authorities.get(0).toString().equals("Warden"));
+		Assert.isTrue(authorities.get(0).toString().equals("WARDEN"));
 
 	}
 
