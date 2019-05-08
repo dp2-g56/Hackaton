@@ -347,6 +347,8 @@
 				<property name="visits">
 					<list>	
 						<ref bean="visit1" /> 
+						<ref bean="visit2" /> 
+						<ref bean="visit3" /> 
 					</list>
 				</property>
 				
@@ -809,7 +811,7 @@
 				<property name="ticker" value="231232-FFFFFF" />
 				<property name="incomeDate" value="12/12/2004 23:59" />
 				<property name="exitDate" value="12/12/2025 23:59" />
-				<property name="isIsolated" value="False" />
+				<property name="isIsolated" value="True" />
 				<property name="isSuspect" value="False" />
 				<property name="points" value="100" />
 				<property name="freedom" value="False" />
@@ -865,7 +867,7 @@
 				<property name="isIsolated" value="False" />
 				<property name="isSuspect" value="False" />
 				<property name="points" value="100" />
-				<property name="freedom" value="False" />
+				<property name="freedom" value="True" />
 				
 				<property name="charges">
 					<list>
@@ -913,6 +915,7 @@
 				<property name="visitor" ref="visitor1" />
 				<property name="report" ref="report1" />
 				<property name="prisoner" ref="prisoner1" />
+				<property name="createdByPrisoner" value="true" />
 			</bean>
 			
 			<bean id="visit2" class="domain.Visit">
@@ -922,6 +925,7 @@
 				<property name="reason" value="BUSSINESS" />
 				<property name="visitor" ref="visitor1" />
 				<property name="prisoner" ref="prisoner1" />
+				<property name="createdByPrisoner" value="false" />
 			</bean>
 			
 			<bean id="visit3" class="domain.Visit">
@@ -931,6 +935,7 @@
 				<property name="reason" value="BUSSINESS" />
 				<property name="visitor" ref="visitor1" />
 				<property name="prisoner" ref="prisoner1" />
+				<property name="createdByPrisoner" value="false" />
 			</bean>
 			
 			<bean id="visit4" class="domain.Visit">
@@ -940,6 +945,7 @@
 				<property name="reason" value="BUSSINESS" />
 				<property name="visitor" ref="visitor2" />
 				<property name="prisoner" ref="prisoner1" />
+				<property name="createdByPrisoner" value="true" />
 			</bean>
 			
 			<bean id="visit5" class="domain.Visit">
@@ -949,6 +955,7 @@
 				<property name="reason" value="BUSSINESS" />
 				<property name="visitor" ref="visitor3" />
 				<property name="prisoner" ref="prisoner1" />
+				<property name="createdByPrisoner" value="false" />
 			</bean>
 			
 			<bean id="visit6" class="domain.Visit">
@@ -958,15 +965,17 @@
 				<property name="reason" value="BUSSINESS" />
 				<property name="visitor" ref="visitor2" />
 				<property name="prisoner" ref="prisoner1" />
+				<property name="createdByPrisoner" value="true" />
 			</bean>
 			
 			<bean id="visit7" class="domain.Visit">
 				<property name="visitStatus" value="PENDING" />
 				<property name="description" value="I need to talk with him" />
-				<property name="date" value="12/12/2016 23:59" />
+				<property name="date" value="12/12/2019 23:59" />
 				<property name="reason" value="BUSSINESS" />
 				<property name="visitor" ref="visitor2" />
 				<property name="prisoner" ref="prisoner1" />
+				<property name="createdByPrisoner" value="false" />
 			</bean>
 			
 			<bean id="visit8" class="domain.Visit">
@@ -976,6 +985,7 @@
 				<property name="reason" value="BUSSINESS" />
 				<property name="visitor" ref="visitor1" />
 				<property name="prisoner" ref="prisoner1" />
+				<property name="createdByPrisoner" value="true" />
 			</bean> 
 	
 	<!-- REPORT -->

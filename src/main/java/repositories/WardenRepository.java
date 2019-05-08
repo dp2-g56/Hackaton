@@ -13,7 +13,4 @@ public interface WardenRepository extends JpaRepository<Warden, Integer> {
 	@Query("select m from Warden m join m.userAccount u where u.username = ?1")
 	public Warden getWardenByUsername(String username);
 
-	//The minimum, the maximum, the average, and the standard deviation of the
-	//number of curricula per hacker.
-
 }
