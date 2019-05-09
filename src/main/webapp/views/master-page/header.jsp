@@ -44,7 +44,7 @@
 				<ul>
 					<li class="arrow"></li>
 					<li><a href="visit/visitor/list.do"><spring:message code="master.page.listVisits" /></a></li>
-					
+					<li><a href="finder/visitor/list.do"><spring:message code="master.page.finderVisitor" /></a></li>	
 				</ul></li>
 		</security:authorize>
 		

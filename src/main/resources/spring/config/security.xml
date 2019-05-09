@@ -52,6 +52,7 @@
 	
 	<!-- VISITOR -->
 		<security:intercept-url pattern="/visit/visitor/**" 	access="hasRole('VISITOR')" />
+		<security:intercept-url pattern="/finder/visitor/**" 	access="hasRole('VISITOR')" />
 		
 	<!-- GUARD -->
 		<security:intercept-url pattern="/visit/guard/**" 	access="hasRole('GUARD')" />

@@ -11,12 +11,10 @@ import domain.Prisoner;
 
 public interface FinderRepository extends JpaRepository<Finder, Integer> {
 
-
 	@Query("select distinct(p) from Prisoner p where p.ticker like ?1 or p.name like ?1 or p.surname like ?1")
 	public List<Prisoner> filterByKeyWord(String keyWord);
 
-	@Query("select distinct(p) from Prisoner p join p.charges c where c.title_english like ?1")
+	@Query("select distinct(p) from Prisoner p join p.charges c where c.titleEnglish like ?1")
 	public List<Prisoner> filterByCharge(String charge);
-
 
 }
