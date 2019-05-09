@@ -28,6 +28,8 @@
 		<value>/views/anonymous/messages</value>
 		<value>/views/guard/messages</value>
 		<value>/views/warden/messages</value>
+		<value>/views/actor/messages</value>
+		<value>/views/socialWorker/messages</value>
 	</util:list>
 
 </beans>

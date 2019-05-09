@@ -5,7 +5,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import security.LoginService;
-import services.CurriculumService;
+import security.UserAccount;
+import services.ActorService;
 import services.PersonalRecordService;
 import services.SocialWorkerService;
+import domain.Actor;
 import domain.Curriculum;
 import domain.PersonalRecord;
 import domain.SocialWorker;
@@ -25,34 +26,15 @@ import domain.SocialWorker;
 public class CurriculumController extends AbstractController {
 
 	@Autowired
-	private CurriculumService		curriculumService;
-	@Autowired
 	private SocialWorkerService		socialWorkerService;
 	@Autowired
 	private PersonalRecordService	personalRecordService;
+	@Autowired
+	private ActorService			actorService;
 
 
 	public CurriculumController() {
 		super();
-	}
-
-	@RequestMapping(value = "/anonymous/show", method = RequestMethod.GET)
-	public ModelAndView showCurriculumAnonymous(@RequestParam int socialId) {
-
-		ModelAndView result;
-		SocialWorker h = this.socialWorkerService.findOne(socialId);
-		Curriculum curriculum = h.getCurriculum();
-		Boolean canEdit = false;
-
-		result = new ModelAndView("curriculum/anonymous/show");
-
-		result.addObject("socialId", socialId);
-		result.addObject("canEdit", canEdit);
-		result.addObject("curriculum", curriculum);
-		result.addObject("requestURI", "curriculum/anonymous/show.do?socialId=" + socialId);
-
-		return result;
-
 	}
 
 	@RequestMapping(value = "/socialWorker/show", method = RequestMethod.GET)
@@ -61,27 +43,34 @@ public class CurriculumController extends AbstractController {
 		ModelAndView result;
 		SocialWorker socialWorker = this.socialWorkerService.getSocialWorkerByUsername(LoginService.getPrincipal().getUsername());
 		Curriculum curriculum = socialWorker.getCurriculum();
-		Boolean canEdit;
 
-		try {
-			Assert.isTrue(socialWorker.getCurriculum().equals(curriculum));
-			canEdit = true;
-		} catch (Exception e) {
-			canEdit = false;
+		if (curriculum == null) {
+			UserAccount userAccount;
+			userAccount = LoginService.getPrincipal();
+			Actor logguedActor = new Actor();
+
+			result = new ModelAndView("authenticated/showProfile");
+
+			logguedActor = this.actorService.getActorByUsername(userAccount.getUsername());
+
+			result.addObject("curriculum", null);
+
+			result.addObject("actor", logguedActor);
+			result.addObject("requestURI", "authenticated/showProfile.do");
+		} else {
+
+			result = new ModelAndView("curriculum/socialWorker/show");
+
+			result.addObject("socialId", socialWorker.getId());
+			result.addObject("curriculum", curriculum);
+			result.addObject("requestURI", "curriculum/socialWorker/show.do");
 		}
-
-		result = new ModelAndView("curriculum/socialWorker/show");
-
-		result.addObject("socialId", socialWorker.getId());
-		result.addObject("canEdit", canEdit);
-		result.addObject("curriculum", curriculum);
-		result.addObject("requestURI", "curriculum/socialWorker/show.do");
 
 		return result;
 
 	}
 
-	@RequestMapping(value = "/socialWorker/add", method = RequestMethod.GET)
+	@RequestMapping(value = "/socialWorker/register", method = RequestMethod.GET)
 	public ModelAndView addCurriculum() {
 
 		ModelAndView result;
@@ -96,8 +85,14 @@ public class CurriculumController extends AbstractController {
 
 		ModelAndView result;
 		PersonalRecord personalRecord = this.personalRecordService.findOne(personalRecordId);
+		SocialWorker socialWorker = this.socialWorkerService.getSocialWorkerByUsername(LoginService.getPrincipal().getUsername());
 
-		result = this.createEditModelAndView(personalRecord);
+		if (personalRecord == null || socialWorker.getCurriculum() == null || socialWorker.getCurriculum().getPersonalRecord().getId() != personalRecordId) {
+			result = new ModelAndView("redirect:show.do");
+		} else {
+
+			result = this.createEditModelAndView(personalRecord);
+		}
 		return result;
 
 	}
@@ -106,43 +101,21 @@ public class CurriculumController extends AbstractController {
 	public ModelAndView addCurriculum(@Valid PersonalRecord personalRecord, BindingResult binding) {
 		ModelAndView result;
 
-		if (binding.hasErrors())
+		if (binding.hasErrors()) {
 			result = this.createEditModelAndView(personalRecord);
-		else
+		} else {
 			try {
-				SocialWorker socialWorker = this.socialWorkerService.loggedSocialWorker();
-
-				Assert.isTrue(personalRecord.getId() == 0 && socialWorker.getCurriculum() == null);
-				Curriculum c = this.curriculumService.create();
-				c.setPersonalRecord(personalRecord);
-				this.socialWorkerService.addCurriculum(c);
+				if (personalRecord.getId() == 0) {
+					this.socialWorkerService.addCurriculum(personalRecord);
+				} else {
+					this.socialWorkerService.updateCurriculum(personalRecord);
+				}
 				result = new ModelAndView("redirect:show.do");
 
 			} catch (Throwable oops) {
-				result = this.createEditModelAndView(personalRecord, "note.commit.error");
+				result = this.createEditModelAndView(personalRecord, "commit.error");
 			}
-		return result;
-	}
-
-	@RequestMapping(value = "/socialWorker/editPersonalRecord", method = RequestMethod.POST, params = "edit")
-	public ModelAndView editPersonalRecord(@Valid PersonalRecord personalRecord, BindingResult binding) {
-		ModelAndView result;
-		SocialWorker socialWorker = this.socialWorkerService.getSocialWorkerByUsername(LoginService.getPrincipal().getUsername());
-		Curriculum c = socialWorker.getCurriculum();
-
-		if (binding.hasErrors())
-			result = this.createEditModelAndView(personalRecord);
-		else
-			try {
-				Assert.notNull(c);
-				Assert.isTrue(c.getPersonalRecord().getId() == personalRecord.getId());
-				c.setPersonalRecord(personalRecord);
-				this.curriculumService.save(c);
-				result = new ModelAndView("redirect:show.do");
-
-			} catch (Throwable oops) {
-				result = this.createEditModelAndView(personalRecord, "note.commit.error");
-			}
+		}
 		return result;
 	}
 

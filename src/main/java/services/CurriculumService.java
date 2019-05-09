@@ -4,7 +4,6 @@ package services;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +12,7 @@ import javax.transaction.Transactional;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import repositories.CurriculumRepository;
 import utilities.RandomString;
@@ -27,21 +27,24 @@ import domain.SocialWorker;
 @Transactional
 public class CurriculumService {
 
-	// Manged Repository
+	@Autowired
+	private CurriculumRepository		curriculumRepository;
 
 	@Autowired
-	private CurriculumRepository	curriculumRepository;
-
-	// Supporting service
+	private PersonalRecordService		personalRecordService;
 
 	@Autowired
-	private SocialWorkerService		socialWorkerService;
+	private SocialWorkerService			socialWorkerService;
 
 	@Autowired
-	private PersonalRecordService	personalRecordService;
+	private EducationRecordService		educationRecordService;
 
+	@Autowired
+	private ProfessionalRecordService	professionalRecordService;
 
-	// Simple CRUD methods
+	@Autowired
+	private MiscellaneousRecordService	miscellaneousRecordService;
+
 
 	public Curriculum create() {
 
@@ -69,7 +72,7 @@ public class CurriculumService {
 		String date1;
 		String date2 = LocalDate.now().toString();
 		String gen = new RandomString(6).nextString();
-		List<Curriculum> lc = this.curriculumRepository.findAll();
+		List<String> tickers = this.curriculumRepository.getAllTickers();
 		SimpleDateFormat df_in = new SimpleDateFormat("yyMMdd");
 		SimpleDateFormat df_output = new SimpleDateFormat("yyyy-MM-dd");
 		try {
@@ -79,14 +82,15 @@ public class CurriculumService {
 		}
 		date1 = df_in.format(date);
 		res = res + date1 + "-" + gen;
-		for (Curriculum c : lc)
-			if (c.getTicker() == res)
-				return this.generateTicker();
+
+		if (tickers.contains(res)) {
+			return this.generateTicker();
+		}
 		return res;
 	}
 
-	public Collection<Curriculum> findAll() {
-		Collection<Curriculum> result;
+	public List<Curriculum> findAll() {
+		List<Curriculum> result;
 
 		result = this.curriculumRepository.findAll();
 
@@ -105,16 +109,113 @@ public class CurriculumService {
 
 	}
 
-	public void delete(Curriculum curriculum) {
-		SocialWorker socialCurriculum = this.getSocialWorkerByCurriculum(curriculum.getId());
-		socialCurriculum.setCurriculum(null);
-		this.socialWorkerService.save(socialCurriculum);
-		this.curriculumRepository.delete(curriculum);
+	public SocialWorker getSocialWorkerByCurriculum(int id) {
+		return this.curriculumRepository.getSocialWorkerByCurriculum(id);
+	}
+
+	public void addEducationRecord(EducationRecord educationRecord) {
+		SocialWorker logguedSocialWorker = this.socialWorkerService.loggedSocialWorker();
+		Curriculum curriculum = logguedSocialWorker.getCurriculum();
+
+		Assert.notNull(curriculum);
+		Assert.isTrue(educationRecord.getId() == 0);
+
+		curriculum.getEducationRecords().add(educationRecord);
+		this.save(curriculum);
 
 	}
 
-	public SocialWorker getSocialWorkerByCurriculum(int id) {
-		return this.curriculumRepository.getSocialWorkerByCurriculum(id);
+	public void updateEducationRecord(EducationRecord educationRecord) {
+		SocialWorker logguedSocialWorker = this.socialWorkerService.loggedSocialWorker();
+		Curriculum curriculum = logguedSocialWorker.getCurriculum();
+
+		Assert.notNull(curriculum);
+		Assert.isTrue(educationRecord.getId() != 0 && logguedSocialWorker.getCurriculum().getEducationRecords().contains(educationRecord));
+
+		this.educationRecordService.save(educationRecord);
+
+	}
+
+	public void deleteEducationRecord(EducationRecord educationRecord) {
+		SocialWorker logguedSocialWorker = this.socialWorkerService.loggedSocialWorker();
+		Curriculum c = logguedSocialWorker.getCurriculum();
+
+		Assert.isTrue(c.getEducationRecords().contains(educationRecord));
+
+		c.getEducationRecords().remove(educationRecord);
+		this.save(c);
+		this.educationRecordService.delete(educationRecord);
+
+	}
+
+	public void addProfessionalRecord(ProfessionalRecord professionalRecord) {
+		SocialWorker logguedSocialWorker = this.socialWorkerService.loggedSocialWorker();
+		Curriculum curriculum = logguedSocialWorker.getCurriculum();
+
+		Assert.notNull(curriculum);
+		Assert.isTrue(professionalRecord.getId() == 0);
+
+		curriculum.getProfessionalRecords().add(professionalRecord);
+		this.save(curriculum);
+
+	}
+
+	public void updateProfessionalRecord(ProfessionalRecord professionalRecord) {
+		SocialWorker logguedSocialWorker = this.socialWorkerService.loggedSocialWorker();
+		Curriculum curriculum = logguedSocialWorker.getCurriculum();
+
+		Assert.notNull(curriculum);
+		Assert.isTrue(professionalRecord.getId() != 0 && logguedSocialWorker.getCurriculum().getProfessionalRecords().contains(professionalRecord));
+
+		this.professionalRecordService.save(professionalRecord);
+
+	}
+
+	public void deleteProfessionalRecord(ProfessionalRecord professionalRecord) {
+		SocialWorker logguedSocialWorker = this.socialWorkerService.loggedSocialWorker();
+		Curriculum c = logguedSocialWorker.getCurriculum();
+
+		Assert.isTrue(c.getProfessionalRecords().contains(professionalRecord));
+
+		c.getProfessionalRecords().remove(professionalRecord);
+		this.save(c);
+		this.professionalRecordService.delete(professionalRecord);
+
+	}
+
+	public void addMiscellaneousRecord(MiscellaneousRecord miscellaneousRecord) {
+		SocialWorker logguedSocialWorker = this.socialWorkerService.loggedSocialWorker();
+		Curriculum curriculum = logguedSocialWorker.getCurriculum();
+
+		Assert.notNull(curriculum);
+		Assert.isTrue(miscellaneousRecord.getId() == 0);
+
+		curriculum.getMiscellaneousRecords().add(miscellaneousRecord);
+		this.save(curriculum);
+
+	}
+
+	public void updateMiscellaneousRecord(MiscellaneousRecord miscellaneousRecord) {
+		SocialWorker logguedSocialWorker = this.socialWorkerService.loggedSocialWorker();
+		Curriculum curriculum = logguedSocialWorker.getCurriculum();
+
+		Assert.notNull(curriculum);
+		Assert.isTrue(miscellaneousRecord.getId() != 0 && logguedSocialWorker.getCurriculum().getMiscellaneousRecords().contains(miscellaneousRecord));
+
+		this.miscellaneousRecordService.save(miscellaneousRecord);
+
+	}
+
+	public void deleteMiscellaneousRecord(MiscellaneousRecord miscellaneousRecord) {
+		SocialWorker logguedSocialWorker = this.socialWorkerService.loggedSocialWorker();
+		Curriculum c = logguedSocialWorker.getCurriculum();
+
+		Assert.isTrue(c.getMiscellaneousRecords().contains(miscellaneousRecord));
+
+		c.getMiscellaneousRecords().remove(miscellaneousRecord);
+		this.save(c);
+		this.miscellaneousRecordService.delete(miscellaneousRecord);
+
 	}
 
 }
