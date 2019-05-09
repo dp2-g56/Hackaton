@@ -2,6 +2,9 @@
 package services;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -11,28 +14,31 @@ import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
-import repositories.ReportRepository;
 import domain.Guard;
+import domain.Prisoner;
 import domain.Report;
 import domain.Visit;
 import domain.VisitStatus;
+import repositories.ReportRepository;
 
 @Service
 @Transactional
 public class ReportService {
 
 	@Autowired
-	private ReportRepository	reportRepository;
+	private ReportRepository reportRepository;
 
 	@Autowired
-	private GuardService		guardService;
+	private GuardService guardService;
 
 	@Autowired
-	private VisitService		visitService;
+	private VisitService visitService;
 
 	@Autowired
-	private Validator			validator;
+	private WardenService wardenService;
 
+	@Autowired
+	private Validator validator;
 
 	public void saveReport(Report report, int visitId) {
 		this.guardService.loggedAsGuard();
@@ -53,7 +59,7 @@ public class ReportService {
 
 	}
 
-	//RECONSTRUCT
+	// RECONSTRUCT
 	public Report reconstruct(Report report, BindingResult binding) {
 		Report result = new Report();
 
@@ -65,6 +71,21 @@ public class ReportService {
 
 		this.validator.validate(result, binding);
 		return result;
+	}
+
+	public Map<Report, Prisoner> getReportsAsWarden() {
+		this.wardenService.loggedAsWarden();
+
+		Map<Report, Prisoner> reportsAndPrisoner = new HashMap<>();
+
+		List<Report> reports = this.reportRepository.findAll();
+
+		for (Report r : reports) {
+			Prisoner prisoner = this.reportRepository.getPrisonerOfReport(r.getId());
+			reportsAndPrisoner.put(r, prisoner);
+		}
+
+		return reportsAndPrisoner;
 	}
 
 }
