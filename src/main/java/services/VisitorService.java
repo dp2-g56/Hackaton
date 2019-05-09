@@ -43,4 +43,14 @@ public class VisitorService {
 		return logged;
 	}
 
+	public Visitor getLoggedVisitor() {
+		UserAccount userAccount = LoginService.getPrincipal();
+		String username = userAccount.getUsername();
+
+		Visitor logged = this.visitorRepository.getVisitorByUsername(username);
+
+		return logged;
+
+	}
+
 }
