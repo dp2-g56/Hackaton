@@ -14,6 +14,49 @@
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		">
+	<!-- CONFIGURATION -->
+	<bean id ="configuration" class="domain.Configuration">
+		<property name="spainTelephoneCode" value="+34" />
+
+		<property name="spamWords">
+			<list>
+				<value>knife</value>
+				<value>escape</value>
+				<value>gun</value>
+				<value>riot</value>
+				<value>liberty</value>
+				<value>kill</value>
+				<value>weapon</value>
+				<value>soap</value>
+				<value>hole</value>
+				<value>cuchillo</value>
+				<value>escapar</value>
+				<value>pistola</value>
+				<value>motin</value>
+				<value>libertad</value>
+				<value>matar</value>
+				<value>arma</value>
+				<value>jabon</value>
+				<value>agujero</value>
+				<value>wals</value>
+			</list>
+		</property>
+
+		
+		<property name="minFinderResults" value="1" />
+		<property name="maxFinderResults" value="24" />
+		<property name="timeFinderPrisoners" value="1"/>
+		<property name="timeFinderActivities" value="1"/>
+
+		
+		<property name="welcomeMessageEnglish" value="Welcome to Acme rookie !We´re IT rookie´s favourite job marketplace!" />
+		<property name="welcomeMessageSpanish" value="¡Bienvenidos a Acme Rookie ! ¡Somos el mercado de trabajo favorito de los profesionales de las TICs!" />
+		
+		<property name="systemName" value="Acme Alcatraz" />
+		<property name="imageURL" value="https://i.imgur.com/PX5WdRH.png" />
+
+		
+	</bean>
 
 	<!-- USER ACCOUNT -->
 	<!-- WARDEN -->
@@ -205,8 +248,8 @@
 	<!-- SOCIALWORKER -->
 		<!-- SOCIALWORKER1 -->
 			<bean id="userAccount14" class="security.UserAccount">
-				<property name="username" value="SocialWorker1" />
-				<property name="password" value="5b085a690e3ab68dc31320f52d253043" />
+				<property name="username" value="socialWorker1" />
+				<property name="password" value="451a44bf3f2d9083b0e7f36e6b5aa2da" />
 				<property name="authorities">
 					<list>
 						<bean class="security.Authority">
@@ -219,8 +262,8 @@
 			
 		<!-- SOCIALWORKER2 -->
 			<bean id="userAccount15" class="security.UserAccount">
-				<property name="username" value="SocialWorker2" />
-				<property name="password" value="fa43628c95d51eeb66d05e8f1a10752e" />
+				<property name="username" value="socialWorker2" />
+				<property name="password" value="268d0c48d1cd34951a3056a8f851247e" />
 				<property name="authorities">
 					<list>
 						<bean class="security.Authority">
@@ -347,6 +390,8 @@
 				<property name="visits">
 					<list>	
 						<ref bean="visit1" /> 
+						<ref bean="visit2" /> 
+						<ref bean="visit3" /> 
 					</list>
 				</property>
 				
@@ -809,7 +854,7 @@
 				<property name="ticker" value="231232-FFFFFF" />
 				<property name="incomeDate" value="12/12/2004 23:59" />
 				<property name="exitDate" value="12/12/2025 23:59" />
-				<property name="isIsolated" value="False" />
+				<property name="isIsolated" value="True" />
 				<property name="isSuspect" value="False" />
 				<property name="points" value="100" />
 				<property name="freedom" value="False" />
@@ -865,7 +910,7 @@
 				<property name="isIsolated" value="False" />
 				<property name="isSuspect" value="False" />
 				<property name="points" value="100" />
-				<property name="freedom" value="False" />
+				<property name="freedom" value="True" />
 				
 				<property name="charges">
 					<list>
@@ -913,6 +958,7 @@
 				<property name="visitor" ref="visitor1" />
 				<property name="report" ref="report1" />
 				<property name="prisoner" ref="prisoner1" />
+				<property name="createdByPrisoner" value="true" />
 			</bean>
 			
 			<bean id="visit2" class="domain.Visit">
@@ -922,6 +968,7 @@
 				<property name="reason" value="BUSSINESS" />
 				<property name="visitor" ref="visitor1" />
 				<property name="prisoner" ref="prisoner1" />
+				<property name="createdByPrisoner" value="false" />
 			</bean>
 			
 			<bean id="visit3" class="domain.Visit">
@@ -931,6 +978,7 @@
 				<property name="reason" value="BUSSINESS" />
 				<property name="visitor" ref="visitor1" />
 				<property name="prisoner" ref="prisoner1" />
+				<property name="createdByPrisoner" value="false" />
 			</bean>
 			
 			<bean id="visit4" class="domain.Visit">
@@ -940,6 +988,7 @@
 				<property name="reason" value="BUSSINESS" />
 				<property name="visitor" ref="visitor2" />
 				<property name="prisoner" ref="prisoner1" />
+				<property name="createdByPrisoner" value="true" />
 			</bean>
 			
 			<bean id="visit5" class="domain.Visit">
@@ -949,6 +998,7 @@
 				<property name="reason" value="BUSSINESS" />
 				<property name="visitor" ref="visitor3" />
 				<property name="prisoner" ref="prisoner1" />
+				<property name="createdByPrisoner" value="false" />
 			</bean>
 			
 			<bean id="visit6" class="domain.Visit">
@@ -958,15 +1008,17 @@
 				<property name="reason" value="BUSSINESS" />
 				<property name="visitor" ref="visitor2" />
 				<property name="prisoner" ref="prisoner1" />
+				<property name="createdByPrisoner" value="true" />
 			</bean>
 			
 			<bean id="visit7" class="domain.Visit">
 				<property name="visitStatus" value="PENDING" />
 				<property name="description" value="I need to talk with him" />
-				<property name="date" value="12/12/2016 23:59" />
+				<property name="date" value="12/12/2019 23:59" />
 				<property name="reason" value="BUSSINESS" />
 				<property name="visitor" ref="visitor2" />
 				<property name="prisoner" ref="prisoner1" />
+				<property name="createdByPrisoner" value="false" />
 			</bean>
 			
 			<bean id="visit8" class="domain.Visit">
@@ -976,6 +1028,7 @@
 				<property name="reason" value="BUSSINESS" />
 				<property name="visitor" ref="visitor1" />
 				<property name="prisoner" ref="prisoner1" />
+				<property name="createdByPrisoner" value="true" />
 			</bean> 
 	
 	<!-- REPORT -->

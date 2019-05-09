@@ -16,10 +16,6 @@
 	uri="http://www.springframework.org/security/tags"%>
 
 <div>
-	<a href="#"><img src="${imageURL}" height= 150px width= 500px alt="Acme Alcatraz Co., Inc." /></a>
-</div>
-
-<div>
 	<ul id="jMenu">
 		<!-- Do not forget the "fNiv" class for the first level links !! -->
 		<security:authorize access="hasRole('WARDEN')">
@@ -27,6 +23,7 @@
 						code="master.page.warden" /></a>
 				<ul>
 					<li class="arrow"></li>
+					<li><a href="warden/freePrisoners/list.do"><spring:message code="master.page.freePrisoners" /></a></li>
 					
 				</ul></li>
 		</security:authorize>
@@ -36,7 +33,8 @@
 						code="master.page.prisoner" /></a>
 				<ul>
 					<li class="arrow"></li>
-					
+					<li><a href="visit/prisoner/list.do"><spring:message code="master.page.listVisits" /></a></li>
+					<li><a href="product/salesman/prisoner/list.do"><spring:message code="master.page.salesMen" /></a></li>
 				</ul></li>
 		</security:authorize>
 		
@@ -45,6 +43,7 @@
 						code="master.page.visitor" /></a>
 				<ul>
 					<li class="arrow"></li>
+					<li><a href="visit/visitor/list.do"><spring:message code="master.page.listVisits" /></a></li>
 					
 				</ul></li>
 		</security:authorize>
@@ -54,7 +53,8 @@
 						code="master.page.guard" /></a>
 				<ul>
 					<li class="arrow"></li>
-					
+					<li><a href="visit/guard/listFuture.do"><spring:message code="master.page.assignableVisits" /></a></li>
+					<li><a href="visit/guard/list.do"><spring:message code="master.page.listVisits" /></a></li>
 				</ul></li>
 		</security:authorize>
 		
@@ -79,6 +79,22 @@
 		<security:authorize access="isAnonymous()">
 			<li><a class="fNiv" href="security/login.do"><spring:message
 						code="master.page.login" /></a></li>
+		</security:authorize>
+		
+		<security:authorize access="hasAnyRole('VISITOR', 'WARDEN', 'GUARD', 'SALESMAN', 'SOCIALWORKER')">
+		<li><a href="anonymous/prisoner/list.do"><spring:message code="master.page.listOfPrisoners" /> </a></li>
+		</security:authorize>
+		
+		<security:authorize access="hasRole('PRISONER')">
+		<li><a href="visitor/prisoner/list.do"><spring:message code="master.page.myVisitors" /> </a></li>
+		</security:authorize>
+		
+		<security:authorize access="isAnonymous()">
+		<li><a href="anonymous/prisoner/list.do"><spring:message code="master.page.listOfPrisoners" /> </a></li>
+		</security:authorize>
+		
+		<security:authorize access="permitAll">
+		<li><a href="product/anonymous/list.do"><spring:message code="master.page.listOfProducts" /> </a></li>
 		</security:authorize>
 
 		<security:authorize access="isAuthenticated()">

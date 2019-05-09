@@ -63,7 +63,7 @@ public class WelcomeController extends AbstractController {
 			username = "";
 		}
 
-		String imageURL = this.configurationService.getConfiguration().getImageUrl();
+		String imageURL = this.configurationService.getConfiguration().getImageURL();
 
 		request.getSession().setAttribute("imageURL", imageURL);
 

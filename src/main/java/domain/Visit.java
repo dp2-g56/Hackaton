@@ -7,6 +7,8 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.validation.Valid;
@@ -20,16 +22,27 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Visit extends DomainEntity {
 
 	private VisitStatus	visitStatus;
-	private String		description;
-	private Date		date;
-	private Reason		reason;
+	private String		description;		//Formulario
+	private Date		date;				//Formulario	Futura (controlar a mano)
+	private Reason		reason;			//Formulario
 
-	private Visitor		visitor;
+	private Visitor		visitor;			//Formulario
 	private Report		report;
-	private Prisoner	prisoner;
+	private Prisoner	prisoner;			//Formulario
+	private boolean		createdByPrisoner;
 
+
+	@Valid
+	public boolean isCreatedByPrisoner() {
+		return this.createdByPrisoner;
+	}
+
+	public void setCreatedByPrisoner(boolean createdByPrisoner) {
+		this.createdByPrisoner = createdByPrisoner;
+	}
 
 	@NotNull
+	@Enumerated(EnumType.STRING)
 	public VisitStatus getVisitStatus() {
 		return this.visitStatus;
 	}
@@ -47,6 +60,7 @@ public class Visit extends DomainEntity {
 		this.description = description;
 	}
 
+	@NotNull
 	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
 	public Date getDate() {
 		return this.date;

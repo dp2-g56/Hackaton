@@ -1,0 +1,70 @@
+
+package services;
+
+import java.util.Date;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
+
+import repositories.ReportRepository;
+import domain.Guard;
+import domain.Report;
+import domain.Visit;
+import domain.VisitStatus;
+
+@Service
+@Transactional
+public class ReportService {
+
+	@Autowired
+	private ReportRepository	reportRepository;
+
+	@Autowired
+	private GuardService		guardService;
+
+	@Autowired
+	private VisitService		visitService;
+
+	@Autowired
+	private Validator			validator;
+
+
+	public void saveReport(Report report, int visitId) {
+		this.guardService.loggedAsGuard();
+		Guard loggedGuard = this.guardService.loggedGuard();
+		Visit visit = this.visitService.findOne(visitId);
+
+		Date thisMoment = new Date();
+		thisMoment.setTime(thisMoment.getTime() - 1);
+
+		Assert.notNull(visit);
+		Assert.isTrue(loggedGuard.getVisits().contains(visit));
+		Assert.isTrue(visit.getDate().before(thisMoment));
+		Assert.isTrue(visit.getVisitStatus() == VisitStatus.PERMITTED);
+
+		Report saved = this.reportRepository.save(report);
+
+		visit.setReport(saved);
+
+	}
+
+	//RECONSTRUCT
+	public Report reconstruct(Report report, BindingResult binding) {
+		Report result = new Report();
+
+		result = report;
+
+		Date thisMoment = new Date();
+		thisMoment.setTime(thisMoment.getTime() - 1);
+		result.setDate(thisMoment);
+
+		this.validator.validate(result, binding);
+		return result;
+	}
+
+}

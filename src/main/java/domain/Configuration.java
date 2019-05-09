@@ -1,9 +1,13 @@
 
 package domain;
 
+import java.util.List;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.validation.Valid;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
@@ -12,28 +16,24 @@ import org.hibernate.validator.constraints.URL;
 @Access(AccessType.PROPERTY)
 public class Configuration extends DomainEntity {
 
-	private String	spamWords;
-	private String	spainTelephoneCode;
-	private int		minFinderResults;
-	private int		maxFinderResults;
-	private int		minTimeResults;
-	private int		maxTimeResults;
-	private String	goodWords;
-	private String	badWords;
-	private int		timeFinderPrisoners;
-	private String	welcomeMessageEnglish;
-	private String	welcomeMessageSpanish;
-	private String	systemName;
-	private String	imageUrl;
-	private int		timeFinderActivities;
+	private List<String>	spamWords;
+	private String			spainTelephoneCode;
+	private int				minFinderResults;
+	private int				maxFinderResults;
+	private int				timeFinderPrisoners;
+	private String			welcomeMessageEnglish;
+	private String			welcomeMessageSpanish;
+	private String			systemName;
+	private String			imageURL;
+	private int				timeFinderActivities;
 
 
-	@NotBlank
-	public String getSpamWords() {
+	@ElementCollection(targetClass = String.class)
+	public List<String> getSpamWords() {
 		return this.spamWords;
 	}
 
-	public void setSpamWords(String spamWords) {
+	public void setSpamWords(List<String> spamWords) {
 		this.spamWords = spamWords;
 	}
 
@@ -44,24 +44,6 @@ public class Configuration extends DomainEntity {
 
 	public void setSpainTelephoneCode(String spainTelephoneCode) {
 		this.spainTelephoneCode = spainTelephoneCode;
-	}
-
-	@NotBlank
-	public String getGoodWords() {
-		return this.goodWords;
-	}
-
-	public void setGoodWords(String goodWords) {
-		this.goodWords = goodWords;
-	}
-
-	@NotBlank
-	public String getBadWords() {
-		return this.badWords;
-	}
-
-	public void setBadWords(String badWords) {
-		this.badWords = badWords;
 	}
 
 	@NotBlank
@@ -93,14 +75,15 @@ public class Configuration extends DomainEntity {
 
 	@NotBlank
 	@URL
-	public String getImageUrl() {
-		return this.imageUrl;
+	public String getImageURL() {
+		return this.imageURL;
 	}
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
 	}
 
+	@Valid
 	public int getMinFinderResults() {
 		return this.minFinderResults;
 	}
@@ -109,6 +92,7 @@ public class Configuration extends DomainEntity {
 		this.minFinderResults = minFinderResults;
 	}
 
+	@Valid
 	public int getMaxFinderResults() {
 		return this.maxFinderResults;
 	}
@@ -117,22 +101,7 @@ public class Configuration extends DomainEntity {
 		this.maxFinderResults = maxFinderResults;
 	}
 
-	public int getMinTimeResults() {
-		return this.minTimeResults;
-	}
-
-	public void setMinTimeResults(int minTimeResults) {
-		this.minTimeResults = minTimeResults;
-	}
-
-	public int getMaxTimeResults() {
-		return this.maxTimeResults;
-	}
-
-	public void setMaxTimeResults(int maxTimeResults) {
-		this.maxTimeResults = maxTimeResults;
-	}
-
+	@Valid
 	public int getTimeFinderPrisoners() {
 		return this.timeFinderPrisoners;
 	}
@@ -141,6 +110,7 @@ public class Configuration extends DomainEntity {
 		this.timeFinderPrisoners = timeFinderPrisoners;
 	}
 
+	@Valid
 	public int getTimeFinderActivities() {
 		return this.timeFinderActivities;
 	}

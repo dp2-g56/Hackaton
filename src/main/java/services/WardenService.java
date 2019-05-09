@@ -8,7 +8,6 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.validation.Validator;
 
 import repositories.WardenRepository;
 import security.Authority;
@@ -21,13 +20,7 @@ import domain.Warden;
 public class WardenService {
 
 	@Autowired
-	private WardenRepository		wardenRepository;
-
-	@Autowired
-	private ConfigurationService	configurationService;
-
-	@Autowired
-	private Validator				validator;
+	private WardenRepository	wardenRepository;
 
 
 	// ----------------------------------------CRUD
@@ -50,7 +43,7 @@ public class WardenService {
 		UserAccount userAccount;
 		userAccount = LoginService.getPrincipal();
 		List<Authority> authorities = (List<Authority>) userAccount.getAuthorities();
-		Assert.isTrue(authorities.get(0).toString().equals("Warden"));
+		Assert.isTrue(authorities.get(0).toString().equals("WARDEN"));
 		return this.wardenRepository.getWardenByUsername(userAccount.getUsername());
 	}
 
@@ -58,17 +51,13 @@ public class WardenService {
 		UserAccount userAccount;
 		userAccount = LoginService.getPrincipal();
 		List<Authority> authorities = (List<Authority>) userAccount.getAuthorities();
-		Assert.isTrue(authorities.get(0).toString().equals("Warden"));
+		Assert.isTrue(authorities.get(0).toString().equals("WARDEN"));
 
 	}
 
 	public void saveNewWarden(Warden Warden) {
 		this.loggedAsWarden();
 		this.wardenRepository.save(Warden);
-	}
-
-	private Warden findOne(int id) {
-		return this.wardenRepository.findOne(id);
 	}
 
 }

@@ -1,3 +1,4 @@
+
 package repositories;
 
 import java.util.List;
@@ -10,15 +11,12 @@ import domain.Prisoner;
 
 public interface FinderRepository extends JpaRepository<Finder, Integer> {
 
-	/**
-	 * e ticker, name, middle name or surname of a prisoner; and a charge that
-	 * the prisoner must have.
-	 **/
 
 	@Query("select distinct(p) from Prisoner p where p.ticker like ?1 or p.name like ?1 or p.surname like ?1")
 	public List<Prisoner> filterByKeyWord(String keyWord);
 
 	@Query("select distinct(p) from Prisoner p join p.charges c where c.title_english like ?1")
 	public List<Prisoner> filterByCharge(String charge);
+
 
 }
