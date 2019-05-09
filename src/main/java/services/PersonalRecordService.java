@@ -1,7 +1,7 @@
 
 package services;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -32,22 +32,7 @@ public class PersonalRecordService {
 
 	}
 
-	// Simple CRUD methods
-
-	public PersonalRecord create(String fullName, String photo, String email, String phoneNumber, String urlLinkedInProfile) {
-
-		PersonalRecord personalRecord = new PersonalRecord();
-		personalRecord.setFullName(fullName);
-		personalRecord.setPhoto(photo);
-		personalRecord.setEmail(email);
-		personalRecord.setPhoneNumber(phoneNumber);
-		personalRecord.setUrlLinkedInProfile(urlLinkedInProfile);
-
-		return personalRecord;
-
-	}
-
-	public Collection<PersonalRecord> findAll() {
+	public List<PersonalRecord> findAll() {
 		return this.personalRecordRepository.findAll();
 	}
 	public PersonalRecord findOne(Integer id) {
@@ -56,10 +41,6 @@ public class PersonalRecordService {
 
 	public PersonalRecord save(PersonalRecord personalRecord) {
 		return this.personalRecordRepository.save(personalRecord);
-	}
-
-	public void delete(PersonalRecord personalRecord) {
-		this.personalRecordRepository.delete(personalRecord);
 	}
 
 }

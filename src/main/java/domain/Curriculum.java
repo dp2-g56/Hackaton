@@ -78,7 +78,7 @@ public class Curriculum extends DomainEntity {
 		return this.personalRecord;
 	}
 
-	public void setPersonalRecord(PersonalRecord personalRecords) {
-		this.personalRecord = personalRecords;
+	public void setPersonalRecord(PersonalRecord personalRecord) {
+		this.personalRecord = personalRecord;
 	}
 }

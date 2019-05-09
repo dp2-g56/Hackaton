@@ -54,6 +54,15 @@
 			<bean class="converters.PersonalRecordToStringConverter" />
 			<bean class="converters.StringToPersonalRecordConverter" />
 			
+			<bean class="converters.EducationRecordToStringConverter" />
+			<bean class="converters.StringToEducationRecordConverter" />
+			
+			<bean class="converters.MiscellaneousRecordToStringConverter" />
+			<bean class="converters.StringToMiscellaneousRecordConverter" />
+			
+			<bean class="converters.ProfessionalRecordToStringConverter" />
+			<bean class="converters.StringToProfessionalRecordConverter" />
+			
 	</util:list>
 
 </beans>

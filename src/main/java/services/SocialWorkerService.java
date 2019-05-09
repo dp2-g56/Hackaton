@@ -14,6 +14,7 @@ import security.Authority;
 import security.LoginService;
 import security.UserAccount;
 import domain.Curriculum;
+import domain.PersonalRecord;
 import domain.SocialWorker;
 
 @Service
@@ -22,6 +23,9 @@ public class SocialWorkerService {
 
 	@Autowired
 	private SocialWorkerRepository	socialWorkerRepository;
+
+	@Autowired
+	private CurriculumService		curriculumService;
 
 
 	// ----------------------------------------CRUD
@@ -69,14 +73,32 @@ public class SocialWorkerService {
 		return this.socialWorkerRepository.getSocialWorkerByUsername(username);
 	}
 
-	public void addCurriculum(Curriculum curriculum) {
+	public void addCurriculum(PersonalRecord personalRecord) {
 
 		SocialWorker logguedSocialWorker = this.loggedSocialWorker();
 
 		Assert.isNull(logguedSocialWorker.getCurriculum());
+		Assert.isTrue(personalRecord.getId() == 0);
+		Curriculum curriculum = this.curriculumService.create();
+		curriculum.setPersonalRecord(personalRecord);
 
 		logguedSocialWorker.setCurriculum(curriculum);
 		this.socialWorkerRepository.save(logguedSocialWorker);
 
 	}
+
+	public void updateCurriculum(PersonalRecord personalRecord) {
+
+		SocialWorker logguedSocialWorker = this.loggedSocialWorker();
+
+		Assert.notNull(logguedSocialWorker.getCurriculum());
+		Assert.isTrue(personalRecord.getId() == logguedSocialWorker.getCurriculum().getPersonalRecord().getId());
+		Curriculum curriculum = logguedSocialWorker.getCurriculum();
+		curriculum.setPersonalRecord(personalRecord);
+
+		logguedSocialWorker.setCurriculum(curriculum);
+		this.socialWorkerRepository.save(logguedSocialWorker);
+
+	}
+
 }
