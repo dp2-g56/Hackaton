@@ -31,8 +31,10 @@ public class ReportWardenController extends AbstractController {
 		try {
 			Map<Report, Prisoner> reports = this.reportService.getReportsAsWarden();
 
-			result = new ModelAndView("warden/report");
+			result = new ModelAndView("warden/reports");
 			result.addObject("reportsAndPrisoner", reports);
+			result.addObject("reports", reports.keySet());
+			result.addObject("requestURI", "/report/warden/list.do");
 		} catch (Throwable oops) {
 			result = new ModelAndView("redirect:/");
 		}
