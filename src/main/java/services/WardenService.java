@@ -9,19 +9,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import domain.Warden;
 import repositories.WardenRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
-import domain.Warden;
 
 @Service
 @Transactional
 public class WardenService {
 
 	@Autowired
-	private WardenRepository	wardenRepository;
-
+	private WardenRepository wardenRepository;
 
 	// ----------------------------------------CRUD
 	// METHODS--------------------------
@@ -36,7 +35,7 @@ public class WardenService {
 
 	/**
 	 * LoggedWarden now contains the security of loggedAsWarden
-	 * 
+	 *
 	 * @return
 	 */
 	public Warden loggedWarden() {
@@ -52,12 +51,19 @@ public class WardenService {
 		userAccount = LoginService.getPrincipal();
 		List<Authority> authorities = (List<Authority>) userAccount.getAuthorities();
 		Assert.isTrue(authorities.get(0).toString().equals("WARDEN"));
-
 	}
 
 	public void saveNewWarden(Warden Warden) {
 		this.loggedAsWarden();
 		this.wardenRepository.save(Warden);
+	}
+
+	public Warden securityAndWarden() {
+		UserAccount userAccount;
+		userAccount = LoginService.getPrincipal();
+		List<Authority> authorities = (List<Authority>) userAccount.getAuthorities();
+		Assert.isTrue(authorities.get(0).toString().equals("WARDEN"));
+		return this.wardenRepository.getWardenByUsername(userAccount.getUsername());
 	}
 
 }

@@ -24,7 +24,7 @@
 				<ul>
 					<li class="arrow"></li>
 					<li><a href="warden/freePrisoners/list.do"><spring:message code="master.page.freePrisoners" /></a></li>
-					
+					<li><a href="report/warden/list.do"><spring:message code="master.page.report" /></a></li>
 				</ul></li>
 		</security:authorize>
 
@@ -104,6 +104,7 @@
 			</a>
 				<ul>
 					<li class="arrow"></li>
+					<li><a href="authenticated/showProfile.do"><spring:message code="master.page.myProfile" /> </a></li>
 					<li><a href="j_spring_security_logout"><spring:message
 								code="master.page.logout" /> </a></li>
 				</ul></li>

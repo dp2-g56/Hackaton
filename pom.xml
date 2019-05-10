@@ -12,7 +12,7 @@
 	<!-- Artifact identification and properties -->
 
 	<groupId>Design-and-Testing</groupId>
-	<artifactId>Acme-Shout</artifactId>
+	<artifactId>Acme-Alcatraz</artifactId>
 	<version>1.0</version>
 	<packaging>war</packaging>
 
@@ -23,7 +23,7 @@
 	<!-- Indexing information -->
 
 	<name>Acme Shouts</name>
-	<url>http://www.Acme-Shout.com</url>
+	<url>http://www.Acme-Alcatraz.com</url>
 
 	<!-- Build commands -->
 

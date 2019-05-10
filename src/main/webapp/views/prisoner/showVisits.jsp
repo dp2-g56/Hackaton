@@ -150,13 +150,13 @@ java.sql.Timestamp now = new java.sql.Timestamp(utilDate.getTime());
 			<jstl:out value="${reason}"/>
 	</display:column>
 	
-	<security:authorize access="hasRole('PRISONER')" >
+	<security:authorize access="hasAnyRole('GUARD', 'PRISONER')" >
 			<display:column titleKey="visit.visitor" style="color:${color}" >
 				<jstl:out value="${row.visitor.name} ${row.visitor.middleName} ${row.visitor.surname}" />
 			</display:column>	
 	</security:authorize>
 	
-	<security:authorize access="hasRole('VISITOR')">
+	<security:authorize access="hasAnyRole('GUARD','VISITOR')">
 		<display:column titleKey="visit.prisoner" style="color:${color}">
 			<jstl:out value="${row.prisoner.name} ${row.prisoner.middleName} ${row.prisoner.surname}" />
 		</display:column>	

@@ -10,10 +10,9 @@
 
 <tiles-definitions>
 	
-	<!-- EJEMPLO: BORRAR -->
-	<definition name="cosasDeWarden/warden/list" extends="master.page">	
-		<put-attribute name="title" value="JustWardenThings" />
-		<put-attribute name="body" value="/views/warden/borrar.jsp" />
+	<definition name="warden/reports" extends="master.page">	
+		<put-attribute name="title" value="Reports" />
+		<put-attribute name="body" value="/views/warden/reports.jsp" />
 	</definition>
 
 </tiles-definitions>
