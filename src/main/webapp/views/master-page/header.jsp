@@ -26,6 +26,7 @@
 					<li><a href="warden/freePrisoners/list.do"><spring:message code="master.page.freePrisoners" /></a></li>
 					<li><a href="report/warden/list.do"><spring:message code="master.page.report" /></a></li>
 					<li><a href="warden/warden/register.do"><spring:message code="master.page.warden.register" /></a></li>
+					<li><a href="prisoner/warden/register.do"><spring:message code="master.page.prisoner.register" /></a></li>
 				</ul></li>
 		</security:authorize>
 

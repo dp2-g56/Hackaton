@@ -19,5 +19,10 @@
 		<put-attribute name="title" value="Registrar un alcaide" />
 		<put-attribute name="body" value="/views/warden/registerWarden.jsp" />
 	</definition>
+	
+	<definition name="warden/registerPrisoner" extends="master.page">	
+		<put-attribute name="title" value="Registrar un prisionero" />
+		<put-attribute name="body" value="/views/warden/registerPrisoner.jsp" />
+	</definition>
 
 </tiles-definitions>
