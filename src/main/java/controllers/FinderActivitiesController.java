@@ -1,8 +1,5 @@
 package controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
@@ -12,29 +9,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import domain.Charge;
-import domain.Finder;
-import domain.Visitor;
-import services.ChargeService;
-import services.FinderService;
-import services.VisitorService;
+import domain.FinderActivities;
+import domain.Prisoner;
+import services.FinderActivitiesService;
+import services.PrisonerService;
 
 @Controller
-@RequestMapping("/finder/visitor")
-public class FinderVisitorController extends AbstractController {
+@RequestMapping("/finderActivities/prisoner")
+public class FinderActivitiesController extends AbstractController {
+
+	// Services --------------------------------------------------------------
 
 	@Autowired
-	private FinderService finderService;
+	private FinderActivitiesService finderActivitiesService;
 
 	@Autowired
-	private VisitorService visitorService;
-
-	@Autowired
-	private ChargeService chargeService;
+	private PrisonerService prisonerService;
 
 	// Constructors -----------------------------------------------------------
-
-	public FinderVisitorController() {
+	public FinderActivitiesController() {
 		super();
 	}
 
@@ -43,13 +36,13 @@ public class FinderVisitorController extends AbstractController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView list() {
 
-		Visitor visitor = this.visitorService.loggedVisitor();
+		Prisoner prisoner = this.prisonerService.loggedPrisoner();
 
-		ModelAndView result = new ModelAndView("finder/visitor/list");
+		ModelAndView result = new ModelAndView("finderActivities/prisoner/list");
 
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
-		result.addObject("prisoners", this.finderService.getResults(visitor.getFinder()));
+		result.addObject("activities", this.finderActivitiesService.getResults(prisoner.getFinderActivities()));
 		result.addObject("locale", locale);
 
 		return result;
@@ -66,33 +59,12 @@ public class FinderVisitorController extends AbstractController {
 
 		try {
 
-			List<Charge> charges = this.chargeService.findAll();
+			Prisoner prisoner = this.prisonerService.loggedPrisoner();
 
-			Visitor visitor = this.visitorService.loggedVisitor();
-
-			List<String> values = new ArrayList<>();
-			List<String> names = new ArrayList<>();
-
-			names.add("");
-			values.add("");
-
-			Finder finder = visitor.getFinder();
-			if (locale == "EN")
-				for (int i = 0; i < charges.size(); i++) {
-					values.add(charges.get(i).getTitleEnglish());
-					names.add(charges.get(i).getTitleEnglish());
-				}
-			else
-				for (int i = 0; i < charges.size(); i++) {
-					values.add(charges.get(i).getTitleEnglish());
-					names.add(charges.get(i).getTitleSpanish());
-				}
+			FinderActivities finder = prisoner.getFinderActivities();
 
 			Assert.notNull(finder);
 			res = this.createEditModelAndView(finder);
-			res.addObject("values", values);
-			res.addObject("names", names);
-			res.addObject("sizeOfList", values.size());
 		} catch (Throwable oops) {
 			res = new ModelAndView("redirect:list.do");
 		}
@@ -105,16 +77,16 @@ public class FinderVisitorController extends AbstractController {
 	// Save------------------------------------------------------------------------------
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
-	public ModelAndView save(Finder finderForm, BindingResult binding) {
+	public ModelAndView save(FinderActivities finderForm, BindingResult binding) {
 		ModelAndView result;
 
-		Finder finder = this.finderService.reconstruct(finderForm, binding);
+		FinderActivities finder = this.finderActivitiesService.reconstruct(finderForm, binding);
 
 		if (binding.hasErrors())
 			result = this.createEditModelAndView(finderForm);
 		else
 			try {
-				this.finderService.filter(finder);
+				this.finderActivitiesService.filter(finder);
 				result = new ModelAndView("redirect:list.do");
 			} catch (Throwable oops) {
 				try {
@@ -126,8 +98,8 @@ public class FinderVisitorController extends AbstractController {
 		return result;
 	}
 
-	// CreateEditModelAndView
-	protected ModelAndView createEditModelAndView(Finder finder) {
+	// CreateEditModelAndView----------------------------------------------------------
+	protected ModelAndView createEditModelAndView(FinderActivities finder) {
 		ModelAndView result;
 
 		result = this.createEditModelAndView(finder, null);
@@ -135,12 +107,12 @@ public class FinderVisitorController extends AbstractController {
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndView(Finder finder, String messageCode) {
+	protected ModelAndView createEditModelAndView(FinderActivities finder, String messageCode) {
 		ModelAndView result;
 
-		result = new ModelAndView("finder/visitor/edit");
+		result = new ModelAndView("finderActivities/prisoner/edit");
 
-		result.addObject("finder", finder);
+		result.addObject("finderActivities", finder);
 		result.addObject("message", messageCode);
 
 		return result;

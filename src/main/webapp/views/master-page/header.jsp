@@ -35,6 +35,7 @@
 					<li class="arrow"></li>
 					<li><a href="visit/prisoner/list.do"><spring:message code="master.page.listVisits" /></a></li>
 					<li><a href="product/salesman/prisoner/list.do"><spring:message code="master.page.salesMen" /></a></li>
+					<li><a href="finderActivities/prisoner/list.do"><spring:message code="master.page.finderActivities" /></a></li>
 				</ul></li>
 		</security:authorize>
 		

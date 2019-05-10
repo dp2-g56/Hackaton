@@ -34,5 +34,16 @@
 		<put-attribute name="title" value="Vendedores" />
 		<put-attribute name="body" value="/views/prisoner/listOfSalesMen.jsp" />
 	</definition>
+	
+	<definition name="finderActivities/prisoner/list" extends="master.page">	
+		<put-attribute name="title" value="Resultados de la busqueda" />
+		<put-attribute name="body" value="/views/prisoner/finderActivitiesResults.jsp" />
+	</definition>
+	
+	<definition name="finderActivities/prisoner/edit" extends="master.page">	
+		<put-attribute name="title" value="Ediar buscador" />
+		<put-attribute name="body" value="/views/prisoner/editFinder.jsp" />
+	</definition>
+	
 
 </tiles-definitions>
