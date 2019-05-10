@@ -74,6 +74,7 @@
 						code="master.page.salesMan" /></a>
 				<ul>
 					<li class="arrow"></li>
+					<li><a href="product/salesman/list.do"><spring:message code="master.page.products" /></a></li>
 					
 				</ul></li>
 		</security:authorize>

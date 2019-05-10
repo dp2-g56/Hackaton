@@ -89,7 +89,7 @@ public class MiscellaneousRecordController extends AbstractController {
 				result = new ModelAndView("redirect:show.do");
 
 			} catch (Throwable oops) {
-				result = this.createEditModelAndView(miscellaneousRecord, "note.commit.error");
+				result = this.createEditModelAndView(miscellaneousRecord, "commit.error");
 			}
 		}
 		return result;
@@ -105,7 +105,7 @@ public class MiscellaneousRecordController extends AbstractController {
 			result = new ModelAndView("redirect:show.do");
 
 		} catch (Throwable oops) {
-			result = this.createEditModelAndView(miscellaneousRecord, "note.commit.error");
+			result = this.createEditModelAndView(miscellaneousRecord, "commit.error");
 		}
 
 		return result;
