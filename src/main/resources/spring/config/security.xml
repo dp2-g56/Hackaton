@@ -40,9 +40,10 @@
 		<security:intercept-url pattern="/product/anonymous/**" access="permitAll" />
 		
 	<!-- WARDEN -->
-	<security:intercept-url pattern="/warden/freePrisoners/**" 	access="hasRole('WARDEN')" />
-	<security:intercept-url pattern="/warden/charge/**" 	access="hasRole('WARDEN')" />
-	<security:intercept-url pattern="/report/warden/**" 	access="hasRole('WARDEN')" />
+		<security:intercept-url pattern="/warden/freePrisoners/**" access="hasRole('WARDEN')" />
+		<security:intercept-url pattern="/warden/charge/**" access="hasRole('WARDEN')" />
+		<security:intercept-url pattern="/report/warden/**"	access="hasRole('WARDEN')" />
+		<security:intercept-url pattern="/warden/warden/**"	access="hasRole('WARDEN')" />
 		
 	<!-- PRISONER -->
 		<security:intercept-url pattern="/visit/prisoner/**" 	access="hasRole('PRISONER')" />
