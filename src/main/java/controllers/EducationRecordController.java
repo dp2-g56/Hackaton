@@ -82,9 +82,9 @@ public class EducationRecordController extends AbstractController {
 
 		if (educationRecord.getEndDateStudy() != null && educationRecord.getStartDateStudy() != null && educationRecord.getStartDateStudy().after(educationRecord.getEndDateStudy())) {
 			if (locale.contains("ES")) {
-				binding.addError(new FieldError("positionData", "startDate", educationRecord.getStartDateStudy(), false, null, null, "La fecha de fin no puede ser anterior a la de inicio"));
+				binding.addError(new FieldError("educationRecord", "startDate", educationRecord.getStartDateStudy(), false, null, null, "La fecha de fin no puede ser anterior a la de inicio"));
 			} else {
-				binding.addError(new FieldError("positionData", "startDate", educationRecord.getStartDateStudy(), false, null, null, "The end date can not be before the start date"));
+				binding.addError(new FieldError("educationRecord", "startDate", educationRecord.getStartDateStudy(), false, null, null, "The end date can not be before the start date"));
 			}
 		}
 
@@ -101,7 +101,7 @@ public class EducationRecordController extends AbstractController {
 				result = new ModelAndView("redirect:show.do");
 
 			} catch (Throwable oops) {
-				result = this.createEditModelAndView(educationRecord, "note.commit.error");
+				result = this.createEditModelAndView(educationRecord, "commit.error");
 			}
 		}
 		return result;
@@ -117,7 +117,7 @@ public class EducationRecordController extends AbstractController {
 			result = new ModelAndView("redirect:show.do");
 
 		} catch (Throwable oops) {
-			result = this.createEditModelAndView(educationRecord, "note.commit.error");
+			result = this.createEditModelAndView(educationRecord, "commit.error");
 		}
 
 		return result;

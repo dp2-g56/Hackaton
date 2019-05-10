@@ -80,9 +80,9 @@ public class ProfessionalRecordController extends AbstractController {
 
 		if (professionalRecord.getEndDate() != null && professionalRecord.getStartDate() != null && professionalRecord.getStartDate().after(professionalRecord.getEndDate())) {
 			if (locale.contains("ES")) {
-				binding.addError(new FieldError("positionData", "startDate", professionalRecord.getStartDate(), false, null, null, "La fecha de fin no puede ser anterior a la de inicio"));
+				binding.addError(new FieldError("professionalRecord", "startDate", professionalRecord.getStartDate(), false, null, null, "La fecha de fin no puede ser anterior a la de inicio"));
 			} else {
-				binding.addError(new FieldError("positionData", "startDate", professionalRecord.getStartDate(), false, null, null, "The end date can not be before the start date"));
+				binding.addError(new FieldError("professionalRecord", "startDate", professionalRecord.getStartDate(), false, null, null, "The end date can not be before the start date"));
 			}
 		}
 
@@ -99,7 +99,7 @@ public class ProfessionalRecordController extends AbstractController {
 				result = new ModelAndView("redirect:show.do");
 
 			} catch (Throwable oops) {
-				result = this.createEditModelAndView(professionalRecord, "note.commit.error");
+				result = this.createEditModelAndView(professionalRecord, "commit.error");
 			}
 		}
 		return result;
@@ -114,7 +114,7 @@ public class ProfessionalRecordController extends AbstractController {
 			result = new ModelAndView("redirect:show.do");
 
 		} catch (Throwable oops) {
-			result = this.createEditModelAndView(professionalRecord, "note.commit.error");
+			result = this.createEditModelAndView(professionalRecord, "commit.error");
 		}
 
 		return result;
