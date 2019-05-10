@@ -90,7 +90,6 @@ public class FinderService {
 		}
 		finder.setPrisoners(res);
 
-		this.finderRepository.flush();
 		Finder finderRes = this.finderRepository.save(finder);
 		this.finderRepository.flush();
 
