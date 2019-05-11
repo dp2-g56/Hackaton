@@ -18,8 +18,12 @@ import repositories.WardenRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
+import domain.ActivityStatus;
 import domain.Box;
 import domain.Prisoner;
+import domain.Request;
+import domain.Visit;
+import domain.VisitStatus;
 import domain.Warden;
 import forms.FormObjectWarden;
 
@@ -198,8 +202,21 @@ public class WardenService {
 		this.loggedAsWarden();
 		List<Prisoner> suspects = this.prisonerService.getSuspectPrisoners();
 		Assert.isTrue(prisoner != null && suspects.contains(prisoner));
+
+		List<Visit> visits = this.wardenRepository.getFutureVisitsByPrisoner(prisoner.getId());
+		List<Request> requests = this.wardenRepository.getRequestToFutureActivitiesByPrisoner(prisoner.getId());
+
+		for (Visit v : visits) {
+			v.setVisitStatus(VisitStatus.REJECTED);
+		}
+		for (Request r : requests) {
+			r.setRejectReason("Isolated");
+			r.setStatus(ActivityStatus.REJECTED);
+		}
+
 		prisoner.getUserAccount().setIsNotLocked(false);
 		prisoner.getCharges().add(this.wardenRepository.getSuspiciousCharge());
+		prisoner.setIsIsolated(true);
 		this.prisonerService.save(prisoner);
 
 	}

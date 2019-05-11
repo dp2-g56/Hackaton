@@ -283,4 +283,8 @@ public class PrisonerService {
 		return this.prisonerRepository.getSuspectPrisoners();
 	}
 
+	public List<Prisoner> getIncarceratedPrisoners() {
+		return this.prisonerRepository.getIncarceratedPrisoners();
+	}
+
 }

@@ -4,7 +4,10 @@ package domain;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -30,6 +33,7 @@ public class Request extends DomainEntity {
 	}
 
 	@NotNull
+	@Enumerated(EnumType.STRING)
 	public ActivityStatus getStatus() {
 		return this.status;
 	}
@@ -47,6 +51,7 @@ public class Request extends DomainEntity {
 		this.motivation = motivation;
 	}
 
+	@Valid
 	public String getRejectReason() {
 		return this.rejectReason;
 	}

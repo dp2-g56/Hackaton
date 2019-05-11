@@ -39,7 +39,7 @@ public class AnonymousController extends AbstractController {
 
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
-		prisoners = this.prisonerService.findAll();
+		prisoners = this.prisonerService.getIncarceratedPrisoners();
 
 		result = new ModelAndView("anonymous/prisoner/list");
 		result.addObject("prisoners", prisoners);
@@ -57,8 +57,9 @@ public class AnonymousController extends AbstractController {
 
 		Prisoner prisoner = this.prisonerService.findOne(prisonerId);
 
-		if (prisoner == null)
+		if (prisoner == null) {
 			return this.listPrisoner();
+		}
 
 		List<Charge> charges = prisoner.getCharges();
 
