@@ -25,6 +25,9 @@
 					<li class="arrow"></li>
 					<li><a href="warden/freePrisoners/list.do"><spring:message code="master.page.freePrisoners" /></a></li>
 					<li><a href="report/warden/list.do"><spring:message code="master.page.report" /></a></li>
+					<li><a href="warden/warden/register.do"><spring:message code="master.page.warden.register" /></a></li>
+					<li><a href="prisoner/warden/register.do"><spring:message code="master.page.prisoner.register" /></a></li>
+					<li><a href="salesman/warden/register.do"><spring:message code="master.page.salesman.register" /></a></li>
 				</ul></li>
 		</security:authorize>
 
@@ -73,6 +76,7 @@
 						code="master.page.salesMan" /></a>
 				<ul>
 					<li class="arrow"></li>
+					<li><a href="product/salesman/list.do"><spring:message code="master.page.products" /></a></li>
 					
 				</ul></li>
 		</security:authorize>
@@ -106,6 +110,7 @@
 				<ul>
 					<li class="arrow"></li>
 					<li><a href="authenticated/showProfile.do"><spring:message code="master.page.myProfile" /> </a></li>
+					<li><a href="box/actor/list.do"><spring:message code="master.page.mailSystem" /> </a></li>
 					<li><a href="j_spring_security_logout"><spring:message
 								code="master.page.logout" /> </a></li>
 				</ul></li>

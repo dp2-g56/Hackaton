@@ -15,7 +15,8 @@ public class Product extends DomainEntity {
 
 	private String	name;
 	private String	description;
-	private String	type;
+	private String	typeEN;
+	private String	typeES;
 	private int		price;
 	private int		stock;
 	private Boolean	isDraftMode;
@@ -40,12 +41,21 @@ public class Product extends DomainEntity {
 	}
 
 	@NotBlank
-	public String getType() {
-		return this.type;
+	public String getTypeEN() {
+		return this.typeEN;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setTypeEN(String typeEN) {
+		this.typeEN = typeEN;
+	}
+
+	@NotBlank
+	public String getTypeES() {
+		return this.typeES;
+	}
+
+	public void setTypeES(String typeES) {
+		this.typeES = typeES;
 	}
 
 	@NotNull

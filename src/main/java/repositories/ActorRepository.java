@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import domain.Actor;
+import domain.Box;
 
 @Repository
 public interface ActorRepository extends JpaRepository<Actor, Integer> {
@@ -23,4 +24,7 @@ public interface ActorRepository extends JpaRepository<Actor, Integer> {
 
 	@Query("select a from Actor a join a.userAccount b where b.username != ?1")
 	public List<Actor> getActorsExceptOne(String username);
+
+	@Query("select c.boxes from Actor c where c = ?1")
+	public List<Box> listOfBoxes(Actor actor);
 }

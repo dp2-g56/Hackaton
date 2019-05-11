@@ -30,6 +30,7 @@
 <%@ attribute name="readonly" required="false" %>
  <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
+
 <jstl:if test="${readonly == null}">
 	<jstl:set var="readonly" value="false" />
 </jstl:if>
@@ -44,6 +45,7 @@
 	<form:select path="${path}">
 	<jstl:forEach var="i" begin="0" end="${number}">
 		<form:option label="${itemsName[i]}" value="${items[i]}"/>
+
 	</jstl:forEach>
 	</form:select>
 	

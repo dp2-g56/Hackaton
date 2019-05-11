@@ -1,3 +1,4 @@
+
 package services;
 
 import java.util.List;
@@ -10,12 +11,13 @@ import org.springframework.stereotype.Service;
 import domain.Charge;
 import repositories.ChargeRepository;
 
-@Service
 @Transactional
+@Service
 public class ChargeService {
 
 	@Autowired
 	private ChargeRepository chargeRepository;
+
 
 	// CRUDS
 
@@ -33,6 +35,10 @@ public class ChargeService {
 
 	public void delete(Charge charge) {
 		this.chargeRepository.delete(charge);
+	}
+
+	public List<Charge> getFinalCharges() {
+		return this.chargeRepository.getFinalCharges();
 	}
 
 }

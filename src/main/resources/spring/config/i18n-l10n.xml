@@ -30,6 +30,8 @@
 		<value>/views/warden/messages</value>
 		<value>/views/actor/messages</value>
 		<value>/views/socialWorker/messages</value>
+		<value>/views/salesman/messages</value>
+		<value>/views/mail/messages</value>
 	</util:list>
 
 </beans>

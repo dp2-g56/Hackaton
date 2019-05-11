@@ -29,7 +29,9 @@
 		<value>/views/guard/tiles.xml</value>
 		<value>/views/warden/tiles.xml</value>
 		<value>/views/actor/tiles.xml</value>
+		<value>/views/mail/tiles.xml</value>
 		<value>/views/socialWorker/tiles.xml</value>
+		<value>/views/salesman/tiles.xml</value>
 	</util:list>
 
 </beans>

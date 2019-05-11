@@ -22,6 +22,7 @@
 			<td><spring:message code="actor.photo" />:</td>
 			<td><jstl:out value="${actor.photo}" /></td>
 		</tr>
+	<security:authorize access="hasRole('SOCIALWORKER')">
 	<jstl:choose>
 		<jstl:when test="${curriculum != null}">
 			<tr>
@@ -44,6 +45,6 @@
 		
 		</jstl:otherwise>
 	</jstl:choose>
-
+	</security:authorize>
 	</table>
 
