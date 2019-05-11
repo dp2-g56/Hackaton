@@ -13,6 +13,7 @@ import repositories.ActorRepository;
 import security.LoginService;
 import security.UserAccount;
 import domain.Actor;
+import domain.Box;
 
 @Service
 @Transactional
@@ -88,12 +89,17 @@ public class ActorService {
 		return actor;
 	}
 
-	public List<String> usernamesOfActors() {
+	public List<String> getUsernamesOfActors() {
 		return this.actorRepository.usernamesOfActors();
 	}
 
 	public List<Actor> allActorsExceptOne(String username) {
 		return this.actorRepository.getActorsExceptOne(username);
+	}
+
+	public List<Box> getlistOfBoxes(final Actor actor) {
+
+		return this.actorRepository.listOfBoxes(actor);
 	}
 
 }

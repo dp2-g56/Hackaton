@@ -6,6 +6,8 @@ import java.util.Date;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
@@ -72,6 +74,7 @@ public class Message extends DomainEntity {
 	}
 
 	@NotNull
+	@Enumerated(EnumType.STRING)
 	public PriorityLvl getPriority() {
 		return this.priority;
 	}

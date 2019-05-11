@@ -108,6 +108,7 @@
 				<ul>
 					<li class="arrow"></li>
 					<li><a href="authenticated/showProfile.do"><spring:message code="master.page.myProfile" /> </a></li>
+					<li><a href="box/actor/list.do"><spring:message code="master.page.mailSystem" /> </a></li>
 					<li><a href="j_spring_security_logout"><spring:message
 								code="master.page.logout" /> </a></li>
 				</ul></li>
