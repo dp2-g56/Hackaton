@@ -285,6 +285,8 @@ public class PrisonerService {
 
 	public List<Prisoner> getIncarceratedPrisoners() {
 		return this.prisonerRepository.getIncarceratedPrisoners();
+	}
+
 	public Prisoner getPrisonerByUsername(String username) {
 		return this.prisonerRepository.getPrisonerByUsername(username);
 	}
