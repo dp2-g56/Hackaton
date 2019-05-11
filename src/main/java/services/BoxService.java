@@ -161,8 +161,8 @@ public class BoxService {
 		return this.boxRepository.getRecievedBoxByActor(a);
 	}
 
-	public Box getSpamBoxByActor(Actor a) {
-		return this.boxRepository.getSpamBoxByActor(a);
+	public Box getSuspiciousBoxByActor(Actor a) {
+		return this.boxRepository.getSuspiciousBoxByActor(a);
 	}
 
 	public Box getTrashBoxByActor(Actor a) {

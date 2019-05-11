@@ -18,8 +18,8 @@ public interface BoxRepository extends JpaRepository<Box, Integer> {
 	@Query("select b from Actor a inner join a.boxes b where b.name = 'INBOX' and a = ?1")
 	public Box getRecievedBoxByActor(Actor actor);
 
-	@Query("select b from Actor a inner join a.boxes b where b.name = 'SPAMBOX' and a = ?1")
-	public Box getSpamBoxByActor(Actor actor);
+	@Query("select b from Actor a inner join a.boxes b where b.name = 'SUSPICIOUSBOX' and a = ?1")
+	public Box getSuspiciousBoxByActor(Actor actor);
 
 	@Query("select b from Actor a inner join a.boxes b where b.name = 'TRASHBOX' and a = ?1")
 	public Box getTrashBoxByActor(Actor actor);

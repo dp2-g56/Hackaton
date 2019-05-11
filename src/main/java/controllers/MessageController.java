@@ -16,15 +16,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import security.Authority;
 import security.LoginService;
 import security.UserAccount;
 import services.ActorService;
 import services.BoxService;
 import services.MessageService;
+import services.PrisonerService;
 import domain.Actor;
 import domain.Box;
 import domain.Message;
 import domain.PriorityLvl;
+import domain.Prisoner;
 
 @Controller
 @RequestMapping("/message/actor")
@@ -39,6 +42,9 @@ public class MessageController extends AbstractController {
 	@Autowired
 	private ActorService	actorService;
 
+	@Autowired
+	private PrisonerService	prisonerService;
+
 
 	//List
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -49,6 +55,8 @@ public class MessageController extends AbstractController {
 		Box box = new Box();
 		box = this.boxService.findOne(boxId);
 		UserAccount userAccount = LoginService.getPrincipal();
+		Boolean crimRate = false;
+
 		Actor a = this.actorService.getActorByUsername(userAccount.getUsername());
 		if (!(this.actorService.getlistOfBoxes(a).contains(box)))
 			return new ModelAndView("redirect:/box/actor/list.do");
@@ -64,9 +72,17 @@ public class MessageController extends AbstractController {
 		boxes = this.actorService.getlistOfBoxes(actor);
 
 		messages = this.messageService.getMessagesByBox(box);
+		String username = userAccount.getUsername();
+		List<Authority> authorities = (List<Authority>) userAccount.getAuthorities();
+		if (authorities.get(0).toString().equals("PRISONER")) {
+			Prisoner prisoner = this.prisonerService.getPrisonerByUsername(username);
+			if (prisoner.getCrimeRate() > -0.5)
+				crimRate = true;
 
+		}
 		result = new ModelAndView("message/actor/list");
 		result.addObject("messages", messages);
+		result.addObject("crimRate", crimRate);
 		result.addObject("boxName", box.getName());
 		result.addObject("currentBox", box);
 		result.addObject("boxId", boxId);
@@ -76,13 +92,20 @@ public class MessageController extends AbstractController {
 
 		return result;
 	}
-
 	//Create
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView create() {
 		this.actorService.loggedAsActor();
 		ModelAndView result;
 		Message message;
+		UserAccount userAccount = LoginService.getPrincipal();
+		String username = userAccount.getUsername();
+		List<Authority> authorities = (List<Authority>) userAccount.getAuthorities();
+		if (authorities.get(0).toString().equals("PRISONER")) {
+			Prisoner prisoner = this.prisonerService.getPrisonerByUsername(username);
+			if (prisoner.getCrimeRate() > -0.5)
+				return new ModelAndView("redirect:/box/actor/list.do");
+		}
 
 		message = this.messageService.create();
 		result = this.createEditModelAndView(message);
@@ -100,6 +123,13 @@ public class MessageController extends AbstractController {
 		List<Box> boxes;
 		Box box;
 		UserAccount userAccount = LoginService.getPrincipal();
+		String username = userAccount.getUsername();
+		List<Authority> authorities = (List<Authority>) userAccount.getAuthorities();
+		if (authorities.get(0).toString().equals("PRISONER")) {
+			Prisoner prisoner = this.prisonerService.getPrisonerByUsername(username);
+			if (prisoner.getCrimeRate() > -0.5)
+				return new ModelAndView("redirect:/box/actor/list.do");
+		}
 
 		messageTest = this.messageService.reconstruct(messageTest, binding);
 
@@ -267,7 +297,7 @@ public class MessageController extends AbstractController {
 
 		actor = this.actorService.getActorByUsername(username);
 		List<String> actors = new ArrayList<String>();
-		actors = this.actorService.getUsernamesOfActors();
+		actors = this.actorService.getUsernamesOfActorsAndGoodPrisoners();
 
 		List<PriorityLvl> priority = new ArrayList<PriorityLvl>();
 		priority = Arrays.asList(PriorityLvl.values());
@@ -275,8 +305,19 @@ public class MessageController extends AbstractController {
 		List<Box> actorBoxes = new ArrayList<Box>();
 		actorBoxes = this.actorService.getlistOfBoxes(actor);
 		result = new ModelAndView("message/actor/create");
+
+		List<Authority> authorities = (List<Authority>) userAccount.getAuthorities();
+
+		if (authorities.get(0).toString().equals("PRISONER")) {
+			Prisoner prisoner = this.prisonerService.getPrisonerByUsername(username);
+			if (prisoner.getCrimeRate() > -0.5)
+				return new ModelAndView("redirect:/box/actor/list.do");
+			List<Actor> actorsToSendMessageOfPrisoners = this.actorService.getActorsToSendMessageOfPrisoners();
+			result.addObject("actors", actorsToSendMessageOfPrisoners);
+		} else
+			result.addObject("actors", actors);
 		result.addObject("messageTest", messageTest);
-		result.addObject("actors", actors);
+
 		result.addObject("actorBoxes", actorBoxes);
 		result.addObject("priority", priority);
 

@@ -1,6 +1,7 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -14,6 +15,7 @@ import security.LoginService;
 import security.UserAccount;
 import domain.Actor;
 import domain.Box;
+import domain.Prisoner;
 
 @Service
 @Transactional
@@ -21,6 +23,9 @@ public class ActorService {
 
 	@Autowired
 	private ActorRepository	actorRepository;
+
+	@Autowired
+	private PrisonerService	prisonerService;
 
 
 	public Actor flushSave(Actor actor) {
@@ -65,11 +70,10 @@ public class ActorService {
 		Boolean res = false;
 		UserAccount userAccount;
 		userAccount = LoginService.getPrincipal();
-		if (userAccount.getAuthorities().size() > 0) {
+		if (userAccount.getAuthorities().size() > 0)
 			res = true;
-		} else {
+		else
 			res = false;
-		}
 		return res;
 	}
 
@@ -102,4 +106,18 @@ public class ActorService {
 		return this.actorRepository.listOfBoxes(actor);
 	}
 
+	public List<Actor> getActorsToSendMessageOfPrisoners() {
+		UserAccount userAccount;
+		userAccount = LoginService.getPrincipal();
+
+		Prisoner prisoner = this.prisonerService.getPrisonerByUsername(userAccount.getUsername());
+		List<Actor> actors = new ArrayList<Actor>();
+		actors.addAll(this.actorRepository.getListOfPrisonersWithLowCrimRate());
+		actors.addAll(this.actorRepository.getVisitorsWithVisitsOfPrisoner(prisoner));
+		return actors;
+	}
+
+	public List<String> getUsernamesOfActorsAndGoodPrisoners() {
+		return this.actorRepository.getUsernamesOfActorsAndGoodPrisoners();
+	}
 }

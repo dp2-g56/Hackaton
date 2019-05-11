@@ -20,6 +20,7 @@ import domain.Actor;
 import domain.Box;
 import domain.Message;
 import domain.PriorityLvl;
+import domain.Prisoner;
 
 @Service
 @Transactional
@@ -39,6 +40,9 @@ public class MessageService {
 
 	@Autowired
 	private Validator				validator;
+
+	@Autowired
+	private PrisonerService			prisonerService;
 
 
 	// Actualizar caja que tiene el mensaje EN ESTE ORDEN
@@ -89,8 +93,9 @@ public class MessageService {
 		Actor senderActor = this.actorService.getActorByUsername(message.getSender());
 
 		Box boxRecieved = new Box();
-		Box boxSpam = new Box();
+		Box boxSusupicious = new Box();
 		Box boxSent = new Box();
+		Box BoxRecievedSender = new Box();
 
 		List<String> spam = new ArrayList<String>();
 
@@ -99,19 +104,68 @@ public class MessageService {
 		Message messageSaved = this.messageRepository.save(message);
 		Message messageCopy = this.create(messageSaved.getSubject(), messageSaved.getBody(), messageSaved.getPriority(), messageSaved.getTags(), messageSaved.getRecipient());
 		Message messageCopySaved = this.messageRepository.save(messageCopy);
+		Message messageNotification = this.create();
+		Message messageNotificationHard = this.create();
+		Message messageNotificationFinal = this.create();
 
 		boxSent = this.boxService.getSentBoxByActor(senderActor);
 		boxRecieved = this.boxService.getRecievedBoxByActor(actorRecieved);
-		boxSpam = this.boxService.getSpamBoxByActor(actorRecieved);
+		boxSusupicious = this.boxService.getSuspiciousBoxByActor(actorRecieved);
+		BoxRecievedSender = this.boxService.getRecievedBoxByActor(senderActor);
+
+		double valueCrim = 0;
 
 		// Guardar la box con ese mensaje;
 
-		if (this.configurationService.isStringSpam(messageSaved.getBody(), spam) || this.configurationService.isStringSpam(messageSaved.getSubject(), spam)) {
+		if (this.configurationService.isStringSpam(messageSaved.getBody(), spam) || this.configurationService.isStringSpam(messageSaved.getSubject(), spam) || this.configurationService.isStringSpam(messageSaved.getTags(), spam)) {
 			boxSent.getMessages().add(messageSaved);
-			boxSpam.getMessages().add(messageCopySaved);
+			boxSusupicious.getMessages().add(messageCopySaved);
 
+			if (this.prisonerService.booleanLogedAsPrisoner()) {
+				Prisoner prisoner = this.prisonerService.loggedPrisoner();
+				if (prisoner.getCrimeRate() != 1.0) {
+					valueCrim = prisoner.getCrimeRate() + 0.05;
+					String s = String.format("%.2f", valueCrim);
+					double val = Double.parseDouble(s);
+					prisoner.setCrimeRate(val);
+
+					if (valueCrim == -0.75) {
+						messageNotification
+							.setBody("Se le informa de que si continua teniendo un comportamiento inadecuado nos veremos obligados a restringir su mensajería. / You are advised that if you continue to behave inappropriately we will be forced to restrict your messaging.");
+						messageNotification.setPriority(PriorityLvl.HIGH);
+						messageNotification.setRecipient(senderActor.getUserAccount().getUsername());
+						messageNotification.setSender("SYSTEM");
+						messageNotification.setSubject("Bad behavior warning/Aviso de mala condcuta");
+						messageNotification.setTags("NOTIFICATION / NOTIFICACION");
+						Message savedMessageNotification = this.messageRepository.save(messageNotification);
+						BoxRecievedSender.getMessages().add(savedMessageNotification);
+					}
+					if (valueCrim == -0.5) {
+						messageNotificationFinal
+							.setBody("Esto es un aviso final, si no rectifica su conducta su mensajeria sera bloqueada hasta que muestre un buen comportamiento. / This is a final warning, if you do not rectify your behavior your messaging will be blocked until it shows good behavior.");
+						messageNotificationFinal.setPriority(PriorityLvl.HIGH);
+						messageNotificationFinal.setRecipient(senderActor.getUserAccount().getUsername());
+						messageNotificationFinal.setSender("SYSTEM");
+						messageNotificationFinal.setSubject("Bad behavior final warning/Aviso final por mala conducta");
+						messageNotificationFinal.setTags("NOTIFICATION / NOTIFICACION");
+						Message savedMessageNotificationFinal = this.messageRepository.save(messageNotificationFinal);
+						BoxRecievedSender.getMessages().add(savedMessageNotificationFinal);
+					}
+					if (valueCrim > -0.5) {
+						messageNotificationHard.setBody("Se le informa de que su sistema de mensajeria ha sido restringido por mal comportamiento. / You are informed that your messaging system has been restricted for misbehavior.");
+						messageNotificationHard.setPriority(PriorityLvl.HIGH);
+						messageNotificationHard.setRecipient(senderActor.getUserAccount().getUsername());
+						messageNotificationHard.setSender("SYSTEM");
+						messageNotificationHard.setSubject("Bad behavior ban/Bloqueo por mala condcuta");
+						messageNotificationHard.setTags("NOTIFICATION / NOTIFICACION");
+						Message savedMessageNotificationHard = this.messageRepository.save(messageNotificationHard);
+						BoxRecievedSender.getMessages().add(savedMessageNotificationHard);
+					}
+				}
+			}
 			this.boxService.saveSystem(boxSent);
-			this.boxService.saveSystem(boxSpam);
+			this.boxService.saveSystem(boxSusupicious);
+			this.boxService.saveSystem(BoxRecievedSender);
 			this.actorService.save(senderActor);
 			this.actorService.save(actorRecieved);
 
@@ -130,7 +184,6 @@ public class MessageService {
 		//TODO: this.configurationService.computeScore(senderActor);
 		return messageSaved;
 	}
-
 	public Message save(Message message) {
 		return this.messageRepository.save(message);
 

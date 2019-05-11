@@ -12,6 +12,7 @@ package controllers;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,9 +23,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import security.Authority;
 import security.LoginService;
 import security.UserAccount;
+import services.ActorService;
 import services.ConfigurationService;
+import services.PrisonerService;
+import domain.Prisoner;
 
 @Controller
 @RequestMapping("/welcome")
@@ -32,6 +37,12 @@ public class WelcomeController extends AbstractController {
 
 	@Autowired
 	ConfigurationService	configurationService;
+
+	@Autowired
+	ActorService			actorService;
+
+	@Autowired
+	PrisonerService			prisonerService;
 
 
 	// Constructors -----------------------------------------------------------
@@ -55,6 +66,7 @@ public class WelcomeController extends AbstractController {
 		String systemName = this.configurationService.getConfiguration().getSystemName();
 		UserAccount userAccount;
 		String username;
+		Boolean crimRatePositive = false;
 
 		try {
 			userAccount = LoginService.getPrincipal();
@@ -63,9 +75,23 @@ public class WelcomeController extends AbstractController {
 			username = "";
 		}
 
+		if (this.actorService.loggedAsActorBoolean()) {
+			UserAccount userAccountPrisoner = LoginService.getPrincipal();
+			String usernamePrisoner = userAccountPrisoner.getUsername();
+			List<Authority> authorities = (List<Authority>) userAccountPrisoner.getAuthorities();
+			if (authorities.get(0).toString().equals("PRISONER")) {
+				Prisoner prisoner = this.prisonerService.getPrisonerByUsername(usernamePrisoner);
+				if (prisoner.getCrimeRate() > -0.5)
+					crimRatePositive = true;
+			}
+
+		}
+
 		String imageURL = this.configurationService.getConfiguration().getImageURL();
 
 		request.getSession().setAttribute("imageURL", imageURL);
+
+		request.getSession().setAttribute("crimRatePositive", crimRatePositive);
 
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 		if (locale.equals("EN"))

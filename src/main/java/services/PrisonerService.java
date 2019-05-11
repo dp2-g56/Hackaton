@@ -285,6 +285,17 @@ public class PrisonerService {
 
 	public List<Prisoner> getIncarceratedPrisoners() {
 		return this.prisonerRepository.getIncarceratedPrisoners();
+	public Prisoner getPrisonerByUsername(String username) {
+		return this.prisonerRepository.getPrisonerByUsername(username);
 	}
 
+	public Boolean booleanLogedAsPrisoner() {
+		Boolean prisoner = false;
+		UserAccount userAccount;
+		userAccount = LoginService.getPrincipal();
+		List<Authority> authorities = (List<Authority>) userAccount.getAuthorities();
+		if (authorities.get(0).toString().equals("PRISONER"))
+			prisoner = true;
+		return prisoner;
+	}
 }

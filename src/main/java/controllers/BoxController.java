@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import services.ActorService;
 import services.BoxService;
+import services.PrisonerService;
 import domain.Actor;
 import domain.Box;
 
@@ -28,17 +29,17 @@ public class BoxController extends AbstractController {
 	@Autowired
 	private ActorService	actorService;
 
+	@Autowired
+	private PrisonerService	prisonerService;
+
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView list() {
 
 		ModelAndView result;
-
 		List<Box> boxes = new ArrayList<>();
 
 		boxes = this.boxService.getActorBoxes();
-		//boxes = this.boxService.findAll();
-
 		result = new ModelAndView("box/actor/list");
 
 		result.addObject("boxes", boxes);
@@ -47,7 +48,6 @@ public class BoxController extends AbstractController {
 		return result;
 
 	}
-
 	//Create
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView create() {
