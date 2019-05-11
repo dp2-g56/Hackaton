@@ -278,5 +278,9 @@ public class PrisonerService {
 
 		return result;
 	}
+	public List<Prisoner> getSuspectPrisoners() {
+		this.wardenService.loggedAsWarden();
+		return this.prisonerRepository.getSuspectPrisoners();
+	}
 
 }

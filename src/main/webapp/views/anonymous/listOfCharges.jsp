@@ -34,13 +34,23 @@
 			</a>
 	</jstl:if>
 	
-	<jstl:if test="${warden}">
+<jstl:if test="${warden}">
+	<jstl:choose>
+		<jstl:when test="${suspect}">
+			<spring:url var="backUrl" value="/prisoner/warden/listSuspects.do"/>
+			<a href="${backUrl}">
+				<spring:message code="charge.back" />
+			</a>
+		</jstl:when><jstl:otherwise>
 			<spring:url var="backUrl2" value="/warden/freePrisoners/list.do">
 			</spring:url>
 			<a href="${backUrl2}">
 				<spring:message code="charge.back" />
 			</a>
-	</jstl:if>
+			
+		</jstl:otherwise>
+	</jstl:choose>
+</jstl:if>
 	
 	
 </security:authorize>
@@ -66,13 +76,10 @@
 	</display:table>
 	
 	
-	
-			<spring:url var="backUrl" value="/anonymous/prisoner/list.do">
-			</spring:url>
+			<spring:url var="backUrl" value="/anonymous/prisoner/list.do"/>
 			<a href="${backUrl}">
 				<spring:message code="charge.back" />
 			</a>
-	
 	
 	
 </security:authorize>
