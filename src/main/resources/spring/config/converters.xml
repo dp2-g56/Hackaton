@@ -63,6 +63,11 @@
 			<bean class="converters.ProfessionalRecordToStringConverter" />
 			<bean class="converters.StringToProfessionalRecordConverter" />
 			
+			<bean class="converters.MessageToStringConverter" />
+			<bean class="converters.StringToMessageConverter" />
+			
+			<bean class="converters.BoxToStringConverter" />
+			<bean class="converters.StringToBoxConverter" />
 	</util:list>
 
 </beans>
