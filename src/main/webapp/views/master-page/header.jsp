@@ -28,6 +28,7 @@
 					<li><a href="warden/warden/register.do"><spring:message code="master.page.warden.register" /></a></li>
 					<li><a href="prisoner/warden/register.do"><spring:message code="master.page.prisoner.register" /></a></li>
 					<li><a href="salesman/warden/register.do"><spring:message code="master.page.salesman.register" /></a></li>
+					<li><a href="prisoner/warden/listSuspects.do"><spring:message code="master.page.prisoner.listSuspects" /></a></li>
 				</ul></li>
 		</security:authorize>
 

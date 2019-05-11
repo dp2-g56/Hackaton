@@ -14,22 +14,27 @@ import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
-import domain.Box;
-import domain.Warden;
-import forms.FormObjectWarden;
 import repositories.WardenRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
+import domain.Box;
+import domain.Prisoner;
+import domain.Warden;
+import forms.FormObjectWarden;
 
 @Service
 @Transactional
 public class WardenService {
 
 	@Autowired
-	private WardenRepository wardenRepository;
+	private WardenRepository	wardenRepository;
 	@Autowired
-	private BoxService boxService;
+	private BoxService			boxService;
+
+	@Autowired
+	private PrisonerService		prisonerService;
+
 
 	// ----------------------------------------CRUD
 	// METHODS--------------------------
@@ -189,4 +194,13 @@ public class WardenService {
 		return result;
 	}
 
+	public void isolatePrisoner(Prisoner prisoner) {
+		this.loggedAsWarden();
+		List<Prisoner> suspects = this.prisonerService.getSuspectPrisoners();
+		Assert.isTrue(prisoner != null && suspects.contains(prisoner));
+		prisoner.getUserAccount().setIsNotLocked(false);
+		prisoner.getCharges().add(this.wardenRepository.getSuspiciousCharge());
+		this.prisonerService.save(prisoner);
+
+	}
 }
