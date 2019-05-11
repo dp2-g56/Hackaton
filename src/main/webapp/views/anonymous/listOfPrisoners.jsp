@@ -20,7 +20,6 @@
 			</a>
 		</display:column> 
 			
-		<display:column property="crimeRate" titleKey="prisoner.crimeRate" /> 
 		<display:column property="ticker" titleKey="prisoner.ticker" /> 		
 		<display:column property="incomeDate" titleKey="prisoner.incomeDate" /> 
 		<display:column property="exitDate" titleKey="prisoner.exitDate" /> 
@@ -41,25 +40,6 @@
 					</jstl:if>
 
 					<jstl:out value="${isIsolated}"/>
-	
-		</display:column>
-		
-		<display:column titleKey="prisoner.freedom">
-	
-					<jstl:if test="${row.freedom}">
-						<jstl:set var="freedom" value="YES"/>
-						<jstl:if test="${locale=='ES'}">
-							<jstl:set var="freedom" value="SI"/>
-						</jstl:if>
-					</jstl:if>
-					<jstl:if test="${!row.freedom}">
-						<jstl:set var="freedom" value="NO"/>
-						<jstl:if test="${locale=='ES'}">
-							<jstl:set var="freedom" value="NO"/>
-						</jstl:if>
-					</jstl:if>
-
-					<jstl:out value="${freedom}"/>
 	
 		</display:column>
 				
@@ -120,7 +100,6 @@
 			</a>
 		</display:column> 
 			
-		<display:column property="crimeRate" titleKey="prisoner.crimeRate" /> 
 		<display:column property="ticker" titleKey="prisoner.ticker" /> 		
 		<display:column property="incomeDate" titleKey="prisoner.incomeDate" /> 
 		<display:column property="exitDate" titleKey="prisoner.exitDate" /> 
@@ -141,25 +120,6 @@
 					</jstl:if>
 
 					<jstl:out value="${isIsolated}"/>
-	
-		</display:column>
-		
-		<display:column titleKey="prisoner.freedom">
-	
-					<jstl:if test="${row.freedom}">
-						<jstl:set var="freedom" value="YES"/>
-						<jstl:if test="${locale=='ES'}">
-							<jstl:set var="freedom" value="SI"/>
-						</jstl:if>
-					</jstl:if>
-					<jstl:if test="${!row.freedom}">
-						<jstl:set var="freedom" value="NO"/>
-						<jstl:if test="${locale=='ES'}">
-							<jstl:set var="freedom" value="NO"/>
-						</jstl:if>
-					</jstl:if>
-
-					<jstl:out value="${freedom}"/>
 	
 		</display:column>
 				

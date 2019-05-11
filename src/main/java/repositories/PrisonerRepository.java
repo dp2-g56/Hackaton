@@ -22,4 +22,10 @@ public interface PrisonerRepository extends JpaRepository<Prisoner, Integer> {
 	@Query("select p from Prisoner p where p.freedom = true")
 	public List<Prisoner> getFreePrisoners();
 
+	@Query("select p from Prisoner p where p.freedom = false")
+	public List<Prisoner> getIncarceratedPrisoners();
+
+	@Query("select p from Prisoner p join p.userAccount u where p.isSuspect = true and p.freedom = false and p.isIsolated = false and u.isNotLocked = true")
+	public List<Prisoner> getSuspectPrisoners();
+
 }

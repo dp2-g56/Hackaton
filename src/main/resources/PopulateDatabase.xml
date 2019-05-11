@@ -333,7 +333,7 @@
 						</bean>
 					</list>
 				</property>
-				<property name="isNotLocked" value="True" />
+				<property name="isNotLocked" value="False" />
 			</bean>
 			
 		<!-- PRISONER4 -->
@@ -347,7 +347,7 @@
 						</bean>
 					</list>
 				</property>
-				<property name="isNotLocked" value="True" />
+				<property name="isNotLocked" value="False" />
 			</bean>
 		
 	
@@ -766,7 +766,6 @@
 						<ref bean="kidnapping" />
 						<ref bean="rape" />
 						<ref bean="fraud" />
-						<ref bean="suspicious" />
 					</list>
 				</property>
 				
