@@ -1,5 +1,7 @@
 package controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
@@ -9,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import domain.Activity;
 import domain.FinderActivities;
 import domain.Prisoner;
+import services.ActivityService;
 import services.FinderActivitiesService;
 import services.PrisonerService;
 
@@ -25,6 +29,9 @@ public class FinderActivitiesController extends AbstractController {
 
 	@Autowired
 	private PrisonerService prisonerService;
+
+	@Autowired
+	private ActivityService activityService;
 
 	// Constructors -----------------------------------------------------------
 	public FinderActivitiesController() {
@@ -42,8 +49,11 @@ public class FinderActivitiesController extends AbstractController {
 
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
-		result.addObject("activities", this.finderActivitiesService.getResults(prisoner.getFinderActivities()));
+		List<Activity> activities = this.finderActivitiesService.getResults(prisoner.getFinderActivities());
+
+		result.addObject("activities", activities);
 		result.addObject("locale", locale);
+		result.addObject("map", this.activityService.getNumberOfApprobedRequestPerActivity(activities));
 
 		return result;
 
