@@ -81,7 +81,7 @@ public class FinderActivitiesService {
 		Assert.isTrue(finder.getId() > 0);
 		Assert.isTrue(prisoner.getFinderActivities().getId() == finder.getId());
 
-		List<Activity> res = this.activityService.findAll();
+		List<Activity> res = this.activityService.getFutureActivites();
 		List<Activity> filter = new ArrayList<>();
 
 		if (!finder.getKeyWord().equals(null) && !finder.getKeyWord().contentEquals("")) {
