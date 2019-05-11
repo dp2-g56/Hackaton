@@ -40,9 +40,11 @@
 		<security:intercept-url pattern="/product/anonymous/**" access="permitAll" />
 		
 	<!-- WARDEN -->
-	<security:intercept-url pattern="/warden/freePrisoners/**" 	access="hasRole('WARDEN')" />
-	<security:intercept-url pattern="/warden/charge/**" 	access="hasRole('WARDEN')" />
-	<security:intercept-url pattern="/report/warden/**" 	access="hasRole('WARDEN')" />
+		<security:intercept-url pattern="/warden/freePrisoners/**" access="hasRole('WARDEN')" />
+		<security:intercept-url pattern="/warden/charge/**" access="hasRole('WARDEN')" />
+		<security:intercept-url pattern="/report/warden/**"	access="hasRole('WARDEN')" />
+		<security:intercept-url pattern="/warden/warden/**"	access="hasRole('WARDEN')" />
+		<security:intercept-url pattern="/prisoner/warden/**" access="hasRole('WARDEN')" />
 		
 	<!-- PRISONER -->
 		<security:intercept-url pattern="/visit/prisoner/**" 	access="hasRole('PRISONER')" />
@@ -61,6 +63,7 @@
 	<!-- SOCIAL WORKER -->
 	<security:intercept-url pattern="/curriculum/socialWorker/**" 	access="hasRole('SOCIALWORKER')" />
 	<!-- SALESMAN -->
+	<security:intercept-url pattern="/product/salesman/**" 	access="hasRole('SALESMAN')" />
 	
 	<!-- AUTHENTICATED -->
 		<security:intercept-url pattern="/authenticated/**" access="isAuthenticated()" />
