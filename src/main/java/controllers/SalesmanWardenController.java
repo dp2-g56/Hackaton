@@ -1,0 +1,82 @@
+
+package controllers;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import domain.SalesMan;
+import forms.FormObjectSalesman;
+import services.SalesManService;
+import services.WardenService;
+
+@Controller
+@RequestMapping("/salesman/warden")
+public class SalesmanWardenController extends AbstractController {
+
+	@Autowired
+	private WardenService wardenService;
+
+	@Autowired
+	private SalesManService salesManService;
+
+	public SalesmanWardenController() {
+		super();
+	}
+
+	@RequestMapping(value = "/register", method = RequestMethod.GET)
+	public ModelAndView register() {
+		ModelAndView result;
+
+		try {
+			this.wardenService.loggedAsWarden();
+			FormObjectSalesman formSalesman = new FormObjectSalesman();
+
+			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+
+			result = new ModelAndView("warden/registerSalesman");
+			result.addObject("formSalesman", formSalesman);
+			result.addObject("locale", locale);
+
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:/");
+		}
+
+		return result;
+	}
+
+	@RequestMapping(value = "/register", method = RequestMethod.POST, params = "save")
+	public ModelAndView save(@ModelAttribute("formSalesman") @Valid FormObjectSalesman formSalesman,
+			BindingResult binding) {
+		ModelAndView result;
+
+		SalesMan salesman = new SalesMan();
+		salesman = this.salesManService.reconstruct(formSalesman, binding);
+
+		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+
+		if (binding.hasErrors()) {
+			result = new ModelAndView("warden/registerSalesman");
+			result.addObject("formSalesman", formSalesman);
+			result.addObject("locale", locale);
+		} else
+			try {
+				this.salesManService.saveSalesman(salesman);
+				result = new ModelAndView("redirect:/");
+			} catch (Throwable oops) {
+				result = new ModelAndView("warden/registerWarden");
+				result.addObject("formSalesman", formSalesman);
+				result.addObject("locale", locale);
+				result.addObject("message", "warden.register.commit.error");
+			}
+
+		return result;
+	}
+}
