@@ -14,10 +14,6 @@ import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
-import repositories.WardenRepository;
-import security.Authority;
-import security.LoginService;
-import security.UserAccount;
 import domain.ActivityStatus;
 import domain.Box;
 import domain.Prisoner;
@@ -26,19 +22,22 @@ import domain.Visit;
 import domain.VisitStatus;
 import domain.Warden;
 import forms.FormObjectWarden;
+import repositories.WardenRepository;
+import security.Authority;
+import security.LoginService;
+import security.UserAccount;
 
 @Service
 @Transactional
 public class WardenService {
 
 	@Autowired
-	private WardenRepository	wardenRepository;
+	private WardenRepository wardenRepository;
 	@Autowired
-	private BoxService			boxService;
+	private BoxService boxService;
 
 	@Autowired
-	private PrisonerService		prisonerService;
-
+	private PrisonerService prisonerService;
 
 	// ----------------------------------------CRUD
 	// METHODS--------------------------
@@ -206,9 +205,8 @@ public class WardenService {
 		List<Visit> visits = this.wardenRepository.getFutureVisitsByPrisoner(prisoner.getId());
 		List<Request> requests = this.wardenRepository.getRequestToFutureActivitiesByPrisoner(prisoner.getId());
 
-		for (Visit v : visits) {
+		for (Visit v : visits)
 			v.setVisitStatus(VisitStatus.REJECTED);
-		}
 		for (Request r : requests) {
 			r.setRejectReason("Isolated");
 			r.setStatus(ActivityStatus.REJECTED);
@@ -219,5 +217,9 @@ public class WardenService {
 		prisoner.setIsIsolated(true);
 		this.prisonerService.save(prisoner);
 
+	}
+
+	public Warden findOne(int id) {
+		return this.wardenRepository.findOne(id);
 	}
 }
