@@ -38,21 +38,24 @@ public class WardenService {
 
 	@Autowired
 	private WardenRepository wardenRepository;
-	
+
 	@Autowired
 	private BoxService boxService;
 
 	@Autowired
-	private ActorService		actorService;
+	private ActorService actorService;
 
 	@Autowired
-	private MessageService		messageService;
+	private MessageService messageService;
 
 	@Autowired
-	private Validator			validator;
+	private Validator validator;
 
 	@Autowired
-	private GuardService		guardService;
+	private GuardService guardService;
+
+	@Autowired
+	private PrisonerService prisonerService;
 
 	// ----------------------------------------CRUD
 	// METHODS--------------------------
@@ -122,30 +125,32 @@ public class WardenService {
 	public void saveWarden(Warden warden) {
 		this.loggedAsWarden();
 
-		List<Box> boxes = new ArrayList<>();
+		if (warden.getId() == 0) {
+			List<Box> boxes = new ArrayList<>();
 
-		// Boxes
-		Box box1 = this.boxService.createSystem();
-		box1.setName("SUSPICIOUSBOX");
-		Box saved1 = this.boxService.saveSystem(box1);
-		boxes.add(saved1);
+			// Boxes
+			Box box1 = this.boxService.createSystem();
+			box1.setName("SUSPICIOUSBOX");
+			Box saved1 = this.boxService.saveSystem(box1);
+			boxes.add(saved1);
 
-		Box box2 = this.boxService.createSystem();
-		box2.setName("TRASHBOX");
-		Box saved2 = this.boxService.saveSystem(box2);
-		boxes.add(saved2);
+			Box box2 = this.boxService.createSystem();
+			box2.setName("TRASHBOX");
+			Box saved2 = this.boxService.saveSystem(box2);
+			boxes.add(saved2);
 
-		Box box3 = this.boxService.createSystem();
-		box3.setName("OUTBOX");
-		Box saved3 = this.boxService.saveSystem(box3);
-		boxes.add(saved3);
+			Box box3 = this.boxService.createSystem();
+			box3.setName("OUTBOX");
+			Box saved3 = this.boxService.saveSystem(box3);
+			boxes.add(saved3);
 
-		Box box4 = this.boxService.createSystem();
-		box4.setName("INBOX");
-		Box saved4 = this.boxService.saveSystem(box4);
-		boxes.add(saved4);
+			Box box4 = this.boxService.createSystem();
+			box4.setName("INBOX");
+			Box saved4 = this.boxService.saveSystem(box4);
+			boxes.add(saved4);
 
-		warden.setBoxes(boxes);
+			warden.setBoxes(boxes);
+		}
 
 		this.wardenRepository.save(warden);
 	}
@@ -359,6 +364,21 @@ public class WardenService {
 			this.messageService.sendMessageBroadcasted(message);
 		}
 
+	}
+
+	public Warden reconstruct(Warden warden, BindingResult binding) {
+		Warden result = new Warden();
+		Warden wardenFounded = this.wardenRepository.findOne(warden.getId());
+
+		result = warden;
+
+		result.setVersion(wardenFounded.getVersion());
+		result.setBoxes(wardenFounded.getBoxes());
+		result.setUserAccount(wardenFounded.getUserAccount());
+
+		this.validator.validate(result, binding);
+
+		return result;
 	}
 
 }

@@ -75,6 +75,4 @@
 	
 	</form:form>
 	
-	
-	
 </security:authorize>
