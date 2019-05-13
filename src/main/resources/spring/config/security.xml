@@ -67,6 +67,7 @@
 	
 	<!-- SOCIAL WORKER -->
 	<security:intercept-url pattern="/curriculum/socialWorker/**" 	access="hasRole('SOCIALWORKER')" />
+	<security:intercept-url pattern="/activity/socialworker/**" 	access="hasRole('SOCIALWORKER')" />
 	<!-- SALESMAN -->
 	<security:intercept-url pattern="/product/salesman/**" 	access="hasRole('SALESMAN')" />
 	
