@@ -1,4 +1,3 @@
-
 package services;
 
 import java.text.ParseException;
@@ -77,6 +76,7 @@ public class PrisonerService {
 	public List<Prisoner> findAll() {
 		return this.prisonerRepository.findAll();
 	}
+
 
 	public List<Visitor> getVisitorsToCreateVisit(Prisoner prisoner) {
 		int prisonerId = prisoner.getId();

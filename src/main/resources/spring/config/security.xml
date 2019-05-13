@@ -57,9 +57,12 @@
 		<security:intercept-url pattern="/visit/report/**" 	access="hasAnyRole('VISITOR', 'PRISONER', 'GUARD', 'WARDEN')" />
 		<security:intercept-url pattern="/product/salesman/prisoner/**" 	access="hasRole('PRISONER')" />
 		<security:intercept-url pattern="/product/prisoner/**" 	access="hasRole('PRISONER')" />
+		<security:intercept-url pattern="/finderActivities/prisoner/**" 	access="hasRole('PRISONER')" />
+		<security:intercept-url pattern="/request/prisoner/**" 	access="hasRole('PRISONER')" />
 	
 	<!-- VISITOR -->
 		<security:intercept-url pattern="/visit/visitor/**" 	access="hasRole('VISITOR')" />
+		<security:intercept-url pattern="/finder/visitor/**" 	access="hasRole('VISITOR')" />
 		
 	<!-- GUARD -->
 		<security:intercept-url pattern="/visit/guard/**" 	access="hasRole('GUARD')" />

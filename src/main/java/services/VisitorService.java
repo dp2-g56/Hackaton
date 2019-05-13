@@ -1,4 +1,3 @@
-
 package services;
 
 import java.util.List;
@@ -20,6 +19,7 @@ import domain.Visitor;
 public class VisitorService {
 
 	@Autowired
+
 	private VisitorRepository	visitorRepository;
 
 
@@ -29,6 +29,7 @@ public class VisitorService {
 	public Visitor save(Visitor visitor) {
 		return this.visitorRepository.save(visitor);
 	}
+
 
 	public Visitor loggedVisitor() {
 		UserAccount userAccount;

@@ -1,6 +1,7 @@
 
 package domain;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Access;
@@ -12,10 +13,11 @@ import javax.persistence.ManyToMany;
 @Access(AccessType.PROPERTY)
 public class Finder extends DomainEntity {
 
-	private String			keyWord;
-	private String			charge;
-	private List<Prisoner>	prisoners;
+	private String keyWord;
+	private String charge;
+	private List<Prisoner> prisoners;
 
+	private Date lastEdit;
 
 	public String getKeyWord() {
 		return this.keyWord;
@@ -41,4 +43,13 @@ public class Finder extends DomainEntity {
 	public void setPrisoners(List<Prisoner> prisoners) {
 		this.prisoners = prisoners;
 	}
+
+	public Date getLastEdit() {
+		return this.lastEdit;
+	}
+
+	public void setLastEdit(Date lastEdit) {
+		this.lastEdit = lastEdit;
+	}
+
 }
