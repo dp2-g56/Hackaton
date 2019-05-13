@@ -2,6 +2,7 @@
 package services;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -13,9 +14,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.Validator;
 
 import domain.ActivityStatus;
+import domain.Actor;
 import domain.Box;
+import domain.Guard;
+import domain.Message;
 import domain.Prisoner;
 import domain.Request;
 import domain.Visit;
@@ -33,11 +38,21 @@ public class WardenService {
 
 	@Autowired
 	private WardenRepository wardenRepository;
+	
 	@Autowired
 	private BoxService boxService;
 
 	@Autowired
-	private PrisonerService prisonerService;
+	private ActorService		actorService;
+
+	@Autowired
+	private MessageService		messageService;
+
+	@Autowired
+	private Validator			validator;
+
+	@Autowired
+	private GuardService		guardService;
 
 	// ----------------------------------------CRUD
 	// METHODS--------------------------
@@ -222,4 +237,128 @@ public class WardenService {
 	public Warden findOne(int id) {
 		return this.wardenRepository.findOne(id);
 	}
+
+	public boolean loggedAsWardenBoolean() {
+		UserAccount userAccount;
+		Boolean isWarden = false;
+		userAccount = LoginService.getPrincipal();
+		List<Authority> authorities = (List<Authority>) userAccount.getAuthorities();
+		if (authorities.get(0).toString().equals("WARDEN"))
+			isWarden = true;
+		return isWarden;
+	}
+
+	public Message reconstruct(Message message, BindingResult binding) {
+
+		UserAccount userAccount;
+		userAccount = LoginService.getPrincipal();
+		Actor actor = this.actorService.getActorByUsername(userAccount.getUsername());
+
+		domain.Message result;
+		result = this.messageService.create();
+		if (message.getId() == 0) {
+			result = message;
+			result.setSender(actor.getUserAccount().getUsername());
+			Date thisMoment = new Date();
+			thisMoment.setTime(thisMoment.getTime() - 1000);
+			result.setMoment(thisMoment);
+			result.setRecipient(actor.getUserAccount().getUsername());
+
+		} else {
+			result = this.messageService.findOne(message.getId());
+
+			result.setBody(message.getBody());
+			result.setPriority(message.getPriority());
+			result.setTags(message.getTags());
+			result.setSubject(message.getSubject());
+			result.setRecipient(actor.getUserAccount().getUsername());
+			result.setSender(actor.getUserAccount().getUsername());
+
+		}
+
+		this.validator.validate(result, binding);
+
+		return result;
+
+	}
+
+	public void broadcastMessage(Message message) {
+		this.loggedAsWarden();
+
+		UserAccount userAccount;
+		userAccount = LoginService.getPrincipal();
+		Actor admin = this.actorService.getActorByUsername(userAccount.getUsername());
+
+		List<Actor> actors = new ArrayList<Actor>();
+		actors = this.actorService.findAll();
+
+		message.setRecipient("BROADCAST");
+		Message messageWardenSaved = this.messageService.save(message);
+
+		Box outBox = this.boxService.getSentBoxByActor(admin);
+
+		outBox.getMessages().add(messageWardenSaved);
+
+		this.actorService.save(admin);
+
+		for (Actor a : actors)
+			if (!(a.equals(admin))) {
+				message.setRecipient(a.getUserAccount().getUsername());
+				this.messageService.sendMessageBroadcasted(message);
+			}
+
+	}
+
+	public void broadcastMessageGuards(Message message) {
+		this.loggedAsWarden();
+
+		UserAccount userAccount;
+		userAccount = LoginService.getPrincipal();
+		Actor admin = this.actorService.getActorByUsername(userAccount.getUsername());
+
+		List<Guard> guards = new ArrayList<Guard>();
+		guards = this.guardService.findAll();
+
+		message.setRecipient("BROADCAST");
+		Message messageWardenSaved = this.messageService.save(message);
+
+		Box outBox = this.boxService.getSentBoxByActor(admin);
+
+		outBox.getMessages().add(messageWardenSaved);
+
+		this.actorService.save(admin);
+
+		for (Guard a : guards) {
+			message.setRecipient(a.getUserAccount().getUsername());
+			this.messageService.sendMessageBroadcasted(message);
+		}
+
+	}
+
+	public void broadcastMessagePrisoners(Message message) {
+		this.loggedAsWarden();
+
+		UserAccount userAccount;
+		userAccount = LoginService.getPrincipal();
+		Actor admin = this.actorService.getActorByUsername(userAccount.getUsername());
+
+		List<Prisoner> prisoners = new ArrayList<Prisoner>();
+		prisoners = this.prisonerService.findAll();
+
+		message.setRecipient("BROADCAST");
+		Message messageWardenSaved = this.messageService.save(message);
+
+		Box outBox = this.boxService.getSentBoxByActor(admin);
+
+		outBox.getMessages().add(messageWardenSaved);
+
+		this.actorService.save(admin);
+
+		for (Prisoner a : prisoners) {
+			message.setRecipient(a.getUserAccount().getUsername());
+			this.messageService.sendMessageBroadcasted(message);
+		}
+
+	}
+
 }
