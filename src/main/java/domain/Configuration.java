@@ -16,6 +16,7 @@ import org.hibernate.validator.constraints.URL;
 @Access(AccessType.PROPERTY)
 public class Configuration extends DomainEntity {
 
+
 	private List<String>	spamWords;
 	private List<String>	typeProductsEN;
 	private List<String>	typeProductsES;
@@ -23,12 +24,22 @@ public class Configuration extends DomainEntity {
 	private int				minFinderResults;
 	private int				maxFinderResults;
 	private int				timeFinderPrisoners;
+	private int 			finderResult;
 	private String			welcomeMessageEnglish;
 	private String			welcomeMessageSpanish;
 	private String			systemName;
 	private String			imageURL;
 	private int				timeFinderActivities;
 
+
+	@Valid
+	public int getFinderResult() {
+		return this.finderResult;
+	}
+
+	public void setFinderResult(int finderResult) {
+		this.finderResult = finderResult;
+	}
 
 	@ElementCollection(targetClass = String.class)
 	public List<String> getSpamWords() {

@@ -14,5 +14,16 @@
 		<put-attribute name="title" value="Crear una Visita" />
 		<put-attribute name="body" value="/views/visitor/editVisit.jsp" />
 	</definition>
+	
+		
+	<definition name="finder/visitor/list" extends="master.page">	
+		<put-attribute name="title" value="Resultados del buscador" />
+		<put-attribute name="body" value="/views/visitor/finderResult.jsp" />
+	</definition>
+	
+	<definition name="finder/visitor/edit" extends="master.page">	
+		<put-attribute name="title" value="Editar el filtro del buscador" />
+		<put-attribute name="body" value="/views/visitor/editFinder.jsp" />
+	</definition>
 
 </tiles-definitions>

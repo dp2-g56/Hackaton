@@ -42,6 +42,8 @@
 					<li class="arrow"></li>
 					<li><a href="visit/prisoner/list.do"><spring:message code="master.page.listVisits" /></a></li>
 					<li><a href="product/salesman/prisoner/list.do"><spring:message code="master.page.salesMen" /></a></li>
+					<li><a href="finderActivities/prisoner/list.do"><spring:message code="master.page.finderActivities" /></a></li>
+					<li><a href="request/prisoner/list.do"><spring:message code="master.page.request" /></a></li>
 				</ul></li>
 		</security:authorize>
 		
@@ -51,7 +53,7 @@
 				<ul>
 					<li class="arrow"></li>
 					<li><a href="visit/visitor/list.do"><spring:message code="master.page.listVisits" /></a></li>
-					
+					<li><a href="finder/visitor/list.do"><spring:message code="master.page.finderVisitor" /></a></li>	
 				</ul></li>
 		</security:authorize>
 		
