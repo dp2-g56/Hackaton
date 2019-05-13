@@ -4,28 +4,36 @@ package controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import domain.Actor;
+import domain.Prisoner;
+import domain.SalesMan;
+import domain.SocialWorker;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
 import services.ActorService;
+import services.PrisonerService;
+import services.SalesManService;
 import services.SocialWorkerService;
-import domain.Actor;
-import domain.SocialWorker;
 
 @Controller
 @RequestMapping("/authenticated")
 public class SocialProfileController extends AbstractController {
 
 	@Autowired
-	private ActorService		actorService;
+	private ActorService actorService;
 	@Autowired
-	private SocialWorkerService	socialWorkerService;
-
+	private SocialWorkerService socialWorkerService;
+	@Autowired
+	private PrisonerService prisonerService;
+	@Autowired
+	private SalesManService salesManService;
 
 	// -------------------------------------------------------------------
 	// ---------------------------LIST
@@ -38,6 +46,7 @@ public class SocialProfileController extends AbstractController {
 		Actor logguedActor = new Actor();
 
 		List<Authority> authorities = (List<Authority>) userAccount.getAuthorities();
+		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
 		result = new ModelAndView("authenticated/showProfile");
 
@@ -49,8 +58,22 @@ public class SocialProfileController extends AbstractController {
 			result.addObject("curriculum", socialWorker.getCurriculum());
 		}
 
+		if (authorities.get(0).toString().equals("PRISONER")) {
+			Prisoner prisoner = this.prisonerService.findOne(logguedActor.getId());
+
+			result.addObject("prisoner", prisoner);
+			result.addObject("size", prisoner.getCharges().size());
+		}
+
+		if (authorities.get(0).toString().equals("SALESMAN")) {
+			SalesMan salesman = this.salesManService.findOne(logguedActor.getId());
+
+			result.addObject("salesman", salesman);
+		}
+
 		result.addObject("actor", logguedActor);
 		result.addObject("requestURI", "authenticated/showProfile.do");
+		result.addObject("locale", locale);
 
 		return result;
 	}

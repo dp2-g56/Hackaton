@@ -8,9 +8,6 @@
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 <%@ taglib prefix="acme" tagdir="/WEB-INF/tags"%>
 
-
-
-<br/>
 	<!-- Actor Data -->
 	
 	
@@ -25,6 +22,56 @@
 			<td>
 	<img src="${actor.photo}" alt="Italian Trulli"></td>
 		</tr>
+	<security:authorize access="hasRole('PRISONER')">
+		<tr>
+			<td><spring:message code="prisoner.incomeDate"/>:</td>
+			<td><jstl:out value="${prisoner.incomeDate}" /></td>
+		</tr>
+		<tr>
+			<td><spring:message code="prisoner.exitDate"/>:</td>
+			<td><jstl:out value="${prisoner.exitDate}" /></td>
+		</tr>
+		<tr>
+			<td><spring:message code="prisoner.points"/>:</td>
+			<td><jstl:out value="${prisoner.points}" /></td>
+		</tr>
+		<tr>
+			<td><spring:message code="prisoner.charges"/>:</td>
+			<jstl:set value="" var="listOfCharges"/>
+			<jstl:set value="1" var="counter"/>
+			<jstl:forEach items="${prisoner.charges}" var="charge">
+				<jstl:if test="${locale =='EN'}">
+					<jstl:set value="${listOfCharges}${charge.titleEnglish}" var="listOfCharges"/>
+					<jstl:if test="${size!=counter}">
+						<jstl:set value="${listOfCharges}, " var="listOfCharges"/>
+						<jstl:set value="${counter + 1}" var="counter"/>
+					</jstl:if>
+				</jstl:if>
+				<jstl:if test="${locale =='ES'}">
+					<jstl:set value="${listOfCharges}${charge.titleSpanish}, " var="listOfCharges"/>
+					<jstl:if test="${size!=counter}">
+						<jstl:set value="${listOfCharges}, " var="listOfCharges"/>
+						<jstl:set value="${counter + 1}" var="counter"/>
+					</jstl:if>
+				</jstl:if>
+			</jstl:forEach>
+			<td><jstl:out value="${listOfCharges}" /></td>
+		</tr>
+	</security:authorize>
+	<security:authorize access="hasRole('SALESMAN')">
+		<tr>
+			<td><spring:message code="salesman.VATNumber"/>:</td>
+			<td><jstl:out value="${salesman.VATNumber}" /></td>
+		</tr>
+		<tr>
+			<td><spring:message code="salesman.storeName"/>:</td>
+			<td><jstl:out value="${salesman.storeName}" /></td>
+		</tr>
+		<tr>
+			<td><spring:message code="salesman.points"/>:</td>
+			<td><jstl:out value="${salesman.points}" /></td>
+		</tr>
+	</security:authorize>
 	<security:authorize access="hasRole('SOCIALWORKER')">
 	<jstl:choose>
 		<jstl:when test="${curriculum != null}">
@@ -50,4 +97,11 @@
 	</jstl:choose>
 	</security:authorize>
 	</table>
+	
+	<security:authorize access="hasAnyRole('WARDEN')">
+		<spring:url var="editProfileUrl" value="authenticated/editProfile.do"/>
+		<a href="${editProfileUrl}">
+			<strong><spring:message code="actor.editProfile" /></strong>
+		</a>		
+	</security:authorize>
 
