@@ -108,9 +108,18 @@
 </display:table>
 
 <!-- Enlaces parte inferior -->
-<spring:url var="newMessage" value="/message/actor/create.do"/>
+<jstl:choose>
+<jstl:when test="${crimRate == true}">
+  	<h3 style="color:Red;"><spring:message code="mail.message.cannotSend" /></h3>
+  </jstl:when>
+  <jstl:otherwise>
+    <spring:url var="newMessage" value="/message/actor/create.do"/>
+	<p><a href="${newMessage}"><spring:message code="mail.message.new" /></a></p>
+    
+  </jstl:otherwise>
+</jstl:choose>
 
-<p><a href="${newMessage}"><spring:message code="mail.message.new" /></a></p>
+
 
 <spring:url var="mail" value="/box/actor/list.do"/>
 

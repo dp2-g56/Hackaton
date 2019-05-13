@@ -12,27 +12,29 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import domain.Charge;
-import domain.Prisoner;
-import forms.FormObjectPrisoner;
 import services.ChargeService;
 import services.PrisonerService;
 import services.WardenService;
+import domain.Charge;
+import domain.Prisoner;
+import forms.FormObjectPrisoner;
 
 @Controller
 @RequestMapping("/prisoner/warden")
 public class PrisonerWardenController extends AbstractController {
 
 	@Autowired
-	private ChargeService chargeService;
+	private ChargeService	chargeService;
 
 	@Autowired
-	private WardenService wardenService;
+	private WardenService	wardenService;
 
 	@Autowired
-	private PrisonerService prisonerService;
+	private PrisonerService	prisonerService;
+
 
 	public PrisonerWardenController() {
 		super();
@@ -63,8 +65,7 @@ public class PrisonerWardenController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST, params = "save")
-	public ModelAndView save(@ModelAttribute("formPrisoner") @Valid FormObjectPrisoner formPrisoner,
-			BindingResult binding) {
+	public ModelAndView save(@ModelAttribute("formPrisoner") @Valid FormObjectPrisoner formPrisoner, BindingResult binding) {
 		ModelAndView result = null;
 
 		Prisoner prisoner = new Prisoner();
@@ -78,7 +79,7 @@ public class PrisonerWardenController extends AbstractController {
 			result.addObject("formPrisoner", formPrisoner);
 			result.addObject("locale", locale);
 			result.addObject("finalCharges", finalCharges);
-		} else
+		} else {
 			try {
 				this.prisonerService.savePrisoner(prisoner);
 				result = new ModelAndView("redirect:/");
@@ -89,6 +90,78 @@ public class PrisonerWardenController extends AbstractController {
 				result.addObject("finalCharges", finalCharges);
 				result.addObject("message", "warden.register.commit.error");
 			}
+		}
+
+		return result;
+	}
+
+	@RequestMapping(value = "/listSuspects", method = RequestMethod.GET)
+	public ModelAndView listSuspects() {
+		ModelAndView result;
+
+		try {
+			List<Prisoner> prisoners = this.prisonerService.getSuspectPrisoners();
+
+			result = new ModelAndView("prisoner/warden/listSuspects");
+			result.addObject("prisoners", prisoners);
+
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:/");
+		}
+
+		return result;
+	}
+
+	@RequestMapping(value = "/isolate", method = RequestMethod.GET)
+	public ModelAndView isolate(@RequestParam int prisonerId) {
+		ModelAndView result;
+
+		try {
+
+			Prisoner prisoner = this.prisonerService.findOne(prisonerId);
+			List<Prisoner> prisoners = this.prisonerService.getSuspectPrisoners();
+
+			if (prisoner == null || !prisoners.contains(prisoner)) {
+				return this.listSuspects();
+			} else {
+				this.wardenService.isolatePrisoner(prisoner);
+				return this.listSuspects();
+			}
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:/");
+		}
+
+		return result;
+	}
+
+	@RequestMapping(value = "/listSuspectCharges", method = RequestMethod.GET)
+	public ModelAndView listCharge(@RequestParam int prisonerId) {
+
+		ModelAndView result;
+
+		try {
+
+			Prisoner prisoner = this.prisonerService.findOne(prisonerId);
+			List<Prisoner> prisoners = this.prisonerService.getSuspectPrisoners();
+
+			if (prisoner == null || !prisoners.contains(prisoner)) {
+				return this.listSuspects();
+			}
+
+			List<Charge> charges = prisoner.getCharges();
+
+			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+
+			result = new ModelAndView("anonymous/charge/list");
+			result.addObject("charges", charges);
+			result.addObject("locale", locale);
+			result.addObject("requestURI", "prisoner/warden/listSuspectCharges.do");
+			result.addObject("warden", true);
+			result.addObject("suspect", true);
+
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:/");
+		}
 
 		return result;
 	}

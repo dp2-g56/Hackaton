@@ -11,12 +11,12 @@
 <tiles-definitions>
 
 	<definition name="visit/list" extends="master.page">	
-		<put-attribute name="title" value="My Visits" />
+		<put-attribute name="title" value="Visits" />
 		<put-attribute name="body" value="/views/prisoner/showVisits.jsp" />
 	</definition>
 	
 	<definition name="report/list" extends="master.page">	
-		<put-attribute name="title" value="Report" />
+		<put-attribute name="title" value="Reports" />
 		<put-attribute name="body" value="/views/prisoner/showReport.jsp" />
 	</definition>
 	

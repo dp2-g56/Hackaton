@@ -14,6 +14,7 @@
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@taglib prefix="security"
 	uri="http://www.springframework.org/security/tags"%>
+		<%@taglib prefix="jstl"	uri="http://java.sun.com/jsp/jstl/core"%>
 
 <div>
 	<ul id="jMenu">
@@ -28,6 +29,7 @@
 					<li><a href="warden/warden/register.do"><spring:message code="master.page.warden.register" /></a></li>
 					<li><a href="prisoner/warden/register.do"><spring:message code="master.page.prisoner.register" /></a></li>
 					<li><a href="salesman/warden/register.do"><spring:message code="master.page.salesman.register" /></a></li>
+					<li><a href="prisoner/warden/listSuspects.do"><spring:message code="master.page.prisoner.listSuspects" /></a></li>
 				</ul></li>
 		</security:authorize>
 
@@ -110,7 +112,14 @@
 				<ul>
 					<li class="arrow"></li>
 					<li><a href="authenticated/showProfile.do"><spring:message code="master.page.myProfile" /> </a></li>
-					<li><a href="box/actor/list.do"><spring:message code="master.page.mailSystem" /> </a></li>
+					<jstl:choose>
+  				<jstl:when test="${crimRatePositive == true}">
+   					<li><a style="color:Aqua; font-weight: bold;" href="box/actor/list.do"><spring:message code="master.page.mailSystemBanned" /> </a></li>
+  				</jstl:when>
+  				<jstl:otherwise>
+   					<li><a href="box/actor/list.do"><spring:message code="master.page.mailSystem" /> </a></li>
+  				</jstl:otherwise>
+			</jstl:choose>
 					<li><a href="j_spring_security_logout"><spring:message
 								code="master.page.logout" /> </a></li>
 				</ul></li>
