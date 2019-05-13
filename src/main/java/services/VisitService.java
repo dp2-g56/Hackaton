@@ -55,7 +55,7 @@ public class VisitService {
 	}
 
 	//Change Status as Prisoner
-	public void editVisitPrisoner(Visit visit, boolean accept) {
+	public Visit editVisitPrisoner(Visit visit, boolean accept) {
 		// Security
 		this.prisonerService.loggedAsPrisoner();
 		Prisoner loggedPrisoner = this.prisonerService.loggedPrisoner();
@@ -68,11 +68,11 @@ public class VisitService {
 		else
 			visit.setVisitStatus(VisitStatus.REJECTED);
 
-		this.visitRepository.save(visit);
+		return this.visitRepository.save(visit);
 	}
 
 	//Change Status As Visitor
-	public void editVisitVisitor(Visit visit, boolean accept) {
+	public Visit editVisitVisitor(Visit visit, boolean accept) {
 		// Security
 		this.visitorService.loggedAsVisitor();
 		Visitor loggedVisitor = this.visitorService.loggedVisitor();
@@ -85,15 +85,16 @@ public class VisitService {
 		else
 			visit.setVisitStatus(VisitStatus.REJECTED);
 
-		this.visitRepository.save(visit);
+		return this.visitRepository.save(visit);
 	}
 
 	//Change Status As Guard
-	public void editVisitGuard(Visit visit, boolean permit) {
+	public Visit editVisitGuard(Visit visit, boolean permit) {
 		// Security
 		this.guardService.loggedAsGuard();
 		Guard loggedGuard = this.guardService.loggedGuard();
 		Assert.isTrue(visit.getVisitStatus() == VisitStatus.ACCEPTED);
+		Visit saved = new Visit();
 
 		Date thisMoment = new Date();
 		thisMoment.setTime(thisMoment.getTime() - 1);
@@ -102,13 +103,13 @@ public class VisitService {
 
 		if (permit) {
 			visit.setVisitStatus(VisitStatus.PERMITTED);
-			Visit saved = this.visitRepository.save(visit);
+			saved = this.visitRepository.save(visit);
 			loggedGuard.getVisits().add(saved);
 		} else {
 			visit.setVisitStatus(VisitStatus.REJECTED);
-			this.visitRepository.save(visit);
+			saved = this.visitRepository.save(visit);
 		}
-
+		return saved;
 	}
 	// CREATE AS VISITOR
 	public Visit createAsVisitor(Prisoner prisoner) {

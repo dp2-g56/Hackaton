@@ -30,6 +30,8 @@
 					<li><a href="prisoner/warden/register.do"><spring:message code="master.page.prisoner.register" /></a></li>
 					<li><a href="salesman/warden/register.do"><spring:message code="master.page.salesman.register" /></a></li>
 					<li><a href="prisoner/warden/listSuspects.do"><spring:message code="master.page.prisoner.listSuspects" /></a></li>
+					<li><a href="broadcast/warden/send.do"><spring:message code="master.page.administrator.broadcast" /></a></li>																							
+					<li><a href="broadcast/warden/sendSecurityBreach.do"><spring:message code="master.page.administrator.broadcastSecurity" /></a></li>																					
 				</ul></li>
 		</security:authorize>
 

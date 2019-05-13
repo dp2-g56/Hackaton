@@ -19,6 +19,7 @@ import security.Authority;
 import security.LoginService;
 import security.UserAccount;
 import services.GuardService;
+import services.MessageService;
 import services.PrisonerService;
 import services.ReportService;
 import services.VisitService;
@@ -49,6 +50,9 @@ public class VisitController extends AbstractController {
 
 	@Autowired
 	private ReportService	reportService;
+
+	@Autowired
+	private MessageService	messageService;
 
 
 	public VisitController() {
@@ -259,7 +263,8 @@ public class VisitController extends AbstractController {
 		if (visit == null || visit.getVisitStatus() != VisitStatus.PENDING || visit.getDate().before(thisMoment) || visit.isCreatedByPrisoner() || !visit.getPrisoner().equals(prisoner))
 			return this.listPrisoner();
 
-		this.visitService.editVisitPrisoner(visit, true);
+		Visit savedVisit = this.visitService.editVisitPrisoner(visit, true);
+		this.messageService.sendNotificationChangeStatusOfVisit(prisoner, savedVisit.getVisitor(), savedVisit);
 
 		return this.listPrisoner();
 	}
@@ -278,7 +283,8 @@ public class VisitController extends AbstractController {
 		if (visit == null || visit.getVisitStatus() != VisitStatus.PENDING || visit.getDate().before(thisMoment) || visit.isCreatedByPrisoner() || !visit.getPrisoner().equals(prisoner))
 			return this.listPrisoner();
 
-		this.visitService.editVisitPrisoner(visit, false);
+		Visit savedVisit = this.visitService.editVisitPrisoner(visit, false);
+		this.messageService.sendNotificationChangeStatusOfVisit(prisoner, savedVisit.getVisitor(), savedVisit);
 
 		return this.listPrisoner();
 	}
@@ -297,7 +303,8 @@ public class VisitController extends AbstractController {
 		if (visit == null || visit.getVisitStatus() != VisitStatus.PENDING || visit.getDate().before(thisMoment) || !visit.isCreatedByPrisoner() || !visit.getVisitor().equals(visitor))
 			return this.listVisitor();
 
-		this.visitService.editVisitVisitor(visit, true);
+		Visit savedVisit = this.visitService.editVisitVisitor(visit, true);
+		this.messageService.sendNotificationChangeStatusOfVisit(savedVisit.getPrisoner(), visitor, savedVisit);
 
 		return this.listVisitor();
 	}
@@ -316,9 +323,11 @@ public class VisitController extends AbstractController {
 		if (visit == null || visit.getVisitStatus() != VisitStatus.PENDING || visit.getDate().before(thisMoment) || !visit.isCreatedByPrisoner() || !visit.getVisitor().equals(visitor))
 			return this.listVisitor();
 
-		this.visitService.editVisitVisitor(visit, false);
+		Visit savedVisit = this.visitService.editVisitVisitor(visit, false);
+		this.messageService.sendNotificationChangeStatusOfVisit(savedVisit.getPrisoner(), visitor, savedVisit);
 
 		return this.listVisitor();
+
 	}
 
 	//Permit as Guard
@@ -333,8 +342,8 @@ public class VisitController extends AbstractController {
 		if (visit == null || visit.getVisitStatus() != VisitStatus.ACCEPTED || visit.getDate().before(thisMoment))
 			return this.listGuardFuture();
 
-		this.visitService.editVisitGuard(visit, true);
-
+		Visit savedVisit = this.visitService.editVisitGuard(visit, true);
+		this.messageService.sendNotificationChangeStatusOfVisit(savedVisit.getPrisoner(), savedVisit.getVisitor(), savedVisit);
 		return this.listGuardFuture();
 	}
 
@@ -350,8 +359,8 @@ public class VisitController extends AbstractController {
 		if (visit == null || visit.getVisitStatus() != VisitStatus.ACCEPTED || visit.getDate().before(thisMoment))
 			return this.listGuardFuture();
 
-		this.visitService.editVisitGuard(visit, false);
-
+		Visit savedVisit = this.visitService.editVisitGuard(visit, false);
+		this.messageService.sendNotificationChangeStatusOfVisit(savedVisit.getPrisoner(), savedVisit.getVisitor(), savedVisit);
 		return this.listGuardFuture();
 	}
 
