@@ -15,12 +15,20 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Access(AccessType.PROPERTY)
 public class FinderActivities extends DomainEntity {
 
-	private String			keyWord;
-	private Date			minDate;
-	private Date			maxDate;
+	private String keyWord;
+	private Date minDate;
+	private Date maxDate;
+	private Date lastEdit;
 
-	private List<Activity>	activities;
+	private List<Activity> activities;
 
+	public Date getLastEdit() {
+		return this.lastEdit;
+	}
+
+	public void setLastEdit(Date lastEdit) {
+		this.lastEdit = lastEdit;
+	}
 
 	public String getKeyWord() {
 		return this.keyWord;

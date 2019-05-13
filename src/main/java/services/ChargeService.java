@@ -18,12 +18,23 @@ public class ChargeService {
 	@Autowired
 	private ChargeRepository chargeRepository;
 
+
+	// CRUDS
+
+	public Charge findOne(Integer id) {
+		return this.chargeRepository.findOne(id);
+	}
+
 	public List<Charge> findAll() {
 		return this.chargeRepository.findAll();
 	}
 
-	public Charge findOne(int id) {
-		return this.chargeRepository.findOne(id);
+	public Charge save(Charge charge) {
+		return this.chargeRepository.save(charge);
+	}
+
+	public void delete(Charge charge) {
+		this.chargeRepository.delete(charge);
 	}
 
 	public List<Charge> getFinalCharges() {

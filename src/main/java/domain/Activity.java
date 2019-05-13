@@ -7,7 +7,9 @@ import java.util.List;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
+import javax.persistence.Index;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.Min;
 
@@ -16,16 +18,16 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Access(AccessType.PROPERTY)
+@Table(indexes = { @Index(columnList = "realizationDate"), @Index(columnList = "title, description") })
 public class Activity extends DomainEntity {
 
-	private String			title;
-	private String			description;
-	private Date			realizationDate;
-	private int				maxAssistant;
-	private int				rewardPoints;
+	private String title;
+	private String description;
+	private Date realizationDate;
+	private int maxAssistant;
+	private int rewardPoints;
 
-	private List<Request>	requests;
-
+	private List<Request> requests;
 
 	@NotBlank
 	public String getTitle() {
