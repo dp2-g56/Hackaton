@@ -15,26 +15,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import services.ChargeService;
-import services.PrisonerService;
-import services.WardenService;
 import domain.Charge;
 import domain.Prisoner;
 import forms.FormObjectPrisoner;
+import services.ChargeService;
+import services.PrisonerService;
+import services.WardenService;
 
 @Controller
 @RequestMapping("/prisoner/warden")
 public class PrisonerWardenController extends AbstractController {
 
 	@Autowired
-	private ChargeService	chargeService;
+	private ChargeService chargeService;
 
 	@Autowired
-	private WardenService	wardenService;
+	private WardenService wardenService;
 
 	@Autowired
-	private PrisonerService	prisonerService;
-
+	private PrisonerService prisonerService;
 
 	public PrisonerWardenController() {
 		super();
@@ -65,7 +64,8 @@ public class PrisonerWardenController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST, params = "save")
-	public ModelAndView save(@ModelAttribute("formPrisoner") @Valid FormObjectPrisoner formPrisoner, BindingResult binding) {
+	public ModelAndView save(@ModelAttribute("formPrisoner") @Valid FormObjectPrisoner formPrisoner,
+			BindingResult binding) {
 		ModelAndView result = null;
 
 		Prisoner prisoner = new Prisoner();
@@ -79,7 +79,7 @@ public class PrisonerWardenController extends AbstractController {
 			result.addObject("formPrisoner", formPrisoner);
 			result.addObject("locale", locale);
 			result.addObject("finalCharges", finalCharges);
-		} else {
+		} else
 			try {
 				this.prisonerService.savePrisoner(prisoner);
 				result = new ModelAndView("redirect:/");
@@ -90,7 +90,6 @@ public class PrisonerWardenController extends AbstractController {
 				result.addObject("finalCharges", finalCharges);
 				result.addObject("message", "warden.register.commit.error");
 			}
-		}
 
 		return result;
 	}
@@ -121,9 +120,9 @@ public class PrisonerWardenController extends AbstractController {
 			Prisoner prisoner = this.prisonerService.findOne(prisonerId);
 			List<Prisoner> prisoners = this.prisonerService.getSuspectPrisoners();
 
-			if (prisoner == null || !prisoners.contains(prisoner)) {
+			if (prisoner == null || !prisoners.contains(prisoner))
 				return this.listSuspects();
-			} else {
+			else {
 				this.wardenService.isolatePrisoner(prisoner);
 				return this.listSuspects();
 			}
@@ -144,9 +143,8 @@ public class PrisonerWardenController extends AbstractController {
 			Prisoner prisoner = this.prisonerService.findOne(prisonerId);
 			List<Prisoner> prisoners = this.prisonerService.getSuspectPrisoners();
 
-			if (prisoner == null || !prisoners.contains(prisoner)) {
+			if (prisoner == null || !prisoners.contains(prisoner))
 				return this.listSuspects();
-			}
 
 			List<Charge> charges = prisoner.getCharges();
 
@@ -162,6 +160,45 @@ public class PrisonerWardenController extends AbstractController {
 		} catch (Throwable oops) {
 			result = new ModelAndView("redirect:/");
 		}
+
+		return result;
+	}
+
+	@RequestMapping(value = "/edit", method = RequestMethod.GET)
+	public ModelAndView editPrisoner(@RequestParam int prisonerId) {
+		ModelAndView result;
+
+		try {
+			Prisoner prisoner = this.wardenService.getPrisonerAsWarden(prisonerId);
+
+			result = new ModelAndView("warden/editPrisoner");
+			result.addObject("prisoner", prisoner);
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:/");
+		}
+		return result;
+	}
+
+	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
+	public ModelAndView editPrisoner(Prisoner prisoner, BindingResult binding) {
+		ModelAndView result;
+
+		Prisoner prisonerReconstructed = new Prisoner();
+		prisonerReconstructed = this.prisonerService.reconstruct(prisoner, binding);
+
+		if (binding.hasErrors()) {
+			result = new ModelAndView("warden/editPrisoner");
+			result.addObject("prisoner", prisonerReconstructed);
+		} else
+			try {
+				this.prisonerService.savePrisoner(prisonerReconstructed);
+
+				result = new ModelAndView("redirect:/anonymous/prisoner/list.do");
+			} catch (Throwable oops) {
+				result = new ModelAndView("warden/editPrisoner");
+				result.addObject("prisoner", prisonerReconstructed);
+				result.addObject("message", "warden.save.commit.error");
+			}
 
 		return result;
 	}

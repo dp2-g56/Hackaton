@@ -386,4 +386,9 @@ public class WardenService {
 		this.wardenRepository.delete(warden.getId());
 	}
 
+	public Prisoner getPrisonerAsWarden(int prisonerId) {
+		this.loggedAsWarden();
+		return this.prisonerService.findOne(prisonerId);
+	}
+
 }
