@@ -12,6 +12,8 @@
 
 <br/>
 	<!-- Actor Data -->
+	
+	
 	<table>
 		<tr>
 			<td><spring:message code="actor.fullName" />:</td>
@@ -20,7 +22,8 @@
 		</tr>
 		<tr>
 			<td><spring:message code="actor.photo" />:</td>
-			<td><jstl:out value="${actor.photo}" /></td>
+			<td>
+	<img src="${actor.photo}" alt="Italian Trulli"></td>
 		</tr>
 	<security:authorize access="hasRole('SOCIALWORKER')">
 	<jstl:choose>

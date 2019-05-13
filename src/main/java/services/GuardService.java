@@ -52,4 +52,9 @@ public class GuardService {
 		return this.guardRepository.getFutureAcceptedVisits();
 	}
 
+	public List<Guard> findAll() {
+
+		return this.guardRepository.findAll();
+	}
+
 }
