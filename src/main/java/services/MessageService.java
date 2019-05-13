@@ -21,6 +21,8 @@ import domain.Box;
 import domain.Message;
 import domain.PriorityLvl;
 import domain.Prisoner;
+import domain.Visit;
+import domain.Visitor;
 
 @Service
 @Transactional
@@ -44,6 +46,9 @@ public class MessageService {
 	@Autowired
 	private PrisonerService			prisonerService;
 
+	@Autowired
+	private WardenService			wardenService;
+
 
 	// Actualizar caja que tiene el mensaje EN ESTE ORDEN
 	// ACTUALIZAR CAJA SIN EL MENSAJE
@@ -56,29 +61,29 @@ public class MessageService {
 
 		this.actorService.loggedAsActor();
 
-		Box boxNotification = new Box();
+		Box inboxReceipent = new Box();
 
 		Box boxSent = new Box();
 
 		Message messageSaved = this.messageRepository.saveAndFlush(message);
-		Message messageCopy = this.create(messageSaved.getSubject(), messageSaved.getBody(), messageSaved.getPriority(), messageSaved.getTags(), messageSaved.getRecipient());
-		messageCopy.setTags(messageSaved.getTags());
+		//Message messageCopy = this.create(messageSaved.getSubject(), messageSaved.getBody(), messageSaved.getPriority(), messageSaved.getTags(), messageSaved.getRecipient());
+		//messageCopy.setTags(messageSaved.getTags());
 
-		Message messageCopySaved = this.messageRepository.save(messageCopy);
-		Actor actorSent = this.actorService.getActorByUsername(messageSaved.getSender());
+		//Message messageCopySaved = this.messageRepository.save(messageCopy);
+		//Actor actorSent = this.actorService.getActorByUsername(messageSaved.getSender());
 		Actor actorReceipent = this.actorService.getActorByUsername(messageSaved.getRecipient());
 
-		boxSent = this.boxService.getSentBoxByActor(actorSent);
-		boxNotification = this.boxService.getNotificationBoxByActor(actorReceipent);
+		//boxSent = this.boxService.getSentBoxByActor(actorSent);
+		inboxReceipent = this.boxService.getRecievedBoxByActor(actorReceipent);
 
 		// Guardar la box con ese mensaje;
 
-		boxNotification.getMessages().add(messageCopySaved);
-		boxSent.getMessages().add(messageSaved);
+		inboxReceipent.getMessages().add(messageSaved);
+		//boxSent.getMessages().add(messageSaved);
 		// boxRecieved.setMessages(list);
-		this.boxService.saveSystem(boxSent);
-		this.boxService.saveSystem(boxNotification);
-		this.actorService.save(actorSent);
+		//this.boxService.saveSystem(boxSent);
+		this.boxService.saveSystem(inboxReceipent);
+		//this.actorService.save(actorSent);
 		this.actorService.flushSave(actorReceipent);
 
 		return messageSaved;
@@ -214,7 +219,7 @@ public class MessageService {
 
 	public Message createSecurityBreach() {
 
-		this.actorService.loggedAsActor();
+		this.wardenService.loggedAsWarden();
 
 		UserAccount userAccount;
 		userAccount = LoginService.getPrincipal();
@@ -223,15 +228,17 @@ public class MessageService {
 		thisMoment.setTime(thisMoment.getTime() - 1000);
 
 		Message message = new Message();
+
 		Actor sender = this.actorService.getActorByUsername(userAccount.getUsername());
 		Actor receiver = new Actor();
+
 		message.setMoment(thisMoment);
 		message.setSubject("Error de seguridad / Security Breach");
 		message.setBody("Esto es un mensaje para informar que ha habido una brecha de seguridad // This is a message to inform about a security breach");
 		message.setPriority(PriorityLvl.HIGH);
-		message.setRecipient(receiver.getUserAccount().getPassword());
+		message.setRecipient(sender.getUserAccount().getUsername());
 		message.setTags("Security, Breach, Notification, Urgent, Important");
-		message.setSender(sender.getUserAccount().getPassword());
+		message.setSender(sender.getUserAccount().getUsername());
 
 		return message;
 	}
@@ -431,5 +438,35 @@ public class MessageService {
 
 	public void deleteInBatch(List<Message> messages) {
 		this.messageRepository.deleteInBatch(messages);
+	}
+
+	public void sendNotificationChangeStatusOfVisit(Prisoner p, Visitor v, Visit visit) {
+
+		Message messagePrisoner = this.create();
+
+		messagePrisoner.setSubject("Status change in a visit / Cambio de estado de una visita");
+		messagePrisoner.setBody("Visit with description '" + visit.getDescription() + "' has changed the status to " + visit.getVisitStatus() + "/ La visita " + visit.getDescription() + " ha cambiado su estado a " + visit.getVisitStatus());
+		messagePrisoner.setPriority(PriorityLvl.HIGH);
+		messagePrisoner.setRecipient(p.getUserAccount().getUsername());
+		messagePrisoner.setSender("SYSTEM");
+		messagePrisoner.setTags("NOTIFICATION / NOTIFICACION");
+
+		Message messagePrisonerSaved = this.save(messagePrisoner);
+
+		messagePrisoner.setRecipient(v.getUserAccount().getUsername());
+		Message messageVisitorSaved = this.save(messagePrisoner);
+
+		Box boxRecievedPrisoner = new Box();
+		Box boxRecievedVisitor = new Box();
+
+		boxRecievedPrisoner = this.boxService.getRecievedBoxByActor(p);
+		boxRecievedVisitor = this.boxService.getRecievedBoxByActor(v);
+
+		boxRecievedPrisoner.getMessages().add(messagePrisonerSaved);
+		boxRecievedVisitor.getMessages().add(messageVisitorSaved);
+
+		this.actorService.save(v);
+		this.actorService.save(p);
+
 	}
 }
