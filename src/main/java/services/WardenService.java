@@ -2,6 +2,7 @@
 package services;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -13,32 +14,48 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.Validator;
 
-import repositories.WardenRepository;
-import security.Authority;
-import security.LoginService;
-import security.UserAccount;
 import domain.ActivityStatus;
+import domain.Actor;
 import domain.Box;
+import domain.Guard;
+import domain.Message;
 import domain.Prisoner;
 import domain.Request;
 import domain.Visit;
 import domain.VisitStatus;
 import domain.Warden;
 import forms.FormObjectWarden;
+import repositories.WardenRepository;
+import security.Authority;
+import security.LoginService;
+import security.UserAccount;
 
 @Service
 @Transactional
 public class WardenService {
 
 	@Autowired
-	private WardenRepository	wardenRepository;
-	@Autowired
-	private BoxService			boxService;
+	private WardenRepository wardenRepository;
 
 	@Autowired
-	private PrisonerService		prisonerService;
+	private BoxService boxService;
 
+	@Autowired
+	private ActorService actorService;
+
+	@Autowired
+	private MessageService messageService;
+
+	@Autowired
+	private Validator validator;
+
+	@Autowired
+	private GuardService guardService;
+
+	@Autowired
+	private PrisonerService prisonerService;
 
 	// ----------------------------------------CRUD
 	// METHODS--------------------------
@@ -108,30 +125,32 @@ public class WardenService {
 	public void saveWarden(Warden warden) {
 		this.loggedAsWarden();
 
-		List<Box> boxes = new ArrayList<>();
+		if (warden.getId() == 0) {
+			List<Box> boxes = new ArrayList<>();
 
-		// Boxes
-		Box box1 = this.boxService.createSystem();
-		box1.setName("SUSPICIOUSBOX");
-		Box saved1 = this.boxService.saveSystem(box1);
-		boxes.add(saved1);
+			// Boxes
+			Box box1 = this.boxService.createSystem();
+			box1.setName("SUSPICIOUSBOX");
+			Box saved1 = this.boxService.saveSystem(box1);
+			boxes.add(saved1);
 
-		Box box2 = this.boxService.createSystem();
-		box2.setName("TRASHBOX");
-		Box saved2 = this.boxService.saveSystem(box2);
-		boxes.add(saved2);
+			Box box2 = this.boxService.createSystem();
+			box2.setName("TRASHBOX");
+			Box saved2 = this.boxService.saveSystem(box2);
+			boxes.add(saved2);
 
-		Box box3 = this.boxService.createSystem();
-		box3.setName("OUTBOX");
-		Box saved3 = this.boxService.saveSystem(box3);
-		boxes.add(saved3);
+			Box box3 = this.boxService.createSystem();
+			box3.setName("OUTBOX");
+			Box saved3 = this.boxService.saveSystem(box3);
+			boxes.add(saved3);
 
-		Box box4 = this.boxService.createSystem();
-		box4.setName("INBOX");
-		Box saved4 = this.boxService.saveSystem(box4);
-		boxes.add(saved4);
+			Box box4 = this.boxService.createSystem();
+			box4.setName("INBOX");
+			Box saved4 = this.boxService.saveSystem(box4);
+			boxes.add(saved4);
 
-		warden.setBoxes(boxes);
+			warden.setBoxes(boxes);
+		}
 
 		this.wardenRepository.save(warden);
 	}
@@ -206,9 +225,8 @@ public class WardenService {
 		List<Visit> visits = this.wardenRepository.getFutureVisitsByPrisoner(prisoner.getId());
 		List<Request> requests = this.wardenRepository.getRequestToFutureActivitiesByPrisoner(prisoner.getId());
 
-		for (Visit v : visits) {
+		for (Visit v : visits)
 			v.setVisitStatus(VisitStatus.REJECTED);
-		}
 		for (Request r : requests) {
 			r.setRejectReason("Isolated");
 			r.setStatus(ActivityStatus.REJECTED);
@@ -220,4 +238,147 @@ public class WardenService {
 		this.prisonerService.save(prisoner);
 
 	}
+
+	public Warden findOne(int id) {
+		return this.wardenRepository.findOne(id);
+	}
+
+	public boolean loggedAsWardenBoolean() {
+		UserAccount userAccount;
+		Boolean isWarden = false;
+		userAccount = LoginService.getPrincipal();
+		List<Authority> authorities = (List<Authority>) userAccount.getAuthorities();
+		if (authorities.get(0).toString().equals("WARDEN"))
+			isWarden = true;
+		return isWarden;
+	}
+
+	public Message reconstruct(Message message, BindingResult binding) {
+
+		UserAccount userAccount;
+		userAccount = LoginService.getPrincipal();
+		Actor actor = this.actorService.getActorByUsername(userAccount.getUsername());
+
+		domain.Message result;
+		result = this.messageService.create();
+		if (message.getId() == 0) {
+			result = message;
+			result.setSender(actor.getUserAccount().getUsername());
+			Date thisMoment = new Date();
+			thisMoment.setTime(thisMoment.getTime() - 1000);
+			result.setMoment(thisMoment);
+			result.setRecipient(actor.getUserAccount().getUsername());
+
+		} else {
+			result = this.messageService.findOne(message.getId());
+
+			result.setBody(message.getBody());
+			result.setPriority(message.getPriority());
+			result.setTags(message.getTags());
+			result.setSubject(message.getSubject());
+			result.setRecipient(actor.getUserAccount().getUsername());
+			result.setSender(actor.getUserAccount().getUsername());
+
+		}
+
+		this.validator.validate(result, binding);
+
+		return result;
+
+	}
+
+	public void broadcastMessage(Message message) {
+		this.loggedAsWarden();
+
+		UserAccount userAccount;
+		userAccount = LoginService.getPrincipal();
+		Actor admin = this.actorService.getActorByUsername(userAccount.getUsername());
+
+		List<Actor> actors = new ArrayList<Actor>();
+		actors = this.actorService.findAll();
+
+		message.setRecipient("BROADCAST");
+		Message messageWardenSaved = this.messageService.save(message);
+
+		Box outBox = this.boxService.getSentBoxByActor(admin);
+
+		outBox.getMessages().add(messageWardenSaved);
+
+		this.actorService.save(admin);
+
+		for (Actor a : actors)
+			if (!(a.equals(admin))) {
+				message.setRecipient(a.getUserAccount().getUsername());
+				this.messageService.sendMessageBroadcasted(message);
+			}
+
+	}
+
+	public void broadcastMessageGuards(Message message) {
+		this.loggedAsWarden();
+
+		UserAccount userAccount;
+		userAccount = LoginService.getPrincipal();
+		Actor admin = this.actorService.getActorByUsername(userAccount.getUsername());
+
+		List<Guard> guards = new ArrayList<Guard>();
+		guards = this.guardService.findAll();
+
+		message.setRecipient("BROADCAST");
+		Message messageWardenSaved = this.messageService.save(message);
+
+		Box outBox = this.boxService.getSentBoxByActor(admin);
+
+		outBox.getMessages().add(messageWardenSaved);
+
+		this.actorService.save(admin);
+
+		for (Guard a : guards) {
+			message.setRecipient(a.getUserAccount().getUsername());
+			this.messageService.sendMessageBroadcasted(message);
+		}
+
+	}
+
+	public void broadcastMessagePrisoners(Message message) {
+		this.loggedAsWarden();
+
+		UserAccount userAccount;
+		userAccount = LoginService.getPrincipal();
+		Actor admin = this.actorService.getActorByUsername(userAccount.getUsername());
+
+		List<Prisoner> prisoners = new ArrayList<Prisoner>();
+		prisoners = this.prisonerService.findAll();
+
+		message.setRecipient("BROADCAST");
+		Message messageWardenSaved = this.messageService.save(message);
+
+		Box outBox = this.boxService.getSentBoxByActor(admin);
+
+		outBox.getMessages().add(messageWardenSaved);
+
+		this.actorService.save(admin);
+
+		for (Prisoner a : prisoners) {
+			message.setRecipient(a.getUserAccount().getUsername());
+			this.messageService.sendMessageBroadcasted(message);
+		}
+
+	}
+
+	public Warden reconstruct(Warden warden, BindingResult binding) {
+		Warden result = new Warden();
+		Warden wardenFounded = this.wardenRepository.findOne(warden.getId());
+
+		result = warden;
+
+		result.setVersion(wardenFounded.getVersion());
+		result.setBoxes(wardenFounded.getBoxes());
+		result.setUserAccount(wardenFounded.getUserAccount());
+
+		this.validator.validate(result, binding);
+
+		return result;
+	}
+
 }

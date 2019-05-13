@@ -34,6 +34,16 @@
 		<put-attribute name="title" value="Lista de sospechosos" />
 		<put-attribute name="body" value="/views/warden/listOfSuspects.jsp" />
 	</definition>
+	
+	<definition name="broadcast/warden/sendSecurityBreach" extends="master.page">	
+		<put-attribute name="title" value="Enviar notificacion de brecha de seguridad" /> 
+		<put-attribute name="body" value="/views/warden/formBroadcastMessage.jsp" />
+	</definition>
+	
+	<definition name="broadcast/warden/send" extends="master.page">	
+		<put-attribute name="title" value="Enviar notificacion" /> 
+		<put-attribute name="body" value="/views/warden/formBroadcastMessage.jsp" />
+	</definition>
 
 
 </tiles-definitions>
