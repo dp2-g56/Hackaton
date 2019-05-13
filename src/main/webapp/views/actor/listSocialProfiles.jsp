@@ -9,8 +9,6 @@
 <%@ taglib prefix="acme" tagdir="/WEB-INF/tags"%>
 
 	<!-- Actor Data -->
-	
-	
 	<table>
 		<tr>
 			<td><spring:message code="actor.fullName" />:</td>
@@ -102,6 +100,16 @@
 		<spring:url var="editProfileUrl" value="authenticated/editProfile.do"/>
 		<a href="${editProfileUrl}">
 			<strong><spring:message code="actor.editProfile" /></strong>
-		</a>		
+		</a> / 
+		<spring:url var="deleteUserUrl" value="authenticated/deleteUser.do"/>
+		<a href="${deleteUserUrl}" onClick="return confirm('<spring:message code="delete.user.confirmation" />')">
+			<strong><spring:message code="delete.user"/></strong>
+		</a> / 
+		<spring:url var="exportDataUrl" value="export/warden.do">
+			<spring:param name="id" value="${actor.id}"/>
+		</spring:url>
+		<a href="${exportDataUrl}">
+			<strong><spring:message code="export.data.user"/></strong>
+		</a>
 	</security:authorize>
 

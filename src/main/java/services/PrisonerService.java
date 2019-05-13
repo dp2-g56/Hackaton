@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.Validator;
 
 import domain.Box;
 import domain.Charge;
@@ -48,6 +49,9 @@ public class PrisonerService {
 
 	@Autowired
 	private FinderActivitiesService finderActivitiesService;
+
+	@Autowired
+	private Validator validator;
 
 	// -----------------------------------------SECURITY-----------------------------
 	// ------------------------------------------------------------------------------
@@ -169,46 +173,48 @@ public class PrisonerService {
 	public void savePrisoner(Prisoner prisoner) {
 		this.wardenService.loggedAsWarden();
 
-		prisoner.setTicker(this.generateTicker());
+		if (prisoner.getId() == 0) {
+			prisoner.setTicker(this.generateTicker());
 
-		List<Box> boxes = new ArrayList<>();
+			List<Box> boxes = new ArrayList<>();
 
-		// Boxes
-		Box box1 = this.boxService.createSystem();
-		box1.setName("SUSPICIOUSBOX");
-		Box saved1 = this.boxService.saveSystem(box1);
-		boxes.add(saved1);
+			// Boxes
+			Box box1 = this.boxService.createSystem();
+			box1.setName("SUSPICIOUSBOX");
+			Box saved1 = this.boxService.saveSystem(box1);
+			boxes.add(saved1);
 
-		Box box2 = this.boxService.createSystem();
-		box2.setName("TRASHBOX");
-		Box saved2 = this.boxService.saveSystem(box2);
-		boxes.add(saved2);
+			Box box2 = this.boxService.createSystem();
+			box2.setName("TRASHBOX");
+			Box saved2 = this.boxService.saveSystem(box2);
+			boxes.add(saved2);
 
-		Box box3 = this.boxService.createSystem();
-		box3.setName("OUTBOX");
-		Box saved3 = this.boxService.saveSystem(box3);
-		boxes.add(saved3);
+			Box box3 = this.boxService.createSystem();
+			box3.setName("OUTBOX");
+			Box saved3 = this.boxService.saveSystem(box3);
+			boxes.add(saved3);
 
-		Box box4 = this.boxService.createSystem();
-		box4.setName("INBOX");
-		Box saved4 = this.boxService.saveSystem(box4);
-		boxes.add(saved4);
+			Box box4 = this.boxService.createSystem();
+			box4.setName("INBOX");
+			Box saved4 = this.boxService.saveSystem(box4);
+			boxes.add(saved4);
 
-		prisoner.setBoxes(boxes);
-		prisoner.setIncomeDate(new Date());
+			prisoner.setBoxes(boxes);
+			prisoner.setIncomeDate(new Date());
 
-		Calendar exitCalendar = Calendar.getInstance();
-		exitCalendar.setTime(prisoner.getIncomeDate());
+			Calendar exitCalendar = Calendar.getInstance();
+			exitCalendar.setTime(prisoner.getIncomeDate());
 
-		for (Charge c : prisoner.getCharges()) {
-			exitCalendar.add(Calendar.YEAR, c.getYear());
-			exitCalendar.add(Calendar.MONTH, c.getMonth());
+			for (Charge c : prisoner.getCharges()) {
+				exitCalendar.add(Calendar.YEAR, c.getYear());
+				exitCalendar.add(Calendar.MONTH, c.getMonth());
+			}
+
+			prisoner.setExitDate(exitCalendar.getTime());
+
+			FinderActivities finder = this.finderActivitiesService.create();
+			prisoner.setFinderActivities(finder);
 		}
-
-		prisoner.setExitDate(exitCalendar.getTime());
-
-		FinderActivities finder = this.finderActivitiesService.create();
-		prisoner.setFinderActivities(finder);
 
 		this.prisonerRepository.save(prisoner);
 	}
@@ -278,6 +284,7 @@ public class PrisonerService {
 
 		return result;
 	}
+
 	public List<Prisoner> getSuspectPrisoners() {
 		this.wardenService.loggedAsWarden();
 		return this.prisonerRepository.getSuspectPrisoners();
@@ -299,5 +306,33 @@ public class PrisonerService {
 		if (authorities.get(0).toString().equals("PRISONER"))
 			prisoner = true;
 		return prisoner;
+	}
+
+	public Prisoner reconstruct(Prisoner prisoner, BindingResult binding) {
+		Prisoner result;
+		Prisoner founded = this.findOne(prisoner.getId());
+
+		result = prisoner;
+
+		result.setVersion(founded.getVersion());
+		result.setBoxes(founded.getBoxes());
+		result.setCharges(founded.getCharges());
+		result.setCrimeRate(founded.getCrimeRate());
+		result.setExitDate(founded.getExitDate());
+		result.setFinderActivities(founded.getFinderActivities());
+		result.setFreedom(founded.getFreedom());
+		result.setIncomeDate(founded.getIncomeDate());
+		result.setIsIsolated(founded.getIsIsolated());
+		result.setIsSuspect(founded.getIsSuspect());
+		result.setPoints(founded.getPoints());
+		result.setProducts(founded.getProducts());
+		result.setRequests(founded.getRequests());
+		result.setTicker(founded.getTicker());
+		result.setUserAccount(founded.getUserAccount());
+		result.setVisits(founded.getVisits());
+
+		this.validator.validate(result, binding);
+
+		return result;
 	}
 }

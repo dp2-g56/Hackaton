@@ -78,8 +78,9 @@
 		<security:intercept-url pattern="/authenticated/**" access="isAuthenticated()" />
 		<security:intercept-url pattern="/box/actor/**" access="isAuthenticated()" />
 		<security:intercept-url pattern="/message/actor/**" access="isAuthenticated()" />
-		
-		
+	
+	<!-- EXPORT DATA -->	
+		<security:intercept-url pattern="/export/**" access="isAuthenticated()" />
 
 	<!-- NONE -->
 		<security:intercept-url pattern="/**" access="hasRole('NONE')" />
