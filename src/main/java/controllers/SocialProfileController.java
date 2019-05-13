@@ -137,9 +137,26 @@ public class SocialProfileController extends AbstractController {
 		return result;
 	}
 
-	@RequestMapping(value = "/editProfile", method = RequestMethod.POST, params = "savePrisoner")
-	public ModelAndView savePrisoner(Prisoner prisoner, BindingResult binding) {
-		ModelAndView result = null;
+	@RequestMapping(value = "/deleteUser", method = RequestMethod.GET)
+	public ModelAndView deleteUser() {
+		ModelAndView result;
+
+		try {
+			UserAccount userAccount;
+			userAccount = LoginService.getPrincipal();
+			Actor logguedActor = new Actor();
+
+			List<Authority> authorities = (List<Authority>) userAccount.getAuthorities();
+
+			logguedActor = this.actorService.getActorByUsername(userAccount.getUsername());
+
+			result = new ModelAndView("redirect:/j_spring_security_logout");
+
+			if (authorities.get(0).toString().equals("WARDEN"))
+				this.wardenService.deleteLoggedWarden();
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:/");
+		}
 
 		return result;
 	}
