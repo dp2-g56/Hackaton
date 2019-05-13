@@ -13,29 +13,19 @@
 
 <security:authorize access="hasRole('PRISONER')">
 
-	<form:form modelAttribute="finderActivities"
-		action="finderActivities/prisoner/edit.do">
-		
-		
-		<form:hidden path="id" />
-		
-		<acme:textbox code="finder.keyWord" path="keyWord"/>
 
-	
-		<acme:datebox code="finder.maxDate" path="maxDate"/>
+<form:form modelAttribute="request"
+		action="request/prisoner/create.do">
 		
-		<br/>
+		<acme:textarea code="request.motivation" path="motivation"/>
 		
-		<acme:datebox code="finder.minDate" path="minDate"/>
-
-		<br/>
+		<input type="hidden" name="activityId" value="${param.activityId}">
 		
-		<acme:submit name="save" code="finder.save"/>
+		<acme:submit name="save" code="request.save"/>
+		
+		</form:form>
+		
+		<acme:cancel url="finderActivities/prisoner/list.do" code="request.cancel"/>
 		
 		
-	</form:form>
-	
-		<acme:cancel url="finderActivities/prisoner/list.do" code="finder.cancel"/>
-
-
 </security:authorize>

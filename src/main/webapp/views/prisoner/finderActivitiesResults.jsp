@@ -28,16 +28,34 @@
 	
 	</jstl:choose>
 	
-	<display:column property="title" titleKey="activity.title" /> 
-	<display:column property="description" titleKey="activity.description" /> 
-	<display:column property="realizationDate" titleKey="activity.realizationTime" /> 
+	<display:column titleKey="activity.title">
+		<jstl:out value="${row.title}"/>
+	</display:column>
+	<display:column titleKey="activity.description" >
+		<jstl:out value="${row.description}"/>
+	</display:column>
+	<display:column titleKey="activity.realizationTime" >
+		<jstl:out value="${row.realizationDate}"/>
+	</display:column> 
 	<display:column titleKey="activity.maxAssistant" style="color:${color}"> 
 
 	<jstl:out value="${map[row]} / ${row.maxAssistant}"/>
 	
 	</display:column>
-	<display:column property="rewardPoints" titleKey="activity.rewardPoints" /> 
+	<display:column titleKey="activity.rewardPoints" >
+		<jstl:out value="${row.rewardPoints}"/>
+	</display:column>
 	<display:column titleKey="activity.request">
+	
+		 <spring:url var="create" value="/request/prisoner/create.do">
+		    	<spring:param name="activityId" value="${row.id}" />
+		 </spring:url>
+	
+		<a href="${create}"><button>
+		     	<spring:message var ="createRequest" code="request.createRequest" />
+		       	<jstl:out value="${createRequest}" />   
+		</button> </a>
+		
 	
 	
 	</display:column>

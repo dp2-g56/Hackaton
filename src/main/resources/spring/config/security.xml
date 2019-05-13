@@ -54,6 +54,7 @@
 		<security:intercept-url pattern="/product/salesman/prisoner/**" 	access="hasRole('PRISONER')" />
 		<security:intercept-url pattern="/product/prisoner/**" 	access="hasRole('PRISONER')" />
 		<security:intercept-url pattern="/finderActivities/prisoner/**" 	access="hasRole('PRISONER')" />
+		<security:intercept-url pattern="/request/prisoner/**" 	access="hasRole('PRISONER')" />
 	
 	<!-- VISITOR -->
 		<security:intercept-url pattern="/visit/visitor/**" 	access="hasRole('VISITOR')" />

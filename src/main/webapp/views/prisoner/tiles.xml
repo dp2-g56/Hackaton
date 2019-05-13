@@ -44,5 +44,16 @@
 		<put-attribute name="title" value="Edit finder" />
 		<put-attribute name="body" value="/views/prisoner/editFinder.jsp" />
 	</definition>
+	
+		<definition name="request/prisoner/list" extends="master.page">	
+		<put-attribute name="title" value="Requests list" />
+		<put-attribute name="body" value="/views/prisoner/requestList.jsp" />
+	</definition>
+	
+			
+	<definition name="request/prisoner/create" extends="master.page">	
+		<put-attribute name="title" value="Create request" />
+		<put-attribute name="body" value="/views/prisoner/createRequest.jsp" />
+	</definition>
 
 </tiles-definitions>
