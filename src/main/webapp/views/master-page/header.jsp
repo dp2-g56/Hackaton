@@ -68,7 +68,7 @@
 						code="master.page.socialWorker" /></a>
 				<ul>
 					<li class="arrow"></li>
-					
+					<li><a href="activity/socialworker/list.do"><spring:message code="master.page.activities" /></a></li>
 				</ul></li>
 		</security:authorize>
 		
