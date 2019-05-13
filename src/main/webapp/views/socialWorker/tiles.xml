@@ -10,29 +10,60 @@
 
 <tiles-definitions>
 
-	<definition name="curriculum/socialWorker/editPersonalRecord" extends="master.page">	
+	<definition
+		name="curriculum/socialWorker/editPersonalRecord"
+		extends="master.page">
 		<put-attribute name="title" value="Edit Personal Record" />
-		<put-attribute name="body" value="/views/socialWorker/editPersonalRecord.jsp" />
+		<put-attribute name="body"
+			value="/views/socialWorker/editPersonalRecord.jsp" />
 	</definition>
-	
-	<definition name="curriculum/socialWorker/editEducationRecord" extends="master.page">	
-		<put-attribute name="title" value="Edit Education Record" />
-		<put-attribute name="body" value="/views/socialWorker/editEducationRecord.jsp" />
+
+	<definition
+		name="curriculum/socialWorker/editEducationRecord"
+		extends="master.page">
+		<put-attribute name="title"
+			value="Edit Education Record" />
+		<put-attribute name="body"
+			value="/views/socialWorker/editEducationRecord.jsp" />
 	</definition>
-	
-	<definition name="curriculum/socialWorker/editProfessionalRecord" extends="master.page">	
-		<put-attribute name="title" value="Edit Professional Record" />
-		<put-attribute name="body" value="/views/socialWorker/editProfessionalRecord.jsp" />
+
+	<definition
+		name="curriculum/socialWorker/editProfessionalRecord"
+		extends="master.page">
+		<put-attribute name="title"
+			value="Edit Professional Record" />
+		<put-attribute name="body"
+			value="/views/socialWorker/editProfessionalRecord.jsp" />
 	</definition>
-	
-	<definition name="curriculum/socialWorker/editMiscellaneousRecord" extends="master.page">	
-		<put-attribute name="title" value="Edit Miscellaneous Record" />
-		<put-attribute name="body" value="/views/socialWorker/editMiscellaneousRecord.jsp" />
+
+	<definition
+		name="curriculum/socialWorker/editMiscellaneousRecord"
+		extends="master.page">
+		<put-attribute name="title"
+			value="Edit Miscellaneous Record" />
+		<put-attribute name="body"
+			value="/views/socialWorker/editMiscellaneousRecord.jsp" />
 	</definition>
-	
-	<definition name="curriculum/socialWorker/show" extends="master.page">	
+
+	<definition name="curriculum/socialWorker/show"
+		extends="master.page">
 		<put-attribute name="title" value="Curriculum" />
-		<put-attribute name="body" value="/views/socialWorker/showCurriculum.jsp" />
+		<put-attribute name="body"
+			value="/views/socialWorker/showCurriculum.jsp" />
+	</definition>
+
+	<definition name="activity/socialworker/list"
+		extends="master.page">
+		<put-attribute name="title" value="Activities" />
+		<put-attribute name="body"
+			value="/views/socialWorker/listOfActivities.jsp" />
+	</definition>
+	
+	<definition name="activity/socialworker/listAssistants"
+		extends="master.page">
+		<put-attribute name="title" value="Assistants" />
+		<put-attribute name="body"
+			value="/views/socialWorker/listOfAssistants.jsp" />
 	</definition>
 
 </tiles-definitions>
