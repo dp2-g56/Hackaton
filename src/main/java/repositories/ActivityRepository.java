@@ -12,7 +12,7 @@ import domain.Prisoner;
 @Repository
 public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 
-	@Query("select p from Activity a join a.requests r join r.prisoner p where a = ?1")
+	@Query("select p from Activity a join a.requests r join r.prisoner p where r.status = 'APPROVED' and a = ?1")
 	public List<Prisoner> getPrisonersPerActivity(Activity a);
 
 }
