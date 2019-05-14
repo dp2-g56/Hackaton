@@ -202,4 +202,24 @@ public class PrisonerWardenController extends AbstractController {
 
 		return result;
 	}
+
+	@RequestMapping(value = "/show", method = RequestMethod.GET)
+	public ModelAndView showPrisoner(@RequestParam int prisonerId) {
+		ModelAndView result;
+
+		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+
+		try {
+			Prisoner prisoner = this.prisonerService.getPrisonerAsWarden(prisonerId);
+
+			result = new ModelAndView("warden/showPrisoner");
+			result.addObject("prisoner", prisoner);
+			result.addObject("size", prisoner.getCharges().size());
+			result.addObject("locale", locale);
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:/");
+		}
+
+		return result;
+	}
 }
