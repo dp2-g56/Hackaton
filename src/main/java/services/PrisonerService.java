@@ -81,7 +81,6 @@ public class PrisonerService {
 		return this.prisonerRepository.findAll();
 	}
 
-
 	public List<Visitor> getVisitorsToCreateVisit(Prisoner prisoner) {
 		int prisonerId = prisoner.getId();
 		return this.prisonerRepository.getVisitorsToCreateVisit(prisonerId);
@@ -334,5 +333,10 @@ public class PrisonerService {
 		this.validator.validate(result, binding);
 
 		return result;
+	}
+
+	public Prisoner getPrisonerAsWarden(int prisonerId) {
+		this.wardenService.loggedAsWarden();
+		return this.findOne(prisonerId);
 	}
 }

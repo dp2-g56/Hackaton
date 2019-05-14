@@ -14,7 +14,7 @@
 		<display:column property="description" titleKey="report.description" /> 
 		<display:column property="date" titleKey="report.date" /> 
 		<display:column titleKey="report.visit.prisoner">
-			<spring:url var="prisonerUrl" value="/warden/prisoner/show.do">
+			<spring:url var="prisonerUrl" value="/prisoner/warden/show.do">
 				<spring:param name="prisonerId" value="${reportsAndPrisoner.get(row).id}" />
 			</spring:url>
 			<a href="${prisonerUrl}">
