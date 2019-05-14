@@ -1,6 +1,8 @@
 
 package controllers;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +78,22 @@ public class SalesmanWardenController extends AbstractController {
 				result.addObject("locale", locale);
 				result.addObject("message", "warden.register.commit.error");
 			}
+
+		return result;
+	}
+
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	public ModelAndView list() {
+		ModelAndView result;
+
+		try {
+			List<SalesMan> salesmen = this.salesManService.getSalesMenAsWarden();
+
+			result = new ModelAndView("warden/salesman");
+			result.addObject("salesmen", salesmen);
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:/");
+		}
 
 		return result;
 	}

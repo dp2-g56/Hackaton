@@ -55,6 +55,26 @@
 			</jstl:forEach>
 			<td><jstl:out value="${listOfCharges}" /></td>
 		</tr>
+		<tr>
+			<td><spring:message code="prisoner.ticker"/>:</td>
+			<td><jstl:out value="${prisoner.ticker}" /></td>
+		</tr>
+		<tr>
+			<td><spring:message code="prisoner.crimeRate"/>:</td>
+			<td><jstl:out value="${prisoner.crimeRate}" /></td>
+		</tr>
+		<tr>
+			<td><spring:message code="prisoner.isIsolated"/>:</td>
+			<td><jstl:out value="${prisoner.isIsolated}" /></td>
+		</tr>
+		<tr>
+			<td><spring:message code="prisoner.isSuspect"/>:</td>
+			<td><jstl:out value="${prisoner.isSuspect}" /></td>
+		</tr>
+		<tr>
+			<td><spring:message code="prisoner.freedom"/>:</td>
+			<td><jstl:out value="${prisoner.freedom}" /></td>
+		</tr>
 	</table>
 	
 	<acme:cancel url="/report/warden/list.do" code="warden.back" />
