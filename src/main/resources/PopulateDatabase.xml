@@ -780,6 +780,10 @@
 				
 				<property name="products">
 					<list>
+						<ref bean="product1" />
+						<ref bean="product3" />
+						<ref bean="product1" />
+						<ref bean="product3" />
 					</list>
 				</property>
 				
