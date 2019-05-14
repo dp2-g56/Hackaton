@@ -191,4 +191,9 @@ public class SalesManService {
 		return result;
 	}
 
+	public List<SalesMan> getSalesMenAsWarden() {
+		this.wardenService.loggedAsWarden();
+		return this.findAll();
+	}
+
 }
