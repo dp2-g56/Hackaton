@@ -91,6 +91,7 @@ public class SalesmanWardenController extends AbstractController {
 
 			result = new ModelAndView("warden/salesman");
 			result.addObject("salesmen", salesmen);
+			result.addObject("requestURI", "/salesman/warden/list.do");
 		} catch (Throwable oops) {
 			result = new ModelAndView("redirect:/");
 		}
