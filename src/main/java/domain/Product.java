@@ -4,6 +4,7 @@ package domain;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -13,12 +14,13 @@ import org.hibernate.validator.constraints.NotBlank;
 @Access(AccessType.PROPERTY)
 public class Product extends DomainEntity {
 
-	private String name;
-	private String description;
-	private TypeProduct type;
-	private int price;
-	private int stock;
-	private Boolean isDraftMode;
+	private String		name;
+	private String		description;
+	private TypeProduct	type;
+	private int			price;
+	private int			stock;
+	private Boolean		isDraftMode;
+
 
 	@NotBlank
 	public String getName() {
@@ -38,7 +40,8 @@ public class Product extends DomainEntity {
 		this.description = description;
 	}
 
-	@NotBlank
+	@NotNull
+	@ManyToOne
 	public TypeProduct getType() {
 		return this.type;
 	}
