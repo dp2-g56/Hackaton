@@ -74,11 +74,4 @@
 			value="/views/prisoner/createRequest.jsp" />
 	</definition>
 
-	<definition name="product/prisoner/list"
-		extends="master.page">
-		<put-attribute name="title" value="Productos" />
-		<put-attribute name="body"
-			value="/views/prisoner/listOfProducts.jsp" />
-	</definition>
-
 </tiles-definitions>

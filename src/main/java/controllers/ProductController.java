@@ -63,33 +63,33 @@ public class ProductController extends AbstractController {
 	}
 
 	// Listar Visitantes del prisionero logueado
-//	@RequestMapping(value = "/prisoner/list", method = RequestMethod.GET)
-//	public ModelAndView listPrisoner(@RequestParam int salesmanId) {
-//
-//		ModelAndView result;
-//		List<Product> products;
-//
-//		SalesMan salesMan = this.salesManService.findOne(salesmanId);
-//
-//		if (salesMan == null)
-//			return this.listSalesManPrisoner();
-//
-//		products = this.productService.getProductsFinalModeWithStockBySalesMan(salesmanId);
-//
-//		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
-//
-//		Prisoner loggedPrisoner = this.prisonerService.loggedPrisoner();
-//		int points = loggedPrisoner.getPoints();
-//
-//		result = new ModelAndView("anonymous/product/list");
-//		result.addObject("products", products);
-//		result.addObject("points", points);
-//		result.addObject("locale", locale);
-//		result.addObject("prisoner", true);
-//		result.addObject("requestURI", "product/prisoner/list.do");
-//
-//		return result;
-//	}
+	@RequestMapping(value = "/prisoner/list", method = RequestMethod.GET)
+	public ModelAndView listPrisoner(@RequestParam int salesmanId) {
+
+		ModelAndView result;
+		List<Product> products;
+
+		SalesMan salesMan = this.salesManService.findOne(salesmanId);
+
+		if (salesMan == null)
+			return this.listSalesManPrisoner();
+
+		products = this.productService.getProductsFinalModeWithStockBySalesMan(salesmanId);
+
+		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+
+		Prisoner loggedPrisoner = this.prisonerService.loggedPrisoner();
+		int points = loggedPrisoner.getPoints();
+
+		result = new ModelAndView("anonymous/product/list");
+		result.addObject("products", products);
+		result.addObject("points", points);
+		result.addObject("locale", locale);
+		result.addObject("prisoner", true);
+		result.addObject("requestURI", "product/prisoner/list.do");
+
+		return result;
+	}
 
 	// Listar Visitantes del prisionero logueado
 	@RequestMapping(value = "/salesman/prisoner/list", method = RequestMethod.GET)
@@ -127,27 +127,6 @@ public class ProductController extends AbstractController {
 		result.addObject("locale", locale);
 		result.addObject("salesman", true);
 		result.addObject("requestURI", "product/salesman/list.do");
-
-		return result;
-	}
-
-	@RequestMapping(value = "/prisoner/list", method = RequestMethod.GET)
-	public ModelAndView listPrisoner() {
-
-		ModelAndView result;
-		List<Product> products;
-
-		Prisoner prisoner = this.prisonerService.loggedPrisoner();
-
-		products = this.productService.getProductsFinalModeWithStock();
-
-		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
-
-		result = new ModelAndView("product/prisoner/list");
-		result.addObject("products", products);
-		result.addObject("prisoner", prisoner);
-		result.addObject("locale", locale);
-		result.addObject("requestURI", "product/prisoner/list.do");
 
 		return result;
 	}
