@@ -19,9 +19,9 @@
 	
 		<jstl:choose>
 			<jstl:when test="${locale == 'EN'}">
-				<acme:selectString code="product.type" path="typeEN" items="${productType}" itemsName="${productType}"/>	
+				<acme:select items="${productType}" itemLabel="typeProductEN" code="product.type" path="type"/>
 			</jstl:when><jstl:otherwise>
-				<acme:selectString code="product.type" path="typeES" items="${productType}" itemsName="${productType}"/>
+				<acme:select items="${productType}" itemLabel="typeProductES" code="product.type" path="type"/>
 			</jstl:otherwise>
 		</jstl:choose>
 		<br />
@@ -49,7 +49,9 @@
 		<!-- Buttons -->
 
 		<input type="submit" name="save" value="<spring:message code="button.save" />"/>
-		<input type="submit" name="delete" value="<spring:message code="button.delete" />" onclick="return confirm('<spring:message code="delete.confirm" />')"/>
+		<jstl:if test="${product.id != 0}">
+			<input type="submit" name="delete" value="<spring:message code="button.delete" />" onclick="return confirm('<spring:message code="delete.confirm" />')"/>
+		</jstl:if>
 		<acme:cancel url="/product/salesman/list.do" code="button.cancel" /> 
 
 	</form:form>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+ 
 <!-- 
 	* converters.xml 
 	* 
@@ -68,6 +68,9 @@
 			
 			<bean class="converters.BoxToStringConverter" />
 			<bean class="converters.StringToBoxConverter" />
+			
+			<bean class="converters.TypeProductToStringConverter" />
+			<bean class="converters.StringToTypeProductConverter" />
 	</util:list>
 
 </beans>
