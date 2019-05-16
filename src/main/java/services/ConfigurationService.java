@@ -82,8 +82,7 @@ public class ConfigurationService {
 		result.setWelcomeMessageSpanish(configuration.getWelcomeMessageSpanish());
 		result.setSystemName(configuration.getSystemName());
 		result.setImageURL(configuration.getImageURL());
-		result.setTypeProductsEN(configuration.getTypeProductsEN());
-		result.setTypeProductsES(configuration.getTypeProductsES());
+		result.setTypeProducts(configuration.getTypeProducts());
 		result.setMaxFinderResults(configuration.getMaxFinderResults());
 		result.setMinFinderResults(configuration.getMinFinderResults());
 		result.setTimeFinderPrisoners(configuration.getTimeFinderPrisoners());
@@ -146,8 +145,9 @@ public class ConfigurationService {
 		this.wardenService.loggedAsWarden();
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 		Configuration configuration = this.configurationRepository.configuration();
-		List<String> typeProductsEN = configuration.getTypeProductsEN();
-		List<String> typeProductsES = configuration.getTypeProductsES();
+		List<String> typeProductsEN = configuration.getTypeProducts().getTypeProductEN();
+		List<String> typeProductsES = configuration.getTypeProducts().getTypeProductES();
+
 		if (typeProductsEN.contains(typeEN) && typeProductsES.contains(typeES)) {
 			if (locale.contains("ES")) {
 				binding.addError(new FieldError("typeProductsEN", "typeEN", typeEN, false, null, null,
@@ -163,8 +163,8 @@ public class ConfigurationService {
 		} else {
 			typeProductsEN.add(typeEN);
 			typeProductsES.add(typeES);
-			configuration.setTypeProductsEN(typeProductsEN);
-			configuration.setTypeProductsES(typeProductsES);
+			configuration.getTypeProducts().setTypeProductEN(typeProductsEN);
+			configuration.getTypeProducts().setTypeProductES(typeProductsES);
 			this.configurationRepository.save(configuration);
 		}
 	}

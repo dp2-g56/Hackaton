@@ -254,9 +254,9 @@ public class ProductController extends AbstractController {
 		Configuration configuration = this.configurationService.getConfiguration();
 
 		if (locale.equals("EN"))
-			productType = configuration.getTypeProductsEN();
+			productType = configuration.getTypeProducts().getTypeProductEN();
 		else
-			productType = configuration.getTypeProductsES();
+			productType = configuration.getTypeProducts().getTypeProductES();
 
 		result.addObject("locale", locale);
 		result.addObject("productType", productType);
