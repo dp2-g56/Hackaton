@@ -10,50 +10,65 @@
 
 <tiles-definitions>
 
-	<definition name="visit/list" extends="master.page">	
+	<definition name="visit/list" extends="master.page">
 		<put-attribute name="title" value="Visits" />
-		<put-attribute name="body" value="/views/prisoner/showVisits.jsp" />
+		<put-attribute name="body"
+			value="/views/prisoner/showVisits.jsp" />
 	</definition>
-	
-	<definition name="report/list" extends="master.page">	
+
+	<definition name="report/list" extends="master.page">
 		<put-attribute name="title" value="Reports" />
-		<put-attribute name="body" value="/views/prisoner/showReport.jsp" />
+		<put-attribute name="body"
+			value="/views/prisoner/showReport.jsp" />
 	</definition>
-	
-	<definition name="visitor/prisoner/list" extends="master.page">	
+
+	<definition name="visitor/prisoner/list"
+		extends="master.page">
 		<put-attribute name="title" value="My Visitors" />
-		<put-attribute name="body" value="/views/prisoner/listOfVisitors.jsp" />
+		<put-attribute name="body"
+			value="/views/prisoner/listOfVisitors.jsp" />
 	</definition>
-	
-	<definition name="visit/prisoner/edit" extends="master.page">	
+
+	<definition name="visit/prisoner/edit" extends="master.page">
 		<put-attribute name="title" value="Create a Visit" />
-		<put-attribute name="body" value="/views/prisoner/editVisitAsPrisoner.jsp" />
+		<put-attribute name="body"
+			value="/views/prisoner/editVisitAsPrisoner.jsp" />
 	</definition>
-	
-	<definition name="prisoner/salesMen/list" extends="master.page">	
+
+	<definition name="prisoner/salesMen/list"
+		extends="master.page">
 		<put-attribute name="title" value="SalesMen" />
-		<put-attribute name="body" value="/views/prisoner/listOfSalesMen.jsp" />
+		<put-attribute name="body"
+			value="/views/prisoner/listOfSalesMen.jsp" />
 	</definition>
-	
-	<definition name="finderActivities/prisoner/list" extends="master.page">	
+
+	<definition name="finderActivities/prisoner/list"
+		extends="master.page">
 		<put-attribute name="title" value="Finder Result" />
-		<put-attribute name="body" value="/views/prisoner/finderActivitiesResults.jsp" />
+		<put-attribute name="body"
+			value="/views/prisoner/finderActivitiesResults.jsp" />
 	</definition>
-	
-	<definition name="finderActivities/prisoner/edit" extends="master.page">	
+
+	<definition name="finderActivities/prisoner/edit"
+		extends="master.page">
 		<put-attribute name="title" value="Edit finder" />
-		<put-attribute name="body" value="/views/prisoner/editFinder.jsp" />
+		<put-attribute name="body"
+			value="/views/prisoner/editFinder.jsp" />
 	</definition>
-	
-		<definition name="request/prisoner/list" extends="master.page">	
+
+	<definition name="request/prisoner/list"
+		extends="master.page">
 		<put-attribute name="title" value="Requests list" />
-		<put-attribute name="body" value="/views/prisoner/requestList.jsp" />
+		<put-attribute name="body"
+			value="/views/prisoner/requestList.jsp" />
 	</definition>
-	
-			
-	<definition name="request/prisoner/create" extends="master.page">	
+
+
+	<definition name="request/prisoner/create"
+		extends="master.page">
 		<put-attribute name="title" value="Create request" />
-		<put-attribute name="body" value="/views/prisoner/createRequest.jsp" />
+		<put-attribute name="body"
+			value="/views/prisoner/createRequest.jsp" />
 	</definition>
 
 </tiles-definitions>

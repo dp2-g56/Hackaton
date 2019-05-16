@@ -13,31 +13,31 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import services.ConfigurationService;
-import services.PrisonerService;
-import services.ProductService;
-import services.SalesManService;
 import domain.Configuration;
 import domain.Prisoner;
 import domain.Product;
 import domain.SalesMan;
+import domain.TypeProduct;
+import services.ConfigurationService;
+import services.PrisonerService;
+import services.ProductService;
+import services.SalesManService;
 
 @Controller
 @RequestMapping("/product")
 public class ProductController extends AbstractController {
 
 	@Autowired
-	private ProductService			productService;
+	private ProductService productService;
 
 	@Autowired
-	private SalesManService			salesManService;
+	private SalesManService salesManService;
 
 	@Autowired
-	private PrisonerService			prisonerService;
+	private PrisonerService prisonerService;
 
 	@Autowired
-	private ConfigurationService	configurationService;
-
+	private ConfigurationService configurationService;
 
 	public ProductController() {
 		super();
@@ -72,9 +72,8 @@ public class ProductController extends AbstractController {
 
 		SalesMan salesMan = this.salesManService.findOne(salesmanId);
 
-		if (salesMan == null) {
+		if (salesMan == null)
 			return this.listSalesManPrisoner();
-		}
 
 		products = this.productService.getProductsFinalModeWithStockBySalesMan(salesmanId);
 
@@ -92,6 +91,7 @@ public class ProductController extends AbstractController {
 
 		return result;
 	}
+
 	// Listar Visitantes del prisionero logueado
 	@RequestMapping(value = "/salesman/prisoner/list", method = RequestMethod.GET)
 	public ModelAndView listSalesManPrisoner() {
@@ -152,13 +152,10 @@ public class ProductController extends AbstractController {
 		Product product = this.productService.findOne(productId);
 		SalesMan salesman = this.salesManService.loggedSalesMan();
 
-		if (product == null || salesman == null || !salesman.getProducts().contains(product)) {
+		if (product == null || salesman == null || !salesman.getProducts().contains(product))
 			result = new ModelAndView("redirect:list.do");
-		} else {
-
+		else
 			result = this.createEditModelAndView(product);
-
-		}
 		return result;
 	}
 
@@ -170,13 +167,10 @@ public class ProductController extends AbstractController {
 		Product product = this.productService.findOne(productId);
 		SalesMan salesman = this.salesManService.loggedSalesMan();
 
-		if (product == null || salesman == null || !salesman.getProducts().contains(product)) {
+		if (product == null || salesman == null || !salesman.getProducts().contains(product))
 			result = new ModelAndView("redirect:list.do");
-		} else {
-
+		else
 			result = this.restockModelAndView(product);
-
-		}
 		return result;
 	}
 
@@ -186,22 +180,20 @@ public class ProductController extends AbstractController {
 
 		Product pro = this.productService.reconstruct(product, binding);
 
-		if (binding.hasErrors()) {
+		if (binding.hasErrors())
 			result = this.createEditModelAndView(pro);
-		} else {
+		else
 			try {
-				if (product.getId() == 0) {
+				if (product.getId() == 0)
 					this.productService.addProduct(pro);
-				} else {
+				else
 					this.productService.updateProduct(pro);
-				}
 
 				result = new ModelAndView("redirect:list.do");
 
 			} catch (Throwable oops) {
 				result = this.createEditModelAndView(product, "commit.error");
 			}
-		}
 		return result;
 	}
 
@@ -228,9 +220,9 @@ public class ProductController extends AbstractController {
 
 		Product pro = this.productService.reconstruct(product, binding);
 
-		if (binding.hasErrors()) {
+		if (binding.hasErrors())
 			result = this.restockModelAndView(pro);
-		} else {
+		else
 			try {
 
 				this.productService.updateProduct(pro);
@@ -240,7 +232,6 @@ public class ProductController extends AbstractController {
 			} catch (Throwable oops) {
 				result = this.restockModelAndView(product, "commit.error");
 			}
-		}
 		return result;
 	}
 
@@ -263,11 +254,12 @@ public class ProductController extends AbstractController {
 		List<String> productType = new ArrayList<String>();
 		Configuration configuration = this.configurationService.getConfiguration();
 
-		if (locale.equals("EN")) {
-			productType = configuration.getTypeProductsEN();
-		} else {
-			productType = configuration.getTypeProductsES();
-		}
+		if (locale.equals("EN"))
+			for (TypeProduct p : configuration.getTypeProducts())
+				productType.add(p.getTypeProductEN());
+		else
+			for (TypeProduct p : configuration.getTypeProducts())
+				productType.add(p.getTypeProductES());
 
 		result.addObject("locale", locale);
 		result.addObject("productType", productType);
