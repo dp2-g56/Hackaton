@@ -16,6 +16,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 
 import domain.Configuration;
+import domain.TypeProduct;
 import repositories.ConfigurationRepository;
 import security.Authority;
 import security.LoginService;
@@ -145,9 +146,12 @@ public class ConfigurationService {
 		this.wardenService.loggedAsWarden();
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 		Configuration configuration = this.configurationRepository.configuration();
-		List<String> typeProductsEN = configuration.getTypeProducts().getTypeProductEN();
-		List<String> typeProductsES = configuration.getTypeProducts().getTypeProductES();
-
+		List<String> typeProductsEN = new ArrayList<String>();
+		for (TypeProduct p : configuration.getTypeProducts())
+			typeProductsEN.add(p.getTypeProductEN());
+		List<String> typeProductsES = new ArrayList<String>();
+		for (TypeProduct p : configuration.getTypeProducts())
+			typeProductsES.add(p.getTypeProductES());
 		if (typeProductsEN.contains(typeEN) && typeProductsES.contains(typeES)) {
 			if (locale.contains("ES")) {
 				binding.addError(new FieldError("typeProductsEN", "typeEN", typeEN, false, null, null,
@@ -161,10 +165,12 @@ public class ConfigurationService {
 						"The word is already contained in the list of type products."));
 			}
 		} else {
-			typeProductsEN.add(typeEN);
-			typeProductsES.add(typeES);
-			configuration.getTypeProducts().setTypeProductEN(typeProductsEN);
-			configuration.getTypeProducts().setTypeProductES(typeProductsES);
+			TypeProduct p = new TypeProduct();
+			p.setTypeProductEN(typeEN);
+			p.setTypeProductES(typeES);
+			List<TypeProduct> lp = configuration.getTypeProducts();
+			lp.add(p);
+			configuration.setTypeProducts(lp);
 			this.configurationRepository.save(configuration);
 		}
 	}

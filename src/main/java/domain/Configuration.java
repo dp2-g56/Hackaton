@@ -7,7 +7,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.validation.Valid;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -18,7 +18,7 @@ import org.hibernate.validator.constraints.URL;
 public class Configuration extends DomainEntity {
 
 	private List<String> spamWords;
-	private TypeProduct typeProducts;
+	private List<TypeProduct> typeProducts;
 	private String spainTelephoneCode;
 	private int minFinderResults;
 	private int maxFinderResults;
@@ -48,12 +48,12 @@ public class Configuration extends DomainEntity {
 		this.spamWords = spamWords;
 	}
 
-	@OneToOne
-	public TypeProduct getTypeProducts() {
+	@OneToMany
+	public List<TypeProduct> getTypeProducts() {
 		return this.typeProducts;
 	}
 
-	public void setTypeProducts(TypeProduct typeProducts) {
+	public void setTypeProducts(List<TypeProduct> typeProducts) {
 		this.typeProducts = typeProducts;
 	}
 

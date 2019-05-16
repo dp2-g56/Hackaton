@@ -17,6 +17,7 @@ import domain.Configuration;
 import domain.Prisoner;
 import domain.Product;
 import domain.SalesMan;
+import domain.TypeProduct;
 import services.ConfigurationService;
 import services.PrisonerService;
 import services.ProductService;
@@ -254,9 +255,11 @@ public class ProductController extends AbstractController {
 		Configuration configuration = this.configurationService.getConfiguration();
 
 		if (locale.equals("EN"))
-			productType = configuration.getTypeProducts().getTypeProductEN();
+			for (TypeProduct p : configuration.getTypeProducts())
+				productType.add(p.getTypeProductEN());
 		else
-			productType = configuration.getTypeProducts().getTypeProductES();
+			for (TypeProduct p : configuration.getTypeProducts())
+				productType.add(p.getTypeProductES());
 
 		result.addObject("locale", locale);
 		result.addObject("productType", productType);
