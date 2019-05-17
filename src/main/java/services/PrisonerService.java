@@ -339,4 +339,8 @@ public class PrisonerService {
 		this.wardenService.loggedAsWarden();
 		return this.findOne(prisonerId);
 	}
+
+	public List<Prisoner> getPrisonersWithProductsOfASalesMan(int salesmanId) {
+		return this.prisonerRepository.getPrisonersWithProductsOfASalesMan(salesmanId);
+	}
 }

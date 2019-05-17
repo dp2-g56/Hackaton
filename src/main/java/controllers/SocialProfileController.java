@@ -11,6 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import domain.Actor;
+import domain.Guard;
+import domain.Prisoner;
+import domain.SalesMan;
+import domain.SocialWorker;
+import domain.Warden;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
@@ -20,30 +26,23 @@ import services.PrisonerService;
 import services.SalesManService;
 import services.SocialWorkerService;
 import services.WardenService;
-import domain.Actor;
-import domain.Guard;
-import domain.Prisoner;
-import domain.SalesMan;
-import domain.SocialWorker;
-import domain.Warden;
 
 @Controller
 @RequestMapping("/authenticated")
 public class SocialProfileController extends AbstractController {
 
 	@Autowired
-	private ActorService		actorService;
+	private ActorService actorService;
 	@Autowired
-	private SocialWorkerService	socialWorkerService;
+	private SocialWorkerService socialWorkerService;
 	@Autowired
-	private PrisonerService		prisonerService;
+	private PrisonerService prisonerService;
 	@Autowired
-	private SalesManService		salesManService;
+	private SalesManService salesManService;
 	@Autowired
-	private WardenService		wardenService;
+	private WardenService wardenService;
 	@Autowired
-	private GuardService		guardService;
-
+	private GuardService guardService;
 
 	// -------------------------------------------------------------------
 	// ---------------------------LIST
@@ -122,6 +121,10 @@ public class SocialProfileController extends AbstractController {
 				Guard guard = this.guardService.findOne(logguedActor.getId());
 				result.addObject("guard", guard);
 			}
+			if (authorities.get(0).toString().equals("SALESMAN")) {
+				SalesMan salesman = this.salesManService.findOne(logguedActor.getId());
+				result.addObject("salesman", salesman);
+			}
 		} catch (Throwable oops) {
 			result = new ModelAndView("redirect:/");
 		}
@@ -175,6 +178,29 @@ public class SocialProfileController extends AbstractController {
 		return result;
 	}
 
+	@RequestMapping(value = "/editProfile", method = RequestMethod.POST, params = "saveSalesman")
+	public ModelAndView saveSalesman(SalesMan salesman, BindingResult binding) {
+		ModelAndView result;
+
+		SalesMan salesmanActor;
+		salesmanActor = this.salesManService.reconstruct(salesman, binding);
+
+		if (binding.hasErrors()) {
+			result = new ModelAndView("authenticated/editProfile");
+			result.addObject("salesman", salesmanActor);
+		} else
+			try {
+				this.salesManService.saveSalesman(salesmanActor);
+				result = new ModelAndView("redirect:/authenticated/showProfile.do");
+			} catch (Throwable oops) {
+				result = new ModelAndView("authenticated/editProfile");
+				result.addObject("salesman", salesmanActor);
+				result.addObject("message", "warden.save.commit.error");
+			}
+
+		return result;
+	}
+
 	@RequestMapping(value = "/deleteUser", method = RequestMethod.GET)
 	public ModelAndView deleteUser() {
 		ModelAndView result;
@@ -195,6 +221,9 @@ public class SocialProfileController extends AbstractController {
 
 			if (authorities.get(0).toString().equals("WARDEN"))
 				this.wardenService.deleteLoggedWarden();
+
+			if (authorities.get(0).toString().equals("SALESMAN"))
+				this.salesManService.deleteLoggedSalesman();
 		} catch (Throwable oops) {
 			result = new ModelAndView("redirect:/");
 		}

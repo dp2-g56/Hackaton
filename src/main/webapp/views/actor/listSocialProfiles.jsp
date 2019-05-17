@@ -18,7 +18,7 @@
 		<tr>
 			<td><spring:message code="actor.photo" />:</td>
 			<td>
-	<img src="${actor.photo}" alt="Italian Trulli"></td>
+	<img src="${actor.photo}" alt="${actor.photo}"></td>
 		</tr>
 	<security:authorize access="hasRole('PRISONER')">
 		<tr>
@@ -96,7 +96,7 @@
 	</security:authorize>
 	
 	
-	<security:authorize access="hasAnyRole('WARDEN')">
+	<security:authorize access="hasRole('WARDEN')">
 		<spring:url var="editProfileUrl" value="authenticated/editProfile.do"/>
 		<a href="${editProfileUrl}">
 			<strong><spring:message code="actor.editProfile" /></strong>
@@ -106,6 +106,23 @@
 			<strong><spring:message code="delete.user"/></strong>
 		</a> / 
 		<spring:url var="exportDataUrl" value="export/warden.do">
+			<spring:param name="id" value="${actor.id}"/>
+		</spring:url>
+		<a href="${exportDataUrl}">
+			<strong><spring:message code="export.data.user"/></strong>
+		</a>
+	</security:authorize>
+	
+	<security:authorize access="hasRole('SALESMAN')">
+		<spring:url var="editProfileUrl" value="authenticated/editProfile.do"/>
+		<a href="${editProfileUrl}">
+			<strong><spring:message code="actor.editProfile" /></strong>
+		</a> / 
+		<spring:url var="deleteUserUrl" value="authenticated/deleteUser.do"/>
+		<a href="${deleteUserUrl}" onClick="return confirm('<spring:message code="delete.user.confirmation" />')">
+			<strong><spring:message code="delete.user"/></strong>
+		</a> / 
+		<spring:url var="exportDataUrl" value="export/salesman.do">
 			<spring:param name="id" value="${actor.id}"/>
 		</spring:url>
 		<a href="${exportDataUrl}">
