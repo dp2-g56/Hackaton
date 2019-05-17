@@ -55,8 +55,7 @@ public class ProductService {
 		product.setName("");
 		product.setPrice(1);
 		product.setStock(1);
-		product.setTypeEN("");
-		product.setTypeES("");
+		product.setType(null);
 
 		return product;
 	}
@@ -72,33 +71,16 @@ public class ProductService {
 	public Product reconstruct(Product product, BindingResult binding) {
 		Product result = new Product();
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
-		Configuration configuration = this.configurationService.getConfiguration();
 
 		if (product.getId() == 0) {
 			result = product;
-			if (locale.equals("EN")) {
-				result.setTypeES(configuration.getTypeProductsES().get(configuration.getTypeProductsEN().indexOf(product.getTypeEN())));
-			} else if (locale.equals("ES")) {
-				result.setTypeEN(configuration.getTypeProductsEN().get(configuration.getTypeProductsES().indexOf(product.getTypeES())));
-			}
+
 		} else {
 			Product copy = this.findOne(product.getId());
 
 			if (copy.getIsDraftMode()) {
 
-				result.setDescription(product.getDescription());
-				result.setIsDraftMode(product.getIsDraftMode());
-				result.setName(product.getName());
-				result.setPrice(product.getPrice());
-				result.setStock(product.getStock());
-
-				if (locale.equals("EN")) {
-					result.setTypeEN(product.getTypeEN());
-					result.setTypeES(configuration.getTypeProductsES().get(configuration.getTypeProductsEN().indexOf(product.getTypeEN())));
-				} else if (locale.equals("ES")) {
-					result.setTypeES(product.getTypeES());
-					result.setTypeEN(configuration.getTypeProductsEN().get(configuration.getTypeProductsES().indexOf(product.getTypeES())));
-				}
+				result = product;
 				result.setVersion(copy.getVersion());
 				result.setId(copy.getId());
 
@@ -110,8 +92,7 @@ public class ProductService {
 				result.setName(copy.getName());
 				result.setPrice(copy.getPrice());
 
-				result.setTypeEN(copy.getTypeEN());
-				result.setTypeES(copy.getTypeES());
+				result.setType(copy.getType());
 				result.setVersion(copy.getVersion());
 
 				if (result.getStock() < copy.getStock()) {
@@ -132,7 +113,7 @@ public class ProductService {
 	public void addProduct(Product pro) {
 		SalesMan salesman = this.salesManService.loggedSalesMan();
 		Configuration configuration = this.configurationService.getConfiguration();
-		Assert.isTrue(configuration.getTypeProductsES().contains(pro.getTypeES()) && configuration.getTypeProductsEN().contains(pro.getTypeEN()) && pro.getId() == 0);
+		Assert.isTrue(configuration.getTypeProducts().contains(pro.getType()) && pro.getId() == 0);
 		Product product = this.save(pro);
 		salesman.getProducts().add(product);
 		this.salesManService.save(salesman);
@@ -140,7 +121,7 @@ public class ProductService {
 	public void updateProduct(Product pro) {
 		SalesMan salesman = this.salesManService.loggedSalesMan();
 		Configuration configuration = this.configurationService.getConfiguration();
-		Assert.isTrue(configuration.getTypeProductsES().contains(pro.getTypeES()) && configuration.getTypeProductsEN().contains(pro.getTypeEN()) && salesman.getProducts().contains(pro));
+		Assert.isTrue(configuration.getTypeProducts().contains(pro.getType()) && salesman.getProducts().contains(pro));
 		this.save(pro);
 
 	}

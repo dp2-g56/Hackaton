@@ -42,22 +42,12 @@
 			</list>
 		</property>
 		
-		<property name="typeProductsEN">
+		<property name="typeProducts">
 			<list>
-				<value>Decoration</value>
-				<value>Clothes</value>
-				<value>Sugar</value>
-				<value>Sewing</value>
-				
-			</list>
-		</property>
-		
-		<property name="typeProductsES">
-			<list>
-				<value>Decoracion</value>
-				<value>Ropa</value>
-				<value>Azucar</value>
-				<value>Costura</value>
+				<ref bean="type1" />
+				<ref bean="type2" />
+				<ref bean="type3" />
+				<ref bean="type4" />
 				
 			</list>
 		</property>
@@ -1386,42 +1376,41 @@
 			<bean id="product1" class="domain.Product">
 						<property name="name" value="Not an M16" />
 						<property name="description" value="Definitely not an M16" />
-						<property name="typeEN" value="Decoration" />
-						<property name="typeES" value="Decoracion" />
 						<property name="price" value="15" />
 						<property name="stock" value="1" />
 						<property name="isDraftMode" value="False" />
+						<property name="type" ref="type1" />
 			</bean>
 			
 			<bean id="product2" class="domain.Product">
 						<property name="name" value="straitjacket" />
 						<property name="description" value="The most comfortable clothing ever" />
-						<property name="typeEN" value="Clothes" />
-						<property name="typeES" value="Ropa" />
+
 						<property name="price" value="5" />
 						<property name="stock" value="5" />
 						<property name="isDraftMode" value="True" />
+						<property name="type"  ref="type2"/>
 			</bean>
 		
 		<!-- SALESMAN2 -->
 			<bean id="product3" class="domain.Product">
 						<property name="name" value="Not a knife" />
 						<property name="description" value="Definitely not a knife" />
-						<property name="typeEN" value="Sewing" />
-						<property name="typeES" value="Costura" />
+			
 						<property name="price" value="10" />
 						<property name="stock" value="3" />
 						<property name="isDraftMode" value="False" />
+						<property name="type" ref="type4" />
 			</bean>
 			
 			<bean id="product4" class="domain.Product">
 						<property name="name" value="Not drugs" />
 						<property name="description" value="Definitely not drugs" />
-						<property name="typeEN" value="Sugar" />
-						<property name="typeES" value="Azucar" />
+			
 						<property name="price" value="1000" />
 						<property name="stock" value="8" />
 						<property name="isDraftMode" value="True" />
+						<property name="type" ref="type3" />
 			</bean>
 	
 	
@@ -2170,6 +2159,27 @@
 						    <list>
 							</list>
 						</property>
+				</bean>
+			<!-- TYPEPRODUCT -->
+				
+				<bean id="type1" class="domain.TypeProduct">
+						<property name="typeProductEN" value="Decoration" />
+						<property name="typeProductES" value="Decoracion" />
+				</bean>
+				
+				<bean id="type2" class="domain.TypeProduct">
+						<property name="typeProductEN" value="Clothes" />
+						<property name="typeProductES" value="Ropa" />
+				</bean>
+				
+				<bean id="type3" class="domain.TypeProduct">
+						<property name="typeProductEN" value="Sugar" />
+						<property name="typeProductES" value="Azucar" />
+				</bean>
+				
+				<bean id="type4" class="domain.TypeProduct">
+						<property name="typeProductEN" value="Sewing" />
+						<property name="typeProductES" value="Costura" />
 				</bean>
 				
 				

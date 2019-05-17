@@ -1,7 +1,6 @@
 
 package controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ import domain.Configuration;
 import domain.Prisoner;
 import domain.Product;
 import domain.SalesMan;
+import domain.TypeProduct;
 
 @Controller
 @RequestMapping("/product")
@@ -92,6 +92,7 @@ public class ProductController extends AbstractController {
 
 		return result;
 	}
+
 	// Listar Visitantes del prisionero logueado
 	@RequestMapping(value = "/salesman/prisoner/list", method = RequestMethod.GET)
 	public ModelAndView listSalesManPrisoner() {
@@ -155,9 +156,7 @@ public class ProductController extends AbstractController {
 		if (product == null || salesman == null || !salesman.getProducts().contains(product)) {
 			result = new ModelAndView("redirect:list.do");
 		} else {
-
 			result = this.createEditModelAndView(product);
-
 		}
 		return result;
 	}
@@ -173,9 +172,7 @@ public class ProductController extends AbstractController {
 		if (product == null || salesman == null || !salesman.getProducts().contains(product)) {
 			result = new ModelAndView("redirect:list.do");
 		} else {
-
 			result = this.restockModelAndView(product);
-
 		}
 		return result;
 	}
@@ -260,14 +257,8 @@ public class ProductController extends AbstractController {
 		result.addObject("message", messageCode);
 
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
-		List<String> productType = new ArrayList<String>();
 		Configuration configuration = this.configurationService.getConfiguration();
-
-		if (locale.equals("EN")) {
-			productType = configuration.getTypeProductsEN();
-		} else {
-			productType = configuration.getTypeProductsES();
-		}
+		List<TypeProduct> productType = configuration.getTypeProducts();
 
 		result.addObject("locale", locale);
 		result.addObject("productType", productType);

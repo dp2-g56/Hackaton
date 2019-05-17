@@ -94,7 +94,7 @@
 		</jstl:otherwise>
 	</jstl:choose>
 	</security:authorize>
-	</table>
+	
 	
 	<security:authorize access="hasAnyRole('WARDEN')">
 		<spring:url var="editProfileUrl" value="authenticated/editProfile.do"/>
@@ -112,4 +112,33 @@
 			<strong><spring:message code="export.data.user"/></strong>
 		</a>
 	</security:authorize>
+	
+	
+	<security:authorize access="hasAnyRole('GUARD')">
+	
+			<tr>
+				<td><spring:message code="guard.phone"/>:</td>
+				<td><jstl:out value="${guard.phone}" /></td>
+			</tr>
+			<tr>
+				<td><spring:message code="guard.email"/>:</td>
+				<td><jstl:out value="${guard.email}" /></td>
+			</tr>
+		
+		<spring:url var="editProfileUrl" value="authenticated/editProfile.do"/>
+		<a href="${editProfileUrl}">
+			<strong><spring:message code="actor.editProfile" /></strong>
+		</a> / 
+		<spring:url var="deleteUserUrl" value="authenticated/deleteUser.do"/>
+		<a href="${deleteUserUrl}" onClick="return confirm('<spring:message code="delete.user.confirmation" />')">
+			<strong><spring:message code="delete.user"/></strong>
+		</a> / 
+		<spring:url var="exportDataUrl" value="export/guard.do">
+			<spring:param name="id" value="${actor.id}"/>
+		</spring:url>
+		<a href="${exportDataUrl}">
+			<strong><spring:message code="export.data.user"/></strong>
+		</a>
+	</security:authorize>
+	</table>
 
