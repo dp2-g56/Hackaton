@@ -13,8 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.Validator;
 
 import domain.Box;
+import domain.Prisoner;
 import domain.Product;
 import domain.SalesMan;
 import forms.FormObjectSalesman;
@@ -35,6 +37,15 @@ public class SalesManService {
 
 	@Autowired
 	private BoxService boxService;
+
+	@Autowired
+	private PrisonerService prisonerService;
+
+	@Autowired
+	private ProductService productService;
+
+	@Autowired
+	private Validator validator;
 
 	public SalesMan loggedSalesMan() {
 		UserAccount userAccount;
@@ -103,32 +114,36 @@ public class SalesManService {
 	}
 
 	public void saveSalesman(SalesMan salesman) {
-		this.wardenService.loggedAsWarden();
 
-		List<Box> boxes = new ArrayList<>();
+		if (salesman.getId() == 0) {
+			this.wardenService.loggedAsWarden();
 
-		// Boxes
-		Box box1 = this.boxService.createSystem();
-		box1.setName("SUSPICIOUSBOX");
-		Box saved1 = this.boxService.saveSystem(box1);
-		boxes.add(saved1);
+			List<Box> boxes = new ArrayList<>();
 
-		Box box2 = this.boxService.createSystem();
-		box2.setName("TRASHBOX");
-		Box saved2 = this.boxService.saveSystem(box2);
-		boxes.add(saved2);
+			// Boxes
+			Box box1 = this.boxService.createSystem();
+			box1.setName("SUSPICIOUSBOX");
+			Box saved1 = this.boxService.saveSystem(box1);
+			boxes.add(saved1);
 
-		Box box3 = this.boxService.createSystem();
-		box3.setName("OUTBOX");
-		Box saved3 = this.boxService.saveSystem(box3);
-		boxes.add(saved3);
+			Box box2 = this.boxService.createSystem();
+			box2.setName("TRASHBOX");
+			Box saved2 = this.boxService.saveSystem(box2);
+			boxes.add(saved2);
 
-		Box box4 = this.boxService.createSystem();
-		box4.setName("INBOX");
-		Box saved4 = this.boxService.saveSystem(box4);
-		boxes.add(saved4);
+			Box box3 = this.boxService.createSystem();
+			box3.setName("OUTBOX");
+			Box saved3 = this.boxService.saveSystem(box3);
+			boxes.add(saved3);
 
-		salesman.setBoxes(boxes);
+			Box box4 = this.boxService.createSystem();
+			box4.setName("INBOX");
+			Box saved4 = this.boxService.saveSystem(box4);
+			boxes.add(saved4);
+
+			salesman.setBoxes(boxes);
+		} else
+			this.loggedAsSalesMan();
 
 		this.salesManRepository.save(salesman);
 	}
@@ -194,6 +209,46 @@ public class SalesManService {
 	public List<SalesMan> getSalesMenAsWarden() {
 		this.wardenService.loggedAsWarden();
 		return this.findAll();
+	}
+
+	public SalesMan reconstruct(SalesMan salesman, BindingResult binding) {
+		SalesMan result = this.create();
+		SalesMan founded = this.findOne(salesman.getId());
+
+		result = salesman;
+
+		result.setVersion(founded.getVersion());
+		result.setBoxes(founded.getBoxes());
+		result.setPoints(founded.getPoints());
+		result.setProducts(founded.getProducts());
+		result.setUserAccount(founded.getUserAccount());
+
+		this.validator.validate(result, binding);
+
+		return result;
+	}
+
+	public void deleteLoggedSalesman() {
+		SalesMan salesman = this.loggedSalesMan();
+
+		List<Product> products = salesman.getProducts();
+		List<Prisoner> prisoners = this.prisonerService.getPrisonersWithProductsOfASalesMan(salesman.getId());
+
+		for (Prisoner p : prisoners) {
+			List<Product> productsOfPrisoner = p.getProducts();
+			productsOfPrisoner.removeAll(products);
+			p.setProducts(productsOfPrisoner);
+
+			this.prisonerService.save(p);
+		}
+
+//		salesman.setProducts(new ArrayList<Product>());
+//		this.save(salesman);
+
+		for (Product p : products)
+			this.productService.deleteProductToDeleteSalesman(p);
+
+		this.salesManRepository.delete(salesman);
 	}
 
 }

@@ -25,14 +25,6 @@
 		
 		<display:column property="storeName" titleKey="salesman.storeName" /> 
         
-		<display:column titleKey="actor.profiles">
-			<spring:url var="salesmanUrl"
-				value="/salesman/warden/edit.do">
-				<spring:param name="salesmanId" value="${row.id}" />
-			</spring:url>
-			<a href="${salesmanUrl}"><spring:message code="actor.editProfile" /></a>
-		</display:column>
-        
 	</display:table>
 	
 </security:authorize>
