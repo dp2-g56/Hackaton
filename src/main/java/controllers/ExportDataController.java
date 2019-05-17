@@ -2,6 +2,7 @@
 package controllers;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import domain.Guard;
+import domain.Product;
 import domain.SalesMan;
 import domain.Warden;
 import services.GuardService;
@@ -123,6 +125,16 @@ public class ExportDataController {
 		sb.append("- VAT Number: " + salesman.getVATNumber()).append(System.getProperty("line.separator"));
 		sb.append("- Store name: " + salesman.getStoreName()).append(System.getProperty("line.separator"));
 		sb.append("- Points: " + salesman.getPoints()).append(System.getProperty("line.separator"));
+
+		List<Product> products = salesman.getProducts();
+		for (Product p : products) {
+			sb.append("Product '" + p.getName() + "':").append(System.getProperty("line.separator"));
+			sb.append("- Description: " + p.getDescription()).append(System.getProperty("line.separator"));
+			sb.append("- Price: " + p.getPrice()).append(System.getProperty("line.separator"));
+			sb.append("- Stock: " + p.getStock()).append(System.getProperty("line.separator"));
+			sb.append("- ¿Is draft mode?: " + p.getIsDraftMode()).append(System.getProperty("line.separator"));
+			sb.append(System.getProperty("line.separator"));
+		}
 
 		// Defines el nombre del archivo y la extension
 		response.setContentType("text/txt");
