@@ -64,5 +64,25 @@
 		<put-attribute name="title" value="Vendedores" /> 
 		<put-attribute name="body" value="/views/warden/listOfSalesMen.jsp" />
 	</definition>
+	
+	<definition name="warden/configuration" extends="master.page">	
+		<put-attribute name="title" value="Configuracion" /> 
+		<put-attribute name="body" value="/views/warden/configuration.jsp" />
+	</definition>
+	
+	<definition name="warden/editConfiguration" extends="master.page">	
+		<put-attribute name="title" value="Editar Configuracion" /> 
+		<put-attribute name="body" value="/views/warden/editConfiguration.jsp" />
+	</definition>
+	
+	<definition name="spamWords/configuration" extends="master.page">	
+		<put-attribute name="title" value="Lista de palabras spam" /> 
+		<put-attribute name="body" value="/views/warden/spamList.jsp" />
+	</definition>
+	
+	<definition name="listTypeProd/configuration" extends="master.page">	
+		<put-attribute name="title" value="Lista de tipos de productos" /> 
+		<put-attribute name="body" value="/views/warden/typesProducts.jsp" />
+	</definition>
 
 </tiles-definitions>

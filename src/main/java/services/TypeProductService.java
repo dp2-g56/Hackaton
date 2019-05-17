@@ -29,4 +29,8 @@ public class TypeProductService {
 		return this.typeProductRepository.save(typeProduct);
 	}
 
+	public void delete(TypeProduct typeProduct) {
+		this.typeProductRepository.delete(typeProduct);
+	}
+
 }
