@@ -54,6 +54,10 @@ public class VisitService {
 		return this.visitRepository.findOne(visitId);
 	}
 
+	public Visit save(int visitId) {
+		return this.visitRepository.save(this.visitRepository.findOne(visitId));
+	}
+
 	//Change Status as Prisoner
 	public Visit editVisitPrisoner(Visit visit, boolean accept) {
 		// Security

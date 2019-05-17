@@ -167,6 +167,11 @@ public class VisitController extends AbstractController {
 				return this.listPrisoner();
 
 		}
+		if (authority.toString().equals("GUARD")) {
+			Guard loggedGuard = this.guardService.loggedGuard();
+			if (!loggedGuard.getVisits().contains(visit))
+				return this.listGuard();
+		}
 
 		report = visit.getReport();
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();

@@ -1,8 +1,8 @@
 /*
  * DomainEntity.java
- *
+ * 
  * Copyright (C) 2019 Universidad de Sevilla
- *
+ * 
  * The use of this project is hereby constrained to the conditions of the
  * TDG Licence, a copy of which you may download from
  * http://www.tdg-seville.info/License.html
@@ -35,17 +35,19 @@ public class Actor extends DomainEntity {
 		super();
 	}
 
+
 	// Properties -------------------------------------------------------------
 
-	private String name;
+	private String		name;
 
-	private String middleName;
-	private String surname;
-	private String photo;
+	private String		middleName;
+	private String		surname;
+	private String		photo;
 
-	private UserAccount userAccount;
+	private UserAccount	userAccount;
 
-	private List<Box> boxes;
+	private List<Box>	boxes;
+
 
 	@NotBlank
 	public String getName() {
@@ -56,6 +58,7 @@ public class Actor extends DomainEntity {
 		this.name = name;
 	}
 
+	@Valid
 	public String getMiddleName() {
 		return this.middleName;
 	}

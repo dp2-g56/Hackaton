@@ -20,20 +20,32 @@
 			
 	<display:table pagesize="5" name="products" id="row" requestURI="${requestURI}" >
 		
-		<display:column property="name" titleKey="product.name" /> 
-		<display:column property="description" titleKey="product.description" /> 
+		<display:column titleKey="product.name" > 
+		<jstl:out value="${row.name}"></jstl:out>
+		</display:column>
+		<display:column titleKey="product.description" > 
+		<jstl:out value="${row.description}"></jstl:out>
+		</display:column>
 		
 		
 			<jstl:choose>
 				<jstl:when test="${locale == 'EN'}">
-					<display:column property="typeEN"  titleKey="product.type" />
+					<display:column  titleKey="product.type" >
+						<jstl:out value="${row.type.typeProductEN}"></jstl:out>
+					</display:column>
 				</jstl:when><jstl:otherwise>
-					<display:column property="typeES"  titleKey="product.type" />
+					<display:column  titleKey="product.type" >
+						<jstl:out value="${row.type.typeProductES}"></jstl:out>
+					</display:column>
 				</jstl:otherwise>
 			</jstl:choose>
 		
-		<display:column property="price" titleKey="product.price" /> 
-		<display:column property="stock" titleKey="product.stock" /> 
+		<display:column titleKey="product.price" > 
+			<jstl:out value="${row.price}"></jstl:out>
+		</display:column>
+		<display:column titleKey="product.stock" > 
+			<jstl:out value="${row.stock}"></jstl:out>
+		</display:column>
 		
 		<jstl:if test="${prisoner}">
 			<display:column>	
