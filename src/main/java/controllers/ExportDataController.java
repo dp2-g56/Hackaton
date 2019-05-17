@@ -125,8 +125,11 @@ public class ExportDataController {
 		sb.append("- VAT Number: " + salesman.getVATNumber()).append(System.getProperty("line.separator"));
 		sb.append("- Store name: " + salesman.getStoreName()).append(System.getProperty("line.separator"));
 		sb.append("- Points: " + salesman.getPoints()).append(System.getProperty("line.separator"));
+		sb.append(System.getProperty("line.separator"));
 
 		List<Product> products = salesman.getProducts();
+		sb.append("List of Products").append(System.getProperty("line.separator"));
+		sb.append("---").append(System.getProperty("line.separator"));
 		for (Product p : products) {
 			sb.append("Product '" + p.getName() + "':").append(System.getProperty("line.separator"));
 			sb.append("- Description: " + p.getDescription()).append(System.getProperty("line.separator"));
