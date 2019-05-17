@@ -97,7 +97,7 @@ public class RequestPrisonerController extends AbstractController {
 
 		try {
 
-			this.requestService.deleteRequest(this.requestService.findeOne(requestId));
+			this.requestService.deleteRequestFromPrisoner(this.requestService.findeOne(requestId));
 
 			result = new ModelAndView("redirect:list.do");
 

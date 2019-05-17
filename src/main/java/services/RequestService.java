@@ -14,6 +14,7 @@ import domain.Activity;
 import domain.ActivityStatus;
 import domain.Prisoner;
 import domain.Request;
+import domain.SocialWorker;
 import repositories.RequestRepository;
 
 @Service
@@ -28,6 +29,9 @@ public class RequestService {
 
 	@Autowired
 	private ActivityService activityService;
+
+	@Autowired
+	private SocialWorkerService socialWorkerService;
 
 	@Autowired
 	private Validator validator;
@@ -60,7 +64,7 @@ public class RequestService {
 		return this.requestRepository.save(request);
 	}
 
-	// Request
+	// Request Prisoner
 
 	public Request reconstruct(Request request, Integer activityId, BindingResult binding) {
 		Request res = new Request();
@@ -105,7 +109,7 @@ public class RequestService {
 
 	}
 
-	public void deleteRequest(Request request) {
+	public void deleteRequestFromPrisoner(Request request) {
 		Prisoner prisoner = this.prisonerService.loggedPrisoner();
 		Activity activity = this.activityService.findOne(request.getActivity().getId());
 
@@ -126,6 +130,13 @@ public class RequestService {
 		this.prisonerService.save(prisoner);
 
 		this.delete(request);
+	}
+
+	// Request Social Worker
+
+	public List<Request> getRequestsFromSocialWorker() {
+		SocialWorker socialWorker = this.socialWorkerService.loggedSocialWorker();
+		return this.requestRepository.getRequestsFromSocialWorker(socialWorker);
 	}
 
 }
