@@ -30,6 +30,11 @@
 		<put-attribute name="body" value="/views/warden/registerSalesman.jsp" />
 	</definition>
 	
+	<definition name="warden/registerGuard" extends="master.page">	
+		<put-attribute name="title" value="Registrar un guardia" />
+		<put-attribute name="body" value="/views/warden/registerGuard.jsp" />
+	</definition>
+	
 	<definition name="prisoner/warden/listSuspects" extends="master.page">	
 		<put-attribute name="title" value="Lista de sospechosos" />
 		<put-attribute name="body" value="/views/warden/listOfSuspects.jsp" />
