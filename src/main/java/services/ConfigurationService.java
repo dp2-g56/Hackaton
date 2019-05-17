@@ -33,6 +33,9 @@ public class ConfigurationService {
 	private WardenService wardenService;
 
 	@Autowired
+	private TypeProductService typeProductService;
+
+	@Autowired
 	private Validator validator;
 
 	public Configuration getConfiguration() {
@@ -152,7 +155,7 @@ public class ConfigurationService {
 		List<String> typeProductsES = new ArrayList<String>();
 		for (TypeProduct p : configuration.getTypeProducts())
 			typeProductsES.add(p.getTypeProductES());
-		if (typeProductsEN.contains(typeEN) && typeProductsES.contains(typeES)) {
+		if (typeProductsEN.contains(typeEN) || typeProductsES.contains(typeES)) {
 			if (locale.contains("ES")) {
 				binding.addError(new FieldError("typeProductsEN", "typeEN", typeEN, false, null, null,
 						"La palabra ya esta contenida en la lista de tipos de productos."));
@@ -168,11 +171,26 @@ public class ConfigurationService {
 			TypeProduct p = new TypeProduct();
 			p.setTypeProductEN(typeEN);
 			p.setTypeProductES(typeES);
+			this.typeProductService.save(p);
 			List<TypeProduct> lp = configuration.getTypeProducts();
 			lp.add(p);
 			configuration.setTypeProducts(lp);
 			this.configurationRepository.save(configuration);
 		}
+	}
+
+	public void deleteTypeProducts(int id, BindingResult binding) {
+		this.wardenService.loggedAsWarden();
+		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+		Configuration configuration = this.configurationRepository.configuration();
+		TypeProduct tp = new TypeProduct();
+		tp = this.typeProductService.findOne(id);
+		List<TypeProduct> lp = this.typeProductService.findAll();
+		Assert.isTrue(lp.contains(tp));
+		lp.remove(tp);
+		this.typeProductService.delete(tp);
+		configuration.setTypeProducts(lp);
+		this.configurationRepository.save(configuration);
 	}
 
 }

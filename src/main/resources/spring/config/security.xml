@@ -48,7 +48,7 @@
 		<security:intercept-url pattern="/salesman/warden/**" access="hasRole('WARDEN')" />
 		<security:intercept-url pattern="/guard/warden/**" access="hasRole('WARDEN')" />
 		<security:intercept-url pattern="/broadcast/warden/**" access="hasRole('WARDEN')" />
-		
+		<security:intercept-url pattern="/configuration/warden/**" access="hasRole('WARDEN')" />
 		
 		
 		

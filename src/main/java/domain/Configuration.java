@@ -20,22 +20,22 @@ public class Configuration extends DomainEntity {
 	private List<String> spamWords;
 	private List<TypeProduct> typeProducts;
 	private String spainTelephoneCode;
-	private int minFinderResults;
-	private int maxFinderResults;
-	private int timeFinderPrisoners;
-	private int finderResult;
+	private Integer minFinderResults;
+	private Integer maxFinderResults;
+	private Integer timeFinderPrisoners;
+	private Integer finderResult;
 	private String welcomeMessageEnglish;
 	private String welcomeMessageSpanish;
 	private String systemName;
 	private String imageURL;
-	private int timeFinderActivities;
+	private Integer timeFinderActivities;
 
 	@Valid
-	public int getFinderResult() {
+	public Integer getFinderResult() {
 		return this.finderResult;
 	}
 
-	public void setFinderResult(int finderResult) {
+	public void setFinderResult(Integer finderResult) {
 		this.finderResult = finderResult;
 	}
 
@@ -104,38 +104,38 @@ public class Configuration extends DomainEntity {
 	}
 
 	@Valid
-	public int getMinFinderResults() {
+	public Integer getMinFinderResults() {
 		return this.minFinderResults;
 	}
 
-	public void setMinFinderResults(int minFinderResults) {
+	public void setMinFinderResults(Integer minFinderResults) {
 		this.minFinderResults = minFinderResults;
 	}
 
 	@Valid
-	public int getMaxFinderResults() {
+	public Integer getMaxFinderResults() {
 		return this.maxFinderResults;
 	}
 
-	public void setMaxFinderResults(int maxFinderResults) {
+	public void setMaxFinderResults(Integer maxFinderResults) {
 		this.maxFinderResults = maxFinderResults;
 	}
 
 	@Valid
-	public int getTimeFinderPrisoners() {
+	public Integer getTimeFinderPrisoners() {
 		return this.timeFinderPrisoners;
 	}
 
-	public void setTimeFinderPrisoners(int timeFinderPrisoners) {
+	public void setTimeFinderPrisoners(Integer timeFinderPrisoners) {
 		this.timeFinderPrisoners = timeFinderPrisoners;
 	}
 
 	@Valid
-	public int getTimeFinderActivities() {
+	public Integer getTimeFinderActivities() {
 		return this.timeFinderActivities;
 	}
 
-	public void setTimeFinderActivities(int timeFinderActivities) {
+	public void setTimeFinderActivities(Integer timeFinderActivities) {
 		this.timeFinderActivities = timeFinderActivities;
 	}
 
