@@ -152,7 +152,7 @@ public class ConfigurationService {
 		List<String> typeProductsES = new ArrayList<String>();
 		for (TypeProduct p : configuration.getTypeProducts())
 			typeProductsES.add(p.getTypeProductES());
-		if (typeProductsEN.contains(typeEN) && typeProductsES.contains(typeES)) {
+		if (typeProductsEN.contains(typeEN) || typeProductsES.contains(typeES)) {
 			if (locale.contains("ES")) {
 				binding.addError(new FieldError("typeProductsEN", "typeEN", typeEN, false, null, null,
 						"La palabra ya esta contenida en la lista de tipos de productos."));
@@ -170,6 +170,39 @@ public class ConfigurationService {
 			p.setTypeProductES(typeES);
 			List<TypeProduct> lp = configuration.getTypeProducts();
 			lp.add(p);
+			configuration.setTypeProducts(lp);
+			this.configurationRepository.save(configuration);
+		}
+	}
+
+	public void deleteTypeProducts(int id, BindingResult binding) {
+		this.wardenService.loggedAsWarden();
+		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+		Configuration configuration = this.configurationRepository.configuration();
+		List<String> typeProductsEN = new ArrayList<String>();
+		for (TypeProduct p : configuration.getTypeProducts())
+			typeProductsEN.add(p.getTypeProductEN());
+		List<String> typeProductsES = new ArrayList<String>();
+		for (TypeProduct p : configuration.getTypeProducts())
+			typeProductsES.add(p.getTypeProductES());
+		if (!typeProductsEN.contains(typeEN) || !typeProductsES.contains(typeES)) {
+			if (locale.contains("ES")) {
+				binding.addError(new FieldError("typeProductsEN", "typeEN", typeEN, false, null, null,
+						"La palabra no esta contenida en la lista de tipos de productos."));
+				binding.addError(new FieldError("typeProductsES", "typeES", typeES, false, null, null,
+						"La palabra no esta contenida en la lista de tipos de productos."));
+			} else {
+				binding.addError(new FieldError("typeProductsEN", "typeEN", typeEN, false, null, null,
+						"The word isn't already contained in the list of type products."));
+				binding.addError(new FieldError("typeProductsES", "typeES", typeES, false, null, null,
+						"The word isn't already contained in the list of type products."));
+			}
+		} else {
+			TypeProduct p = new TypeProduct();
+			p.setTypeProductEN(typeEN);
+			p.setTypeProductES(typeES);
+			List<TypeProduct> lp = configuration.getTypeProducts();
+			lp.remove(p);
 			configuration.setTypeProducts(lp);
 			this.configurationRepository.save(configuration);
 		}
