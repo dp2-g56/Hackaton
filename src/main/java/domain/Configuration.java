@@ -7,6 +7,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.validation.Valid;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -16,21 +17,18 @@ import org.hibernate.validator.constraints.URL;
 @Access(AccessType.PROPERTY)
 public class Configuration extends DomainEntity {
 
-
-	private List<String>	spamWords;
-	private List<String>	typeProductsEN;
-	private List<String>	typeProductsES;
-	private String			spainTelephoneCode;
-	private int				minFinderResults;
-	private int				maxFinderResults;
-	private int				timeFinderPrisoners;
-	private int 			finderResult;
-	private String			welcomeMessageEnglish;
-	private String			welcomeMessageSpanish;
-	private String			systemName;
-	private String			imageURL;
-	private int				timeFinderActivities;
-
+	private List<String> spamWords;
+	private List<TypeProduct> typeProducts;
+	private String spainTelephoneCode;
+	private int minFinderResults;
+	private int maxFinderResults;
+	private int timeFinderPrisoners;
+	private int finderResult;
+	private String welcomeMessageEnglish;
+	private String welcomeMessageSpanish;
+	private String systemName;
+	private String imageURL;
+	private int timeFinderActivities;
 
 	@Valid
 	public int getFinderResult() {
@@ -50,22 +48,13 @@ public class Configuration extends DomainEntity {
 		this.spamWords = spamWords;
 	}
 
-	@ElementCollection(targetClass = String.class)
-	public List<String> getTypeProductsEN() {
-		return this.typeProductsEN;
+	@OneToMany
+	public List<TypeProduct> getTypeProducts() {
+		return this.typeProducts;
 	}
 
-	public void setTypeProductsEN(List<String> typeProductsEN) {
-		this.typeProductsEN = typeProductsEN;
-	}
-
-	@ElementCollection(targetClass = String.class)
-	public List<String> getTypeProductsES() {
-		return this.typeProductsES;
-	}
-
-	public void setTypeProductsES(List<String> typeProductsES) {
-		this.typeProductsES = typeProductsES;
+	public void setTypeProducts(List<TypeProduct> typeProducts) {
+		this.typeProducts = typeProducts;
 	}
 
 	@NotBlank

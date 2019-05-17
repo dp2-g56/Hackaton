@@ -14,31 +14,32 @@ import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
+import repositories.ReportRepository;
 import domain.Guard;
 import domain.Prisoner;
 import domain.Report;
 import domain.Visit;
 import domain.VisitStatus;
-import repositories.ReportRepository;
 
 @Service
 @Transactional
 public class ReportService {
 
 	@Autowired
-	private ReportRepository reportRepository;
+	private ReportRepository	reportRepository;
 
 	@Autowired
-	private GuardService guardService;
+	private GuardService		guardService;
 
 	@Autowired
-	private VisitService visitService;
+	private VisitService		visitService;
 
 	@Autowired
-	private WardenService wardenService;
+	private WardenService		wardenService;
 
 	@Autowired
-	private Validator validator;
+	private Validator			validator;
+
 
 	public void saveReport(Report report, int visitId) {
 		this.guardService.loggedAsGuard();
@@ -57,6 +58,10 @@ public class ReportService {
 
 		visit.setReport(saved);
 
+	}
+
+	public void delete(int reportId) {
+		this.reportRepository.delete(reportId);
 	}
 
 	// RECONSTRUCT

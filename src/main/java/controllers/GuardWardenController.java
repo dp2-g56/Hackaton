@@ -1,8 +1,6 @@
 
 package controllers;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,22 +12,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import domain.SalesMan;
-import forms.FormObjectSalesman;
-import services.SalesManService;
+import services.ConfigurationService;
+import services.GuardService;
 import services.WardenService;
+import domain.Guard;
+import forms.FormObjectGuard;
 
 @Controller
-@RequestMapping("/salesman/warden")
-public class SalesmanWardenController extends AbstractController {
+@RequestMapping("/guard/warden")
+public class GuardWardenController extends AbstractController {
 
 	@Autowired
-	private WardenService wardenService;
+	private WardenService			wardenService;
 
 	@Autowired
-	private SalesManService salesManService;
+	private GuardService			guardService;
 
-	public SalesmanWardenController() {
+	@Autowired
+	private ConfigurationService	configurationService;
+
+
+	public GuardWardenController() {
 		super();
 	}
 
@@ -39,12 +42,12 @@ public class SalesmanWardenController extends AbstractController {
 
 		try {
 			this.wardenService.loggedAsWarden();
-			FormObjectSalesman formSalesman = new FormObjectSalesman();
+			FormObjectGuard formGuard = new FormObjectGuard();
 
 			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
-			result = new ModelAndView("warden/registerSalesman");
-			result.addObject("formSalesman", formSalesman);
+			result = new ModelAndView("warden/registerGuard");
+			result.addObject("formGuard", formGuard);
 			result.addObject("locale", locale);
 
 		} catch (Throwable oops) {
@@ -55,45 +58,34 @@ public class SalesmanWardenController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST, params = "save")
-	public ModelAndView save(@ModelAttribute("formSalesman") @Valid FormObjectSalesman formSalesman,
-			BindingResult binding) {
+	public ModelAndView save(@ModelAttribute("formGuard") @Valid FormObjectGuard formGuard, BindingResult binding) {
 		ModelAndView result;
 
-		SalesMan salesman = new SalesMan();
-		salesman = this.salesManService.reconstruct(formSalesman, binding);
+		Guard guard = new Guard();
+		guard = this.guardService.reconstruct(formGuard, binding);
+
+		String prefix = this.configurationService.getConfiguration().getSpainTelephoneCode();
 
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
 		if (binding.hasErrors()) {
-			result = new ModelAndView("warden/registerSalesman");
-			result.addObject("formSalesman", formSalesman);
+			result = new ModelAndView("warden/registerGuard");
+			result.addObject("formGuard", formGuard);
 			result.addObject("locale", locale);
 		} else
 			try {
-				this.salesManService.saveSalesman(salesman);
+
+				if (guard.getPhone().matches("([0-9]{4,})$"))
+					guard.setPhone(prefix + guard.getPhone());
+
+				this.guardService.saveGuard(guard);
 				result = new ModelAndView("redirect:/");
 			} catch (Throwable oops) {
-				result = new ModelAndView("warden/registerWarden");
-				result.addObject("formSalesman", formSalesman);
+				result = new ModelAndView("warden/registerGuard");
+				result.addObject("formGuard", formGuard);
 				result.addObject("locale", locale);
 				result.addObject("message", "warden.register.commit.error");
 			}
-
-		return result;
-	}
-
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public ModelAndView list() {
-		ModelAndView result;
-
-		try {
-			List<SalesMan> salesmen = this.salesManService.getSalesMenAsWarden();
-
-			result = new ModelAndView("warden/salesman");
-			result.addObject("salesmen", salesmen);
-		} catch (Throwable oops) {
-			result = new ModelAndView("redirect:/");
-		}
 
 		return result;
 	}
