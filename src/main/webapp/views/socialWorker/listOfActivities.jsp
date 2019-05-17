@@ -29,6 +29,16 @@
 		<display:column titleKey="activity.rewardPoints">
 			<jstl:out value="${row.rewardPoints}" />
 		</display:column>	
+		
+			<display:column>
+			<spring:url var="requests"
+					value="/request/socialworker/list.do">
+					<spring:param name="activityId" value="${row.id}" />
+				</spring:url>
+				<a href="${requests}"> <spring:message
+						code="activity.requests" /></a>
+		</display:column>
+		
 		<display:column>
 			<spring:url var="assistants"
 					value="/activity/socialworker/listAssistants.do">
@@ -37,6 +47,8 @@
 				<a href="${assistants}"> <spring:message
 						code="activity.assistants" /></a>
 		</display:column>
+		
+	
 
 	</display:table>
 

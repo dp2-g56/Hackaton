@@ -10,6 +10,6 @@ import domain.SocialWorker;
 
 public interface RequestRepository extends JpaRepository<Request, Integer> {
 
-	@Query("select distinct(r) from SocialWorker s join s.activities a join a.requests where s=?1")
-	public List<Request> getRequestsFromSocialWorker(SocialWorker socialWorker);
+	@Query("select distinct(r) from SocialWorker s join s.activities a join a.requests where s=?1 and a.id=?2")
+	public List<Request> getRequestsFromSocialWorker(SocialWorker socialWorker, Integer activityId);
 }
