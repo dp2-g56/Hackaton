@@ -16,6 +16,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 
 import domain.Box;
+import domain.Prisoner;
 import domain.Product;
 import domain.SalesMan;
 import forms.FormObjectSalesman;
@@ -36,6 +37,12 @@ public class SalesManService {
 
 	@Autowired
 	private BoxService boxService;
+
+	@Autowired
+	private PrisonerService prisonerService;
+
+	@Autowired
+	private ProductService productService;
 
 	@Autowired
 	private Validator validator;
@@ -222,8 +229,26 @@ public class SalesManService {
 	}
 
 	public void deleteLoggedSalesman() {
-		// TODO Auto-generated method stub
+		SalesMan salesman = this.loggedSalesMan();
 
+		List<Product> products = salesman.getProducts();
+		List<Prisoner> prisoners = this.prisonerService.getPrisonersWithProductsOfASalesMan(salesman.getId());
+
+		for (Prisoner p : prisoners) {
+			List<Product> productsOfPrisoner = p.getProducts();
+			productsOfPrisoner.removeAll(products);
+			p.setProducts(productsOfPrisoner);
+
+			this.prisonerService.save(p);
+		}
+
+//		salesman.setProducts(new ArrayList<Product>());
+//		this.save(salesman);
+
+		for (Product p : products)
+			this.productService.deleteProductToDeleteSalesman(p);
+
+		this.salesManRepository.delete(salesman);
 	}
 
 }

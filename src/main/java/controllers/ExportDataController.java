@@ -13,25 +13,29 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import services.GuardService;
-import services.WardenService;
 import domain.Guard;
+import domain.SalesMan;
 import domain.Warden;
+import services.GuardService;
+import services.SalesManService;
+import services.WardenService;
 
 @Controller
 @RequestMapping("/export")
 public class ExportDataController {
 
 	@Autowired
-	public WardenService	wardenService;
+	public WardenService wardenService;
 
 	@Autowired
-	public GuardService		guardService;
+	public GuardService guardService;
 
+	@Autowired
+	public SalesManService salesManService;
 
 	@RequestMapping(value = "/warden", method = RequestMethod.GET)
-	public @ResponseBody
-	String export(@RequestParam(value = "id", defaultValue = "-1") int id, HttpServletResponse response) throws IOException {
+	public @ResponseBody String export(@RequestParam(value = "id", defaultValue = "-1") int id,
+			HttpServletResponse response) throws IOException {
 
 		this.wardenService.loggedAsWarden();
 
@@ -63,8 +67,8 @@ public class ExportDataController {
 	}
 
 	@RequestMapping(value = "/guard", method = RequestMethod.GET)
-	public @ResponseBody
-	String exportGuard(@RequestParam(value = "id", defaultValue = "-1") int id, HttpServletResponse response) throws IOException {
+	public @ResponseBody String exportGuard(@RequestParam(value = "id", defaultValue = "-1") int id,
+			HttpServletResponse response) throws IOException {
 
 		this.guardService.loggedAsGuard();
 
@@ -87,6 +91,42 @@ public class ExportDataController {
 		// Defines el nombre del archivo y la extension
 		response.setContentType("text/txt");
 		response.setHeader("Content-Disposition", "attachment;filename=exportDataWarden.txt");
+
+		// Con estos comandos permites su descarga cuando clickas
+		ServletOutputStream outStream = response.getOutputStream();
+		outStream.println(sb.toString());
+		outStream.flush();
+		outStream.close();
+
+		// El return no llega nunca, es del metodo viejo
+		return sb.toString();
+	}
+
+	@RequestMapping(value = "/salesman", method = RequestMethod.GET)
+	public @ResponseBody String exportSalesman(@RequestParam(value = "id", defaultValue = "-1") int id,
+			HttpServletResponse response) throws IOException {
+
+		this.salesManService.loggedAsSalesMan();
+
+		SalesMan salesman = new SalesMan();
+		salesman = this.salesManService.findOne(id);
+
+		// Defines un StringBuilder para construir tu string
+		StringBuilder sb = new StringBuilder();
+
+		// linea
+		sb.append("Personal data:").append(System.getProperty("line.separator"));
+		sb.append("- Name: " + salesman.getName()).append(System.getProperty("line.separator"));
+		sb.append("- Middle name: " + salesman.getMiddleName()).append(System.getProperty("line.separator"));
+		sb.append("- Surname: " + salesman.getSurname()).append(System.getProperty("line.separator"));
+		sb.append("- Photo: " + salesman.getPhoto()).append(System.getProperty("line.separator"));
+		sb.append("- VAT Number: " + salesman.getVATNumber()).append(System.getProperty("line.separator"));
+		sb.append("- Store name: " + salesman.getStoreName()).append(System.getProperty("line.separator"));
+		sb.append("- Points: " + salesman.getPoints()).append(System.getProperty("line.separator"));
+
+		// Defines el nombre del archivo y la extension
+		response.setContentType("text/txt");
+		response.setHeader("Content-Disposition", "attachment;filename=exportDataSalesman.txt");
 
 		// Con estos comandos permites su descarga cuando clickas
 		ServletOutputStream outStream = response.getOutputStream();
