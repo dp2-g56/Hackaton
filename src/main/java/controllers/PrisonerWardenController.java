@@ -5,9 +5,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -165,11 +167,14 @@ public class PrisonerWardenController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public ModelAndView editPrisoner(@RequestParam int prisonerId) {
+	public ModelAndView editPrisoner(@RequestParam(required = false) String prisonerId) {
 		ModelAndView result;
 
 		try {
-			Prisoner prisoner = this.wardenService.getPrisonerAsWarden(prisonerId);
+			Assert.isTrue(StringUtils.isNumeric(prisonerId));
+			int prisonerIdInt = Integer.parseInt(prisonerId);
+
+			Prisoner prisoner = this.wardenService.getPrisonerAsWarden(prisonerIdInt);
 
 			result = new ModelAndView("warden/editPrisoner");
 			result.addObject("prisoner", prisoner);
@@ -204,13 +209,15 @@ public class PrisonerWardenController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/show", method = RequestMethod.GET)
-	public ModelAndView showPrisoner(@RequestParam int prisonerId) {
+	public ModelAndView showPrisoner(@RequestParam(required = false) String prisonerId) {
 		ModelAndView result;
 
-		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
-
 		try {
-			Prisoner prisoner = this.prisonerService.getPrisonerAsWarden(prisonerId);
+			Assert.isTrue(StringUtils.isNumeric(prisonerId));
+			int prisonerIdInt = Integer.parseInt(prisonerId);
+
+			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+			Prisoner prisoner = this.prisonerService.getPrisonerAsWarden(prisonerIdInt);
 
 			result = new ModelAndView("warden/showPrisoner");
 			result.addObject("prisoner", prisoner);
