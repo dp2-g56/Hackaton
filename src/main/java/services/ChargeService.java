@@ -8,15 +8,16 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import domain.Charge;
 import repositories.ChargeRepository;
+import domain.Charge;
+import domain.Prisoner;
 
 @Transactional
 @Service
 public class ChargeService {
 
 	@Autowired
-	private ChargeRepository chargeRepository;
+	private ChargeRepository	chargeRepository;
 
 
 	// CRUDS
@@ -39,6 +40,10 @@ public class ChargeService {
 
 	public List<Charge> getFinalCharges() {
 		return this.chargeRepository.getFinalCharges();
+	}
+
+	public List<Charge> getChargesNotAssignedToPrisoner(Prisoner prisoner) {
+		return this.chargeRepository.getChargesNotAssignedToPrisoner(prisoner);
 	}
 
 }

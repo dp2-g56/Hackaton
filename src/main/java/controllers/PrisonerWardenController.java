@@ -17,25 +17,30 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import services.ChargeService;
+import services.ConfigurationService;
+import services.PrisonerService;
+import services.WardenService;
 import domain.Charge;
 import domain.Prisoner;
 import forms.FormObjectPrisoner;
-import services.ChargeService;
-import services.PrisonerService;
-import services.WardenService;
 
 @Controller
 @RequestMapping("/prisoner/warden")
 public class PrisonerWardenController extends AbstractController {
 
 	@Autowired
-	private ChargeService chargeService;
+	private ChargeService			chargeService;
 
 	@Autowired
-	private WardenService wardenService;
+	private WardenService			wardenService;
 
 	@Autowired
-	private PrisonerService prisonerService;
+	private PrisonerService			prisonerService;
+
+	@Autowired
+	private ConfigurationService	configurationService;
+
 
 	public PrisonerWardenController() {
 		super();
@@ -101,10 +106,11 @@ public class PrisonerWardenController extends AbstractController {
 		ModelAndView result;
 
 		try {
-			List<Prisoner> prisoners = this.prisonerService.getSuspectPrisoners();
+			List<Prisoner> prisoners = this.prisonerService.getIncarceratedPrisoners();
 
 			result = new ModelAndView("prisoner/warden/listSuspects");
 			result.addObject("prisoners", prisoners);
+			result.addObject("possibleCharges", this.chargeService.findAll());
 
 		} catch (Throwable oops) {
 			result = new ModelAndView("redirect:/");
@@ -143,7 +149,7 @@ public class PrisonerWardenController extends AbstractController {
 		try {
 
 			Prisoner prisoner = this.prisonerService.findOne(prisonerId);
-			List<Prisoner> prisoners = this.prisonerService.getSuspectPrisoners();
+			List<Prisoner> prisoners = this.prisonerService.getIncarceratedPrisoners();
 
 			if (prisoner == null || !prisoners.contains(prisoner))
 				return this.listSuspects();
@@ -160,21 +166,84 @@ public class PrisonerWardenController extends AbstractController {
 			result.addObject("suspect", true);
 
 		} catch (Throwable oops) {
-			result = new ModelAndView("redirect:/");
+			result = new ModelAndView("redirect:/prisoner/warden/listSuspectCharges.do");
 		}
 
 		return result;
 	}
 
-	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public ModelAndView editPrisoner(@RequestParam(required = false) String prisonerId) {
+	@RequestMapping(value = "/addCharge", method = RequestMethod.POST)
+	public ModelAndView addChargesSave(Charge charge, @RequestParam Integer prisonerId) {
+
 		ModelAndView result;
 
 		try {
-			Assert.isTrue(StringUtils.isNumeric(prisonerId));
-			int prisonerIdInt = Integer.parseInt(prisonerId);
 
-			Prisoner prisoner = this.wardenService.getPrisonerAsWarden(prisonerIdInt);
+			//Assert.isTrue(StringUtils.isNumeric(prisonerId));
+			//int prisonerIdInt = Integer.parseInt(prisonerId);
+
+			//risoner prisoner = this.prisonerService.findOne(prisonerId);
+			List<Prisoner> prisoners = this.prisonerService.getIncarceratedPrisoners();
+
+			Prisoner realPrisoner = this.prisonerService.findOne(prisonerId);
+			Assert.notNull(charge.getId());
+
+			if (realPrisoner == null || !prisoners.contains(realPrisoner))
+				return this.listSuspects();
+
+			charge = this.chargeService.findOne(charge.getId());
+
+			realPrisoner.getCharges().add(charge);
+
+			this.prisonerService.savePrisoner(realPrisoner);
+			result = new ModelAndView("redirect:/prisoner/warden/listSuspects.do");
+
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:/prisoner/warden/listSuspects.do");
+		}
+
+		return result;
+	}
+
+	/*
+	 * @RequestMapping(value = "/addCharge", method = RequestMethod.GET)
+	 * public ModelAndView addCharges(@RequestParam int prisonerId) {
+	 * 
+	 * ModelAndView result;
+	 * 
+	 * try {
+	 * 
+	 * Prisoner prisoner = this.prisonerService.findOne(prisonerId);
+	 * List<Prisoner> prisoners = this.prisonerService.getIncarceratedPrisoners();
+	 * 
+	 * if (prisoner == null || !prisoners.contains(prisoner))
+	 * return this.listSuspects();
+	 * 
+	 * List<Charge> allCharges = this.chargeService.getChargesNotAssignedToPrisoner(prisoner);
+	 * 
+	 * String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+	 * 
+	 * result = new ModelAndView("prisoner/warden/addCharge");
+	 * result.addObject("charges", allCharges);
+	 * result.addObject("prisoner", prisoner);
+	 * result.addObject("locale", locale);
+	 * result.addObject("warden", true);
+	 * result.addObject("suspect", true);
+	 * 
+	 * } catch (Throwable oops) {
+	 * result = new ModelAndView("redirect:/prisoner/warden/listSuspectCharges.do");
+	 * }
+	 * 
+	 * return result;
+	 * }
+	 */
+
+	@RequestMapping(value = "/edit", method = RequestMethod.GET)
+	public ModelAndView editPrisoner(@RequestParam int prisonerId) {
+		ModelAndView result;
+
+		try {
+			Prisoner prisoner = this.wardenService.getPrisonerAsWarden(prisonerId);
 
 			result = new ModelAndView("warden/editPrisoner");
 			result.addObject("prisoner", prisoner);
