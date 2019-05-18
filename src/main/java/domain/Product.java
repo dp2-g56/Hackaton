@@ -1,26 +1,34 @@
 
 package domain;
 
+import java.util.Date;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Access(AccessType.PROPERTY)
 public class Product extends DomainEntity {
 
-	private String		name;
-	private String		description;
-	private TypeProduct	type;
-	private int			price;
-	private int			stock;
-	private Boolean		isDraftMode;
+	private String name;
+	private String description;
+	private TypeProduct type;
+	private int price;
+	private int stock;
+	private Boolean isDraftMode;
 
+	// Prisoner
+	private int quantity;
+	private Date purchaseMoment;
 
 	@NotBlank
 	public String getName() {
@@ -77,6 +85,27 @@ public class Product extends DomainEntity {
 
 	public void setIsDraftMode(Boolean isDraftMode) {
 		this.isDraftMode = isDraftMode;
+	}
+
+	@Valid
+	@Min(0)
+	public int getQuantity() {
+		return this.quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	@Valid
+	@Past
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
+	public Date getPurchaseMoment() {
+		return this.purchaseMoment;
+	}
+
+	public void setPurchaseMoment(Date purchaseMoment) {
+		this.purchaseMoment = purchaseMoment;
 	}
 
 }
