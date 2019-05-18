@@ -27,7 +27,6 @@
 		<jstl:out value="${row.description}"></jstl:out>
 		</display:column>
 		
-		
 			<jstl:choose>
 				<jstl:when test="${locale == 'EN'}">
 					<display:column  titleKey="product.type" >
@@ -72,8 +71,6 @@
 			
 			</display:column>
 		
-		
-		
 			<display:column>
 			<jstl:choose>
 				<jstl:when test="${row.isDraftMode}">
@@ -101,7 +98,7 @@
 		</jstl:if>
 	</display:table>
 	
-	<jstl:if test="${prisoner}">
+	<jstl:if test="${prisoner && !store}">
 			<spring:url var="backUrl" value="/product/salesman/prisoner/list.do">
 			</spring:url>
 					<a href="${backUrl}">
