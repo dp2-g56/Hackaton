@@ -31,7 +31,7 @@ public class ProductPrisonerController extends AbstractController {
 		super();
 	}
 
-	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	@RequestMapping(value = "/store", method = RequestMethod.GET)
 	public ModelAndView listProducts() {
 		ModelAndView result;
 
@@ -60,7 +60,7 @@ public class ProductPrisonerController extends AbstractController {
 			Prisoner prisoner = this.prisonerService.loggedPrisoner();
 			result = this.createEditModelAndView("prisoner/buy", product, prisoner.getPoints());
 		} catch (Throwable oops) {
-			result = new ModelAndView("redirect:/product/prisoner/all.do");
+			result = new ModelAndView("redirect:/product/prisoner/store.do");
 		}
 
 		return result;
@@ -74,7 +74,7 @@ public class ProductPrisonerController extends AbstractController {
 		try {
 			this.productService.buyProductAsPrisoner(productId, quantity);
 
-			result = new ModelAndView("redirect:/product/prisoner/all.do");
+			result = new ModelAndView("redirect:/product/prisoner/store.do");
 		} catch (Throwable oops) {
 			try {
 				Product product = this.productService.getProductAsPrisonerToBuy(productId);
@@ -96,7 +96,7 @@ public class ProductPrisonerController extends AbstractController {
 
 				result = this.createEditModelAndView("prisoner/buy", product, prisoner.getPoints(), message);
 			} catch (Throwable oops2) {
-				result = new ModelAndView("redirect:/product/prisoner/all.do");
+				result = new ModelAndView("redirect:/product/prisoner/store.do");
 			}
 		}
 
@@ -113,7 +113,23 @@ public class ProductPrisonerController extends AbstractController {
 		result.addObject("prisoner", true);
 		result.addObject("store", true);
 		result.addObject("locale", locale);
-		result.addObject("requestURI", "/product/prisoner/all");
+		result.addObject("requestURI", "/product/prisoner/store");
+
+		return result;
+	}
+
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	public ModelAndView listPurchasedProducts() {
+		ModelAndView result;
+
+		try {
+			List<Product> products = this.prisonerService.getProductsOfLoggedPrisoner();
+
+			result = this.createEditModelAndView("prisoner/purchasedProducts", products);
+			result.addObject("requestURI", "/product/prisoner/all.do");
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:/");
+		}
 
 		return result;
 	}
@@ -125,6 +141,17 @@ public class ProductPrisonerController extends AbstractController {
 
 		result.addObject("product", product);
 		result.addObject("points", points);
+		result.addObject("locale", locale);
+
+		return result;
+	}
+
+	private ModelAndView createEditModelAndView(String tiles, List<Product> products) {
+		ModelAndView result = new ModelAndView(tiles);
+
+		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+
+		result.addObject("products", products);
 		result.addObject("locale", locale);
 
 		return result;
