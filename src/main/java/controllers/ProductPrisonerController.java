@@ -28,7 +28,7 @@ public class ProductPrisonerController extends AbstractController {
 		super();
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	public ModelAndView listProducts() {
 		ModelAndView result;
 

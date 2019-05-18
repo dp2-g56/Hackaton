@@ -98,7 +98,7 @@
 		</jstl:if>
 	</display:table>
 	
-	<jstl:if test="${prisoner && !store}">
+	<jstl:if test="${prisoner && store == null}">
 			<spring:url var="backUrl" value="/product/salesman/prisoner/list.do">
 			</spring:url>
 					<a href="${backUrl}">
