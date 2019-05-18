@@ -32,6 +32,9 @@ public class ProductService {
 	private ConfigurationService configurationService;
 
 	@Autowired
+	private PrisonerService prisonerService;
+
+	@Autowired
 	private Validator validator;
 
 	public List<Product> getProductsFinalModeWithStock() {
@@ -137,6 +140,14 @@ public class ProductService {
 
 	public void deleteProductToDeleteSalesman(Product product) {
 		this.productRepository.delete(product);
+	}
+
+	public Product getProductAsPrisonerToBuy(int productId) {
+		this.prisonerService.loggedAsPrisoner();
+		Product product = this.findOne(productId);
+		Assert.notNull(product);
+		Assert.isTrue(product.getIsDraftMode() == false && product.getStock() > 0);
+		return product;
 	}
 
 }

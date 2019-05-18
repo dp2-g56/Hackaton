@@ -12,9 +12,9 @@
 
 	<jstl:if test="${prisoner}">
 
-			<h3> <spring:message code="product.currentPoints"/> 
-			<div style="color:red; display:inline;"> <jstl:out value=" ${points} " /> </div>  
-			<spring:message code="product.points"/> </h3>
+		<h3><spring:message code="product.currentPoints"/> 
+		<span style="color:red; display:inline;"><jstl:out value="${points}" /></span> 
+		<spring:message code="product.points"/></h3>
 			
 	</jstl:if>
 			
