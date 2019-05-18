@@ -2,11 +2,14 @@ package controllers;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import domain.Prisoner;
@@ -44,6 +47,25 @@ public class ProductPrisonerController extends AbstractController {
 		return result;
 	}
 
+	@RequestMapping(value = "/buy", method = RequestMethod.GET)
+	public ModelAndView buyProduct(@RequestParam(required = false) String productId) {
+		ModelAndView result;
+
+		try {
+			Assert.isTrue(StringUtils.isNumeric(productId));
+			int productIdInt = Integer.parseInt(productId);
+
+			Product product = this.productService.getProductAsPrisonerToBuy(productIdInt);
+
+			Prisoner prisoner = this.prisonerService.loggedPrisoner();
+			result = this.createEditModelAndView("prisoner/buy", product, prisoner.getPoints());
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:/product/prisoner/all.do");
+		}
+
+		return result;
+	}
+
 	private ModelAndView createEditModelAndView(String tiles, List<Product> products, Integer points) {
 		ModelAndView result = new ModelAndView(tiles);
 
@@ -53,6 +75,19 @@ public class ProductPrisonerController extends AbstractController {
 		result.addObject("points", points);
 		result.addObject("prisoner", true);
 		result.addObject("store", true);
+		result.addObject("locale", locale);
+		result.addObject("requestURI", "/product/prisoner/all");
+
+		return result;
+	}
+
+	private ModelAndView createEditModelAndView(String tiles, Product product, Integer points) {
+		ModelAndView result = new ModelAndView(tiles);
+
+		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+
+		result.addObject("product", product);
+		result.addObject("points", points);
 		result.addObject("locale", locale);
 
 		return result;
