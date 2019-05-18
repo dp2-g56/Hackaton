@@ -13,27 +13,26 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 
-import repositories.ProductRepository;
 import domain.Configuration;
 import domain.Product;
 import domain.SalesMan;
+import repositories.ProductRepository;
 
 @Service
 @Transactional
 public class ProductService {
 
 	@Autowired
-	private ProductRepository		productRepository;
+	private ProductRepository productRepository;
 
 	@Autowired
-	private SalesManService			salesManService;
+	private SalesManService salesManService;
 
 	@Autowired
-	private ConfigurationService	configurationService;
+	private ConfigurationService configurationService;
 
 	@Autowired
-	private Validator				validator;
-
+	private Validator validator;
 
 	public List<Product> getProductsFinalModeWithStock() {
 		return this.productRepository.getProductsFinalModeWithStock();
@@ -72,10 +71,9 @@ public class ProductService {
 		Product result = new Product();
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
-		if (product.getId() == 0) {
+		if (product.getId() == 0)
 			result = product;
-
-		} else {
+		else {
 			Product copy = this.findOne(product.getId());
 
 			if (copy.getIsDraftMode()) {
@@ -95,13 +93,13 @@ public class ProductService {
 				result.setType(copy.getType());
 				result.setVersion(copy.getVersion());
 
-				if (result.getStock() < copy.getStock()) {
-					if (locale.contains("ES")) {
-						binding.addError(new FieldError("product", "stock", product.getStock(), false, null, null, "La cantidad no puede ser menor a la anterior"));
-					} else {
-						binding.addError(new FieldError("product", "stock", product.getStock(), false, null, null, "Stock can not be less than before"));
-					}
-				}
+				if (result.getStock() < copy.getStock())
+					if (locale.contains("ES"))
+						binding.addError(new FieldError("product", "stock", product.getStock(), false, null, null,
+								"La cantidad no puede ser menor a la anterior"));
+					else
+						binding.addError(new FieldError("product", "stock", product.getStock(), false, null, null,
+								"Stock can not be less than before"));
 
 			}
 
@@ -110,6 +108,7 @@ public class ProductService {
 		this.validator.validate(result, binding);
 		return result;
 	}
+
 	public void addProduct(Product pro) {
 		SalesMan salesman = this.salesManService.loggedSalesMan();
 		Configuration configuration = this.configurationService.getConfiguration();
@@ -118,6 +117,7 @@ public class ProductService {
 		salesman.getProducts().add(product);
 		this.salesManService.save(salesman);
 	}
+
 	public void updateProduct(Product pro) {
 		SalesMan salesman = this.salesManService.loggedSalesMan();
 		Configuration configuration = this.configurationService.getConfiguration();
@@ -133,6 +133,10 @@ public class ProductService {
 		this.salesManService.save(salesman);
 		this.productRepository.delete(product);
 
+	}
+
+	public void deleteProductToDeleteSalesman(Product product) {
+		this.productRepository.delete(product);
 	}
 
 }
