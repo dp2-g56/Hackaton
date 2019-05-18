@@ -66,6 +66,43 @@ public class ProductPrisonerController extends AbstractController {
 		return result;
 	}
 
+	@RequestMapping(value = "/buy", method = RequestMethod.POST, params = "save")
+	public ModelAndView buyProductSave(@RequestParam(required = false) int productId,
+			@RequestParam(required = false) int quantity) {
+		ModelAndView result;
+
+		try {
+			this.productService.buyProductAsPrisoner(productId, quantity);
+
+			result = new ModelAndView("redirect:/product/prisoner/all.do");
+		} catch (Throwable oops) {
+			try {
+				Product product = this.productService.getProductAsPrisonerToBuy(productId);
+				Prisoner prisoner = this.prisonerService.securityAndPrisoner();
+
+				String message = "";
+
+				Boolean stock = quantity <= product.getStock();
+				Boolean points = (product.getPrice() * quantity) <= prisoner.getPoints();
+
+				if (!stock && !points)
+					message = "prisoner.purchase.stockAndPoints.error";
+				else if (!stock)
+					message = "prisoner.purchase.stock.error";
+				else if (!points)
+					message = "prisoner.purchase.points.error";
+				else
+					message = "prisoner.purchase.error";
+
+				result = this.createEditModelAndView("prisoner/buy", product, prisoner.getPoints(), message);
+			} catch (Throwable oops2) {
+				result = new ModelAndView("redirect:/product/prisoner/all.do");
+			}
+		}
+
+		return result;
+	}
+
 	private ModelAndView createEditModelAndView(String tiles, List<Product> products, Integer points) {
 		ModelAndView result = new ModelAndView(tiles);
 
@@ -89,6 +126,13 @@ public class ProductPrisonerController extends AbstractController {
 		result.addObject("product", product);
 		result.addObject("points", points);
 		result.addObject("locale", locale);
+
+		return result;
+	}
+
+	private ModelAndView createEditModelAndView(String tiles, Product product, Integer points, String message) {
+		ModelAndView result = this.createEditModelAndView(tiles, product, points);
+		result.addObject("message", message);
 
 		return result;
 	}

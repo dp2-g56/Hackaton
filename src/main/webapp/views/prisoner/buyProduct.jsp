@@ -60,7 +60,7 @@ function conf() {
 		</display:column>
 	</display:table>
 
-	<form action="/product/prisoner/buy.do" method="post">
+	<form action="product/prisoner/buy.do" method="post">
 		<input type="hidden" name="productId" value="${product.id}">
 		<input type="hidden" id="price" value="${product.price}">
 		
