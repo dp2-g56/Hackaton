@@ -47,7 +47,8 @@
 					<li><a href="product/salesman/prisoner/list.do"><spring:message code="master.page.salesMen" /></a></li>
 					<li><a href="finderActivities/prisoner/list.do"><spring:message code="master.page.finderActivities" /></a></li>
 					<li><a href="request/prisoner/list.do"><spring:message code="master.page.request" /></a></li>
-					<li><a href="product/prisoner/all.do"><spring:message code="master.page.store" /></a></li>
+					<li><a href="product/prisoner/store.do"><spring:message code="master.page.store" /></a></li>
+					<li><a href="product/prisoner/all.do"><spring:message code="master.page.purchased.products" /></a></li>
 				</ul></li>
 		</security:authorize>
 		

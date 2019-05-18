@@ -343,4 +343,8 @@ public class PrisonerService {
 	public List<Prisoner> getPrisonersWithProductsOfASalesMan(int salesmanId) {
 		return this.prisonerRepository.getPrisonersWithProductsOfASalesMan(salesmanId);
 	}
+
+	public List<Product> getProductsOfLoggedPrisoner() {
+		return this.securityAndPrisoner().getProducts();
+	}
 }

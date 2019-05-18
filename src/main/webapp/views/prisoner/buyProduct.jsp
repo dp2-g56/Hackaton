@@ -73,7 +73,7 @@ function conf() {
 		<br/><br/>
 	
 		<input type="submit" name="save" value="<spring:message code ='product.buy'/>" onclick="conf();"/>
-		<acme:cancel url="/product/prisoner/all.do" code="product.cancel"/>
+		<acme:cancel url="/product/prisoner/store.do" code="product.cancel"/>
 	</form>
 		
 </security:authorize>
