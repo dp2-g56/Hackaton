@@ -60,6 +60,7 @@
 		
 		 <spring:url var="deleteUrl" value="/request/socialWorker/delete.do">
 		    	<spring:param name="requestId" value="${row.id}" />
+		    	<spring:param name="activityId" value="${activityId}" />
 		 </spring:url>
 		
 		<a href="${deleteUrl}"><button onclick="return confirm('<spring:message code="request.confirmation" />')" >
@@ -71,6 +72,7 @@
 		</jstl:if>
 
 	</display:column>
+		<display:column>
 	
 		<jstl:if test="${row.status=='PENDING'}">
 		
@@ -86,18 +88,24 @@
 	<a href="${approve}"><button> <spring:message var ="approveRequest" code="request.approve" />
 		       	<jstl:out value="${approveRequest}" />   
 		</button> </a>
+		
+		<jstl:out value="/"/>
 
 	<a href="${reject}"><button> <spring:message var ="rejectRequest" code="request.reject" />
 		       	<jstl:out value="${rejectRequest}" />   
 		</button> </a>
 	
 		</jstl:if>
-	<display:column>
 	
 	
 	</display:column>
 	
 	</display:table>
+	
+		 <spring:url var="back" value="/activity/socialworker/list.do"/>
+
+		<a href="${back}"><button> <spring:message code="request.back" />
+		</button> </a>
 			
 			
 </security:authorize>

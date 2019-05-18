@@ -20,7 +20,7 @@
 		<acme:textarea code="request.rejectReason" path="rejectReason"/>
 		
 		<input type="hidden" name="activityId" value="${activityId}">
-		<input type="hidden" name="id" value="id">
+		<input type="hidden" name="id" value="${request.id}">
 		
 		<acme:submit name="save" code="request.save"/>
 		

@@ -50,6 +50,7 @@ public class RequestSocialWorkerCotroller extends AbstractController {
 		try {
 			this.requestService.approveRequest(requestId, activityId);
 			result = new ModelAndView("redirect:list.do");
+			result.addObject("activityId", activityId);
 		} catch (Exception e) {
 			result = new ModelAndView("redirect:/");
 		}
@@ -78,18 +79,21 @@ public class RequestSocialWorkerCotroller extends AbstractController {
 
 		if (binding.hasErrors())
 			result = this.createEditModelAndView(requestForm);
-		try {
-			this.requestService.rejectRequest(request, activityId);
-			result = new ModelAndView("redirect:list.do");
-		} catch (Exception e) {
-			result = new ModelAndView("redirect:/");
-		}
+		else
+			try {
+				this.requestService.rejectRequest(request, activityId);
+				result = new ModelAndView("redirect:list.do");
+				result.addObject("activityId", activityId);
+			} catch (Exception e) {
+				result = this.createEditModelAndView(requestForm);
+			}
+		result.addObject("activityId", activityId);
 		return result;
 	}
 
 	// DELETE ------------------------------------------------------------------
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
-	public ModelAndView deleteRequest(Integer requestId) {
+	public ModelAndView deleteRequest(Integer requestId, Integer activityId) {
 		ModelAndView result;
 
 		try {
@@ -101,7 +105,7 @@ public class RequestSocialWorkerCotroller extends AbstractController {
 			result = new ModelAndView("redirect:list.do");
 			result.addObject("errorDelete", true);
 		}
-
+		result.addObject("activityId", activityId);
 		return result;
 	}
 

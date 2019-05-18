@@ -32,7 +32,7 @@
 		
 			<display:column>
 			<spring:url var="requests"
-					value="/request/socialworker/list.do">
+					value="/request/socialWorker/list.do">
 					<spring:param name="activityId" value="${row.id}" />
 				</spring:url>
 				<a href="${requests}"> <spring:message

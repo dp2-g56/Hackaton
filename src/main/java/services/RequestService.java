@@ -5,10 +5,11 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 
 import domain.Activity;
@@ -174,11 +175,16 @@ public class RequestService {
 		res.setId(request.getId());
 		res.setStatus(ActivityStatus.REJECTED);
 
-		if (request.getRejectReason() == "" || request.getRejectReason() == null) {
-			ObjectError error = new ObjectError("request", "request.errorRejected");
-			binding.addError(error);
-		}
-		res.setRejectReason(request.getRejectReason());
+		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+
+		if (request.getRejectReason() == "" || request.getRejectReason() == null)
+			if (locale.contains("ES"))
+				binding.addError(new FieldError("request", "rejectReason", "El motivo no puede estar vacio"));
+			else
+				binding.addError(new FieldError("request", "rejectReason", "The reason can not be blank"));
+		else
+			res.setRejectReason(request.getRejectReason());
+
 		res.setMotivation(requestDB.getMotivation());
 		res.setActivity(requestDB.getActivity());
 		res.setPrisoner(requestDB.getPrisoner());
