@@ -2,11 +2,14 @@ package controllers;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import domain.Prisoner;
@@ -28,7 +31,7 @@ public class ProductPrisonerController extends AbstractController {
 		super();
 	}
 
-	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	@RequestMapping(value = "/store", method = RequestMethod.GET)
 	public ModelAndView listProducts() {
 		ModelAndView result;
 
@@ -44,6 +47,62 @@ public class ProductPrisonerController extends AbstractController {
 		return result;
 	}
 
+	@RequestMapping(value = "/buy", method = RequestMethod.GET)
+	public ModelAndView buyProduct(@RequestParam(required = false) String productId) {
+		ModelAndView result;
+
+		try {
+			Assert.isTrue(StringUtils.isNumeric(productId));
+			int productIdInt = Integer.parseInt(productId);
+
+			Product product = this.productService.getProductAsPrisonerToBuy(productIdInt);
+
+			Prisoner prisoner = this.prisonerService.loggedPrisoner();
+			result = this.createEditModelAndView("prisoner/buy", product, prisoner.getPoints());
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:/product/prisoner/store.do");
+		}
+
+		return result;
+	}
+
+	@RequestMapping(value = "/buy", method = RequestMethod.POST, params = "save")
+	public ModelAndView buyProductSave(@RequestParam(required = false) int productId,
+			@RequestParam(required = false) int quantity) {
+		ModelAndView result;
+
+		try {
+			this.productService.buyProductAsPrisoner(productId, quantity);
+
+			result = new ModelAndView("redirect:/product/prisoner/store.do");
+		} catch (Throwable oops) {
+			try {
+				Product product = this.productService.getProductAsPrisonerToBuy(productId);
+				Prisoner prisoner = this.prisonerService.securityAndPrisoner();
+
+				String message = "";
+
+				Boolean stock = quantity <= product.getStock();
+				Boolean points = (product.getPrice() * quantity) <= prisoner.getPoints();
+
+				if (!stock && !points)
+					message = "prisoner.purchase.stockAndPoints.error";
+				else if (!stock)
+					message = "prisoner.purchase.stock.error";
+				else if (!points)
+					message = "prisoner.purchase.points.error";
+				else
+					message = "prisoner.purchase.error";
+
+				result = this.createEditModelAndView("prisoner/buy", product, prisoner.getPoints(), message);
+			} catch (Throwable oops2) {
+				result = new ModelAndView("redirect:/product/prisoner/store.do");
+			}
+		}
+
+		return result;
+	}
+
 	private ModelAndView createEditModelAndView(String tiles, List<Product> products, Integer points) {
 		ModelAndView result = new ModelAndView(tiles);
 
@@ -54,6 +113,53 @@ public class ProductPrisonerController extends AbstractController {
 		result.addObject("prisoner", true);
 		result.addObject("store", true);
 		result.addObject("locale", locale);
+		result.addObject("requestURI", "/product/prisoner/store");
+
+		return result;
+	}
+
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	public ModelAndView listPurchasedProducts() {
+		ModelAndView result;
+
+		try {
+			List<Product> products = this.prisonerService.getProductsOfLoggedPrisoner();
+
+			result = this.createEditModelAndView("prisoner/purchasedProducts", products);
+			result.addObject("requestURI", "/product/prisoner/all.do");
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:/");
+		}
+
+		return result;
+	}
+
+	private ModelAndView createEditModelAndView(String tiles, Product product, Integer points) {
+		ModelAndView result = new ModelAndView(tiles);
+
+		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+
+		result.addObject("product", product);
+		result.addObject("points", points);
+		result.addObject("locale", locale);
+
+		return result;
+	}
+
+	private ModelAndView createEditModelAndView(String tiles, List<Product> products) {
+		ModelAndView result = new ModelAndView(tiles);
+
+		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+
+		result.addObject("products", products);
+		result.addObject("locale", locale);
+
+		return result;
+	}
+
+	private ModelAndView createEditModelAndView(String tiles, Product product, Integer points, String message) {
+		ModelAndView result = this.createEditModelAndView(tiles, product, points);
+		result.addObject("message", message);
 
 		return result;
 	}
