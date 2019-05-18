@@ -8,7 +8,7 @@
 <%@taglib prefix="acme" tagdir="/WEB-INF/tags" %>
 
 
-<security:authorize access="hasAnyRole('WARDEN')">
+<security:authorize access="hasRole('WARDEN')">
 	<jstl:if test="${warden!=null}">
 		<form:form modelAttribute="warden" action="authenticated/editProfile.do">
 		
@@ -41,7 +41,7 @@
 	
 </security:authorize>
 
-<security:authorize access="hasAnyRole('GUARD')">
+<security:authorize access="hasRole('GUARD')">
 	<jstl:if test="${guard!=null}">
 	
 		<form:form modelAttribute="guard" action="authenticated/editProfile.do">
@@ -78,10 +78,41 @@
 	</jstl:if>
 </security:authorize>
 
-
-
-
-
-
-
-
+<security:authorize access="hasRole('SALESMAN')">
+	<jstl:if test="${salesman!=null}">
+		<form:form modelAttribute="salesman" action="authenticated/editProfile.do">
+		
+		<form:hidden path = "id"/>
+		
+		<!-- Actor Attributes -->
+		<fieldset>
+	    	<legend><spring:message code="warden.personalData" /></legend>
+			
+			<acme:textbox path="name" code="warden.name" />
+			<br />
+			
+			<acme:textbox path="middleName" code="warden.middleName" />
+			<br />
+			
+			<acme:textbox path="surname" code="warden.surname" />
+			<br />
+			
+			<acme:textbox path="photo" code="warden.photo" />
+			<br />
+			
+			<acme:textbox path="VATNumber" code="salesman.VATNumber" />
+			<br />
+			
+			<acme:textbox path="storeName" code="salesman.storeName" />
+			<br />
+		</fieldset>
+		<br />
+		
+		<!-- BOTONES -->	
+		<input type="submit" name="saveSalesman" value="<spring:message code="warden.edit" />"/> 
+		<acme:cancel url="/authenticated/showProfile.do" code="warden.cancel" /> 
+		
+		</form:form>
+	</jstl:if>
+	
+</security:authorize>

@@ -34,6 +34,7 @@
 					<li><a href="broadcast/warden/send.do"><spring:message code="master.page.administrator.broadcast" /></a></li>																							
 					<li><a href="broadcast/warden/sendSecurityBreach.do"><spring:message code="master.page.administrator.broadcastSecurity" /></a></li>																					
 					<li><a href="salesman/warden/list.do"><spring:message code="master.page.salesman.list" /></a></li>
+					<li><a href="configuration/warden/list.do"><spring:message code="master.page.warden.configuration" /></a></li>
 				</ul></li>
 		</security:authorize>
 
@@ -46,7 +47,7 @@
 					<li><a href="product/salesman/prisoner/list.do"><spring:message code="master.page.salesMen" /></a></li>
 					<li><a href="finderActivities/prisoner/list.do"><spring:message code="master.page.finderActivities" /></a></li>
 					<li><a href="request/prisoner/list.do"><spring:message code="master.page.request" /></a></li>
-					<li><a href="product/prisoner/list.do"><spring:message code="master.page.product" /></a></li>
+					<li><a href="product/prisoner/all.do"><spring:message code="master.page.store" /></a></li>
 				</ul></li>
 		</security:authorize>
 		

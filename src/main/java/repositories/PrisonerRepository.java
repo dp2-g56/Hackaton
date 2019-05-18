@@ -1,5 +1,4 @@
 
-
 package repositories;
 
 import java.util.List;
@@ -28,5 +27,8 @@ public interface PrisonerRepository extends JpaRepository<Prisoner, Integer> {
 
 	@Query("select p from Prisoner p join p.userAccount u where p.isSuspect = true and p.freedom = false and p.isIsolated = false and u.isNotLocked = true")
 	public List<Prisoner> getSuspectPrisoners();
+
+	@Query("select distinct p from Prisoner p join p.products p1 where p1 in (select p2 from SalesMan s join s.products p2 where s.id = ?1)")
+	List<Prisoner> getPrisonersWithProductsOfASalesMan(int salesmanId);
 
 }
