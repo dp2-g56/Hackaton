@@ -83,5 +83,10 @@
 		<put-attribute name="title" value="Comprar producto" />
 		<put-attribute name="body" value="/views/prisoner/buyProduct.jsp" />
 	</definition>
+	
+	<definition name="prisoner/purchasedProducts" extends="master.page">	
+		<put-attribute name="title" value="Productos comprados" />
+		<put-attribute name="body" value="/views/prisoner/prisonerProducts.jsp" />
+	</definition>
 
 </tiles-definitions>

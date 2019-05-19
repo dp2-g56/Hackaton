@@ -11,8 +11,12 @@
 			
 	<display:table pagesize="5" name="reports" id="row" requestURI="${requestURI}" >
 		
-		<display:column property="description" titleKey="report.description" /> 
-		<display:column property="date" titleKey="report.date" /> 
+		<display:column titleKey="report.description">
+			<jstl:out value="${row.description}"/>
+		</display:column> 
+		<display:column titleKey="report.date">
+			<jstl:out value="${row.date}"/>
+		</display:column>
 		<display:column titleKey="report.visit.prisoner">
 			<spring:url var="prisonerUrl" value="/prisoner/warden/show.do">
 				<spring:param name="prisonerId" value="${reportsAndPrisoner.get(row).id}" />
