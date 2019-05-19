@@ -2,8 +2,10 @@ package controllers;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,10 +29,13 @@ public class RequestSocialWorkerCotroller extends AbstractController {
 	// LIST----------------------------------------------------------------------------------
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public ModelAndView listRequests(@RequestParam Integer activityId) {
+	public ModelAndView listRequests(@RequestParam(required = false) String activityId) {
 		ModelAndView result;
 		try {
-			List<Request> requests = this.requestService.getRequestsFromSocialWorker(activityId);
+			Assert.isTrue(StringUtils.isNumeric(activityId));
+			Integer activityId2 = Integer.parseInt(activityId);
+
+			List<Request> requests = this.requestService.getRequestsFromSocialWorker(activityId2);
 
 			result = new ModelAndView("request/socialWorker/list");
 			result.addObject("requests", requests);
@@ -45,10 +50,15 @@ public class RequestSocialWorkerCotroller extends AbstractController {
 
 	// Change Status Request ---------------------------------------------------
 	@RequestMapping(value = "/approve", method = RequestMethod.GET)
-	public ModelAndView approveRequest(@RequestParam Integer requestId, @RequestParam Integer activityId) {
+	public ModelAndView approveRequest(@RequestParam(required = false) String requestId,
+			@RequestParam(required = false) String activityId) {
 		ModelAndView result;
 		try {
-			this.requestService.approveRequest(requestId, activityId);
+			Assert.isTrue(StringUtils.isNumeric(activityId) && StringUtils.isNumeric(requestId));
+			Integer requestId2 = Integer.parseInt(requestId);
+			Integer activityId2 = Integer.parseInt(activityId);
+
+			this.requestService.approveRequest(requestId2, activityId2);
 			result = new ModelAndView("redirect:list.do");
 			result.addObject("activityId", activityId);
 		} catch (Exception e) {
@@ -58,11 +68,16 @@ public class RequestSocialWorkerCotroller extends AbstractController {
 	}
 
 	@RequestMapping(value = "/reject", method = RequestMethod.GET)
-	public ModelAndView rejectRequest(@RequestParam Integer requestId, @RequestParam Integer activityId) {
+	public ModelAndView rejectRequest(@RequestParam(required = false) String requestId,
+			@RequestParam(required = false) String activityId) {
 		ModelAndView result;
 		try {
-			this.requestService.securityRequestSocialWorker(activityId, requestId);
-			result = this.createEditModelAndView(this.requestService.findeOne(requestId));
+			Assert.isTrue(StringUtils.isNumeric(activityId) && StringUtils.isNumeric(requestId));
+			Integer requestId2 = Integer.parseInt(requestId);
+			Integer activityId2 = Integer.parseInt(activityId);
+
+			this.requestService.securityRequestSocialWorker(activityId2, requestId2);
+			result = this.createEditModelAndView(this.requestService.findeOne(requestId2));
 			result.addObject("activityId", activityId);
 		} catch (Exception e) {
 			result = new ModelAndView("redirect:/");
@@ -71,7 +86,7 @@ public class RequestSocialWorkerCotroller extends AbstractController {
 	}
 
 	@RequestMapping(value = "/reject", method = RequestMethod.POST, params = "save")
-	public ModelAndView rejectRequestSave(Request requestForm, @RequestParam Integer activityId,
+	public ModelAndView rejectRequestSave(Request requestForm, @RequestParam(required = false) String activityId,
 			BindingResult binding) {
 
 		ModelAndView result;
@@ -81,7 +96,10 @@ public class RequestSocialWorkerCotroller extends AbstractController {
 			result = this.createEditModelAndView(requestForm);
 		else
 			try {
-				this.requestService.rejectRequest(request, activityId);
+				Assert.isTrue(StringUtils.isNumeric(activityId));
+				Integer activityId2 = Integer.parseInt(activityId);
+
+				this.requestService.rejectRequest(request, activityId2);
 				result = new ModelAndView("redirect:list.do");
 				result.addObject("activityId", activityId);
 			} catch (Exception e) {
@@ -93,11 +111,15 @@ public class RequestSocialWorkerCotroller extends AbstractController {
 
 	// DELETE ------------------------------------------------------------------
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
-	public ModelAndView deleteRequest(Integer requestId, Integer activityId) {
+	public ModelAndView deleteRequest(@RequestParam(required = false) String requestId,
+			@RequestParam(required = false) String activityId) {
 		ModelAndView result;
 
 		try {
-			this.requestService.deleteRequestFromSocialWorker(this.requestService.findeOne(requestId));
+			Assert.isTrue(StringUtils.isNumeric(activityId) && StringUtils.isNumeric(requestId));
+			Integer requestId2 = Integer.parseInt(requestId);
+
+			this.requestService.deleteRequestFromSocialWorker(this.requestService.findeOne(requestId2));
 
 			result = new ModelAndView("redirect:list.do");
 
