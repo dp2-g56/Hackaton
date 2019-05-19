@@ -89,5 +89,10 @@
 		<put-attribute name="title" value="Añadir un cargo" /> 
 		<put-attribute name="body" value="/views/warden/addCharge.jsp" />
 	</definition>
+	
+	<definition name="statistics/warden/show" extends="master.page">	
+		<put-attribute name="title" value="Estadisticas" />
+		<put-attribute name="body" value="/views/warden/statistics.jsp" />
+	</definition>
 
 </tiles-definitions>
