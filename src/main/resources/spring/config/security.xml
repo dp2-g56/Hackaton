@@ -49,6 +49,7 @@
 		<security:intercept-url pattern="/guard/warden/**" access="hasRole('WARDEN')" />
 		<security:intercept-url pattern="/broadcast/warden/**" access="hasRole('WARDEN')" />
 		<security:intercept-url pattern="/configuration/warden/**" access="hasRole('WARDEN')" />
+		<security:intercept-url pattern="/statistics/warden/**" access="hasRole('WARDEN')" />
 		
 	<!-- PRISONER -->
 		<security:intercept-url pattern="/visit/prisoner/**" 	access="hasRole('PRISONER')" />

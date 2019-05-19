@@ -3,7 +3,9 @@ package services;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -25,6 +27,7 @@ import domain.Prisoner;
 import domain.Request;
 import domain.Visit;
 import domain.VisitStatus;
+import domain.Visitor;
 import domain.Warden;
 import forms.FormObjectWarden;
 import repositories.WardenRepository;
@@ -391,4 +394,90 @@ public class WardenService {
 		return this.prisonerService.findOne(prisonerId);
 	}
 
+	public List<Float> statistics() {
+		List<Float> statistics = new ArrayList<Float>();
+
+		statistics.add(this.wardenRepository.getRatioOfVisitsWithReport());
+		statistics.add(this.wardenRepository.getRatioOfGuardsWithMoreThan50PercentOfVisitsWithReport());
+		statistics.add(this.wardenRepository.getRatioOfPrisonersWithoutVisitsLastMonth());
+		statistics.add(this.wardenRepository.getRegularVisitorToAtLeastOnePrisoner());
+		statistics.add(this.wardenRepository.getRatioOfAvailableGuardsVsFutureVisitsWithoutGuard());
+		statistics.add(this.wardenRepository.getRatioOfNonIsolatedVsIsolatedPrisoners());
+
+		Float[] crime = this.wardenRepository.getStatisticsCrimeRate();
+		statistics.add(crime[0]);
+		statistics.add(crime[1]);
+		statistics.add(crime[2]);
+		statistics.add(crime[3]);
+
+		statistics.add(this.wardenRepository.getRatioSocialWorkersWithCurriculum());
+
+		return statistics;
+	}
+
+	public Map<String, List<String>> getCouplesWithMostVisits() {
+		Map<String, List<String>> result = new HashMap<String, List<String>>();
+		List<Visitor> visitors = this.wardenRepository.getVisitorsMostVisitsToAPrisoner();
+
+		for (Visitor v : visitors) {
+			result.put(v.getUserAccount().getUsername(), this.wardenRepository.getPrisonersWithMostVisitToAVisitor(v.getId()));
+		}
+		return result;
+	}
+
+	public List<String> getPrisonersWithVisitsToMostDifferentVisitors() {
+		return this.wardenRepository.getPrisonersWithVisitsToMostDifferentVisitors();
+	}
+
+	public List<String> getVisitorsWithVisitsToMostDifferentPrisoners() {
+		return this.wardenRepository.getVisitorsWithVisitsToMostDifferentPrisoners();
+	}
+
+	public List<String> getGuardsWithTheLargestNumberOfReportsWritten() {
+		return this.wardenRepository.getGuardsWithTheLargestNumberOfReportsWritten();
+	}
+
+	public List<String> getTop3PrisonersLowestCrimeRate() {
+		List<String> result = this.wardenRepository.getTop3PrisonersLowestCrimeRate();
+		if (result.size() > 3) {
+			return result.subList(0, 2);
+		}
+		return result;
+	}
+
+	public List<String> getSocialWorkerMostActivitiesFull() {
+		return this.wardenRepository.getSocialWorkerMostActivitiesFull();
+	}
+
+	public List<String> getPrisonersMostRejectedRequestToDifferentActivitiesAndNoApprovedOnThoseActivities() {
+		return this.wardenRepository.getPrisonersMostRejectedRequestToDifferentActivitiesAndNoApprovedOnThoseActivities();
+	}
+
+	public List<String> getActivitiesLargestNumberPrisoners() {
+		return this.wardenRepository.getActivitiesLargestNumberPrisoners();
+	}
+
+	public List<String> getActivitiesLargestAvgCrimeRate() {
+		return this.wardenRepository.getActivitiesLargestAvgCrimeRate();
+	}
+
+	public List<String> getActivitiesSmallestAvgCrimeRate() {
+		return this.wardenRepository.getActivitiesSmallestAvgCrimeRate();
+	}
+
+	public List<String> getSocialWorkersLowestRatioPrisonersPerActivity() {
+		return this.wardenRepository.getSocialWorkersLowestRatioPrisonersPerActivity();
+	}
+
+	public List<String> getActivitiesMostSearched() {
+		return this.wardenRepository.getActivitiesMostSearched();
+	}
+
+	public List<String> getTop5PrisonersParticipatedMostActivitiesLastMonth() {
+		List<String> result = this.wardenRepository.getTop5PrisonersParticipatedMostActivitiesLastMonth();
+		if (result.size() > 5) {
+			return result.subList(0, 4);
+		}
+		return result;
+	}
 }

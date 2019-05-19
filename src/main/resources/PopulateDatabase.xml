@@ -449,6 +449,8 @@
 				</property>
 				<property name="visits">
 					<list>
+						<ref bean="visit9" /> 
+						<ref bean="visit10" /> 
 					</list>
 				</property>
 				<property name="userAccount" ref="userAccount5" />
@@ -528,7 +530,9 @@
 					<list>
 						<ref bean="visit4" />
 						<ref bean="visit6" />
-						<ref bean="visit7" /> 
+						<ref bean="visit7" />
+						<ref bean="visit9" /> 
+						<ref bean="visit10" /> 
 					</list>
 				</property>
 				
@@ -739,7 +743,7 @@
 				<property name="surname" value="Gonzalez" />
 				<property name="photo" value="https://www.url.com/example" />
 			
-				<property name="crimeRate" value="0.0" />
+				<property name="crimeRate" value="0.7" />
 				<property name="ticker" value="231232-ABCDEF" />
 				<property name="incomeDate" value="12/12/2009 23:59" />
 				<property name="exitDate" value="12/12/2020 23:59" />
@@ -806,7 +810,7 @@
 				<property name="surname" value="Coffee" />
 				<property name="photo" value="https://www.url.com/example" />
 			
-				<property name="crimeRate" value="0.0" />
+				<property name="crimeRate" value="-0.9" />
 				<property name="ticker" value="231232-CBADEF" />
 				<property name="incomeDate" value="12/12/2004 23:59" />
 				<property name="exitDate" value="12/12/2025 23:59" />
@@ -859,7 +863,7 @@
 				<property name="surname" value="Wals" />
 				<property name="photo" value="https://www.url.com/example" />
 			
-				<property name="crimeRate" value="0.0" />
+				<property name="crimeRate" value="-0.65" />
 				<property name="ticker" value="231232-FFFFFF" />
 				<property name="incomeDate" value="12/12/2004 23:59" />
 				<property name="exitDate" value="12/12/2025 23:59" />
@@ -891,6 +895,8 @@
 				
 				<property name="visits">
 					<list>
+					<ref bean="visit9" />
+					<ref bean="visit10" />
 					</list>
 				</property>
 				
@@ -912,7 +918,7 @@
 				<property name="surname" value="Pocholo" />
 				<property name="photo" value="https://www.url.com/example" />
 			
-				<property name="crimeRate" value="0.0" />
+				<property name="crimeRate" value="-0.4" />
 				<property name="ticker" value="231232-EEEEEE" />
 				<property name="incomeDate" value="12/12/2004 23:59" />
 				<property name="exitDate" value="12/12/2025 23:59" />
@@ -993,7 +999,7 @@
 			<bean id="visit4" class="domain.Visit">
 				<property name="visitStatus" value="ACCEPTED" />
 				<property name="description" value="I need to talk with him" />
-				<property name="date" value="12/12/2021 23:59" />
+				<property name="date" value="06/19/2019 18:00" />
 				<property name="reason" value="BUSSINESS" />
 				<property name="visitor" ref="visitor2" />
 				<property name="prisoner" ref="prisoner1" />
@@ -1039,10 +1045,36 @@
 				<property name="prisoner" ref="prisoner1" />
 				<property name="createdByPrisoner" value="true" />
 			</bean> 
+			
+			<bean id="visit9" class="domain.Visit">
+				<property name="visitStatus" value="PERMITTED" />
+				<property name="description" value="I need to talk with him" />
+				<property name="date" value="05/18/2019 13:00" />
+				<property name="reason" value="LEGAL" />
+				<property name="visitor" ref="visitor2" />
+				<property name="report" ref="report2" />
+				<property name="prisoner" ref="prisoner3" />
+				<property name="createdByPrisoner" value="true" />
+			</bean>
+			
+			<bean id="visit10" class="domain.Visit">
+				<property name="visitStatus" value="PERMITTED" />
+				<property name="description" value="I need to talk with him" />
+				<property name="date" value="05/19/2019 13:00" />
+				<property name="reason" value="LEGAL" />
+				<property name="visitor" ref="visitor2" />
+				<property name="prisoner" ref="prisoner3" />
+				<property name="createdByPrisoner" value="false" />
+			</bean>
 	
 	<!-- REPORT -->
 		<!-- GUARD1 -->
 			<bean id="report1" class="domain.Report">
+				<property name="description" value="The visit was really cool" />
+				<property name="date" value="12/12/2017 23:59" />
+			</bean>
+			
+			<bean id="report2" class="domain.Report">
 				<property name="description" value="The visit was really cool" />
 				<property name="date" value="12/12/2017 23:59" />
 			</bean>
