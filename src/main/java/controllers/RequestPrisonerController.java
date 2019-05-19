@@ -67,7 +67,7 @@ public class RequestPrisonerController extends AbstractController {
 			result = this.createEditModelAndView(request);
 
 		} catch (Exception e) {
-			result = new ModelAndView("redirect:/");
+			result = new ModelAndView("redirect:list.do");
 		}
 
 		return result;
@@ -81,29 +81,26 @@ public class RequestPrisonerController extends AbstractController {
 
 		try {
 			Assert.isTrue(StringUtils.isNumeric(activityId));
+			Integer activityId2 = Integer.parseInt(activityId);
+			Request request = this.requestService.reconstructPrisoner(requestForm, activityId2, binding);
+
+			if (binding.hasErrors())
+				result = this.createEditModelAndView(requestForm);
+			else
+				try {
+
+					this.activityService.securityActivityForRequests(this.activityService.findOne(activityId2));
+					this.requestService.assignRequest(request, activityId2);
+
+					result = new ModelAndView("redirect:list.do");
+
+				} catch (Exception e) {
+					result = this.createEditModelAndView(request, "finder.commit.error");
+				}
+
 		} catch (Exception e) {
-			result = new ModelAndView("redirect:/");
-			return result;
+			result = new ModelAndView("redirect:list.do");
 		}
-
-		Integer activityId2 = Integer.parseInt(activityId);
-
-		Request request = this.requestService.reconstructPrisoner(requestForm, activityId2, binding);
-
-		if (binding.hasErrors())
-			result = this.createEditModelAndView(requestForm);
-		else
-			try {
-
-				this.activityService.securityActivityForRequests(this.activityService.findOne(activityId2));
-				this.requestService.assignRequest(request, activityId2);
-
-				result = new ModelAndView("redirect:list.do");
-
-			} catch (Exception e) {
-				result = this.createEditModelAndView(request, "finder.commit.error");
-			}
-
 		return result;
 	}
 

@@ -60,10 +60,10 @@ public class RequestSocialWorkerCotroller extends AbstractController {
 
 			this.requestService.approveRequest(requestId2, activityId2);
 			result = new ModelAndView("redirect:list.do");
-			result.addObject("activityId", activityId);
 		} catch (Exception e) {
-			result = new ModelAndView("redirect:/");
+			result = new ModelAndView("redirect:list.do");
 		}
+		result.addObject("activityId", activityId);
 		return result;
 	}
 
@@ -78,10 +78,10 @@ public class RequestSocialWorkerCotroller extends AbstractController {
 
 			this.requestService.securityRequestSocialWorker(activityId2, requestId2);
 			result = this.createEditModelAndView(this.requestService.findeOne(requestId2));
-			result.addObject("activityId", activityId);
 		} catch (Exception e) {
-			result = new ModelAndView("redirect:/");
+			result = new ModelAndView("redirect:list.do");
 		}
+		result.addObject("activityId", activityId);
 		return result;
 	}
 
