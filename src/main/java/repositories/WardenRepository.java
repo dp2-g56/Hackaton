@@ -32,7 +32,7 @@ public interface WardenRepository extends JpaRepository<Warden, Integer> {
 
 	/** Visitors and Prisoner with most Visits between them **/
 
-	@Query("select k from Visitor k where (select max(cast((select count(distinct v.prisoner) from Visit v where v.visitor = d and v.visitStatus = 'PERMITTED' and v.date < (NOW()))as integer)) from Visitor d) = (select count(distinct v.prisoner) from Visit v where v.visitor = k and v.visitStatus = 'PERMITTED' and v.date < (NOW()))")
+	@Query("select v2 from Visitor v2 where (select max(cast((select count(v) from Visit v where v.visitor = v2 and v.prisoner = p and v.visitStatus = 'PERMITTED' and v.date < (NOW()))as integer)) from Prisoner p) = (select max(cast((select max(cast((select count(v) from Visit v where v.visitor = k and v.prisoner = p and v.visitStatus = 'PERMITTED' and v.date < (NOW()))as integer)) from Prisoner p)as integer)) from Visitor k)")
 	public List<Visitor> getVisitorsMostVisitsToAPrisoner();
 
 	/** Option 2 for getVisitorsMostVisitsToAPrisoner() **/
@@ -59,7 +59,7 @@ public interface WardenRepository extends JpaRepository<Warden, Integer> {
 
 	/** Ratio of carried out Visits with Report **/
 
-	@Query("select round((select count(a)/cast(count(c) as float) from Visit a where a.report.id > 0)*100, 2) from Visit c where c.visitStatus = 'PERMITTED' and c.date < (NOW())")
+	@Query("select round((select count(a)/cast(count(c) as float) from Visit a where a.report.id > 0)*100, 0) from Visit c where c.visitStatus = 'PERMITTED' and c.date < (NOW())")
 	public Float getRatioOfVisitsWithReport();
 
 	/** Guards with the largest number of Reports written **/
@@ -69,18 +69,18 @@ public interface WardenRepository extends JpaRepository<Warden, Integer> {
 
 	/** Guards with more than 50% of his Visits with a Report **/
 
-	@Query("select g3.userAccount.username from Guard g3 where ((select count(v) from Guard g join g.visits v where g = g3 and v.report.id > 0)/(select count(v) from Guard g join g.visits v where g = g3 and v.visitStatus = 'PERMITTED' and v.date < (NOW()))) > 0.5")
-	public List<String> getGuardsWithMoreThan50PercentOfVisitsWithReport();
+	@Query("select round((select count(g3)/cast(count(g4)as float) from Guard g3 where ((select count(v) from Guard g join g.visits v where g = g3 and v.report.id > 0 and v.visitStatus = 'PERMITTED' and v.date < (NOW()))/(select count(v) from Guard g join g.visits v where g = g3 and v.visitStatus = 'PERMITTED' and v.date < (NOW()))) > 0.5)*100,2) from Guard g4")
+	public Float getRatioOfGuardsWithMoreThan50PercentOfVisitsWithReport();
 
 	/** Prisoners without a Visit in the last month **/
 
-	@Query("select p2.userAccount.username from Prisoner p2 where p2.freedom = false and (select count(v) from Prisoner p join p.visits v where p = p2 and v.visitStatus = 'PERMITTED' and v.date between (NOW() - 100000000) and (NOW())) = 0")
-	public List<String> getPrisonersWithoutVisitsLastMonth();
+	@Query("select round((select count(p2)/cast(count(p3)as float) from Prisoner p2 where p2.freedom = false and (select count(v) from Prisoner p join p.visits v where p = p2 and v.visitStatus = 'PERMITTED' and v.date between (NOW() - 100000000) and (NOW())) = 0)*100, 2) from Prisoner p3 where p3.freedom = false")
+	public Float getRatioOfPrisonersWithoutVisitsLastMonth();
 
 	/** Visitors with at least 2 Visits to the same Prisoner in the last two months **/
 
-	@Query("select v.userAccount.username from Visitor v where (select count(distinct v2.prisoner) from Visit v2 where v2.visitStatus = 'PERMITTED'and v2.date between (NOW() - 200000000) and (NOW()) and v2.visitor = v) < (select count(v2) from Visit v2 where v2.visitStatus = 'PERMITTED'and v2.date between (NOW() - 200000000) and (NOW()) and v2.visitor = v)")
-	public List<String> getRegularVisitorToAtLeastOnePrisoner();
+	@Query("select round((select count(v)/cast(count(v3) as float) from Visitor v where (select count(distinct v2.prisoner) from Visit v2 where v2.visitStatus = 'PERMITTED'and v2.date between (NOW() - 200000000) and (NOW()) and v2.visitor = v) < (select count(v2) from Visit v2 where v2.visitStatus = 'PERMITTED'and v2.date between (NOW() - 200000000) and (NOW()) and v2.visitor = v))*100, 2) from Visitor v3")
+	public Float getRegularVisitorToAtLeastOnePrisoner();
 
 	/** Ratio of available Guards Vs Visits in need of a Guard **/
 
@@ -100,7 +100,7 @@ public interface WardenRepository extends JpaRepository<Warden, Integer> {
 	/** Maximum, minimun, standar deviation and average Crime Rate **/
 
 	@Query("select max(p.crimeRate), min(p.crimeRate), round(stddev(p.crimeRate), 3), round(avg(p.crimeRate), 3) from Prisoner p")
-	public Double[] getStatisticsCrimeRate();
+	public Float[] getStatisticsCrimeRate();
 
 	/** Social Workers with most Activities full filled **/
 
@@ -114,7 +114,7 @@ public interface WardenRepository extends JpaRepository<Warden, Integer> {
 
 	/** Ratio of SocialWorkers with Curriculum **/
 
-	@Query("select round((select count(s2)/cast(count(s)as float) from SocialWorker s2 where s2.curriculum.id > 0)*100, 2) from SocialWorker s")
+	@Query("select round((select count(s2)/cast(count(s)as float) from SocialWorker s2 where s2.curriculum.id > 0)*100, 0) from SocialWorker s")
 	public Float getRatioSocialWorkersWithCurriculum();
 
 	/** Activities with the largest number of Prisoners **/
@@ -137,7 +137,7 @@ public interface WardenRepository extends JpaRepository<Warden, Integer> {
 
 	/** SocialWorkers with the lowest ratio of Prisoners per Activity **/
 
-	@Query("select s3.userAccount.username from SocialWorker s3 where (select count(distinct r2)/s4.activities.size from SocialWorker s4 join s4.activities a2 join a2.requests r2 where s4 = s3 and r2.status = 'APPROVED') = (select min(cast((select count(distinct r)/s.activities.size from SocialWorker s join s.activities a join a.requests r where s = s2 and r.status = 'APPROVED')as float)) from SocialWorker s2)")
+	@Query("select s3.userAccount.username from SocialWorker s3 where (select round((count(distinct r2)/cast(s4.activities.size as float))*100, 0) from SocialWorker s4 join s4.activities a2 join a2.requests r2 where s4 = s3 and r2.status = 'APPROVED') = (select min(cast((select round((count(distinct r)/cast(s.activities.size as float))*100, 0) from SocialWorker s join s.activities a join a.requests r where s = s2 and r.status = 'APPROVED')as integer)) from SocialWorker s2)")
 	public List<String> getSocialWorkersLowestRatioPrisonersPerActivity();
 
 	/** Activities who appears on most searches **/

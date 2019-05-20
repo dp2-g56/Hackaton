@@ -2,8 +2,10 @@ package controllers;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -50,11 +52,14 @@ public class RequestPrisonerController extends AbstractController {
 	// CREATE_REQUEST--------------------------------------------------------------
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
-	public ModelAndView createRequest(@RequestParam Integer activityId) {
+	public ModelAndView createRequest(@RequestParam(required = false) String activityId) {
 		ModelAndView result;
 
 		try {
-			Activity activity = this.activityService.findOne(activityId);
+			Assert.isTrue(StringUtils.isNumeric(activityId));
+			Integer activityId2 = Integer.parseInt(activityId);
+
+			Activity activity = this.activityService.findOne(activityId2);
 			this.activityService.securityActivityForRequests(activity);
 
 			Request request = this.requestService.create();
@@ -62,7 +67,7 @@ public class RequestPrisonerController extends AbstractController {
 			result = this.createEditModelAndView(request);
 
 		} catch (Exception e) {
-			result = new ModelAndView("redirect:/");
+			result = new ModelAndView("redirect:list.do");
 		}
 
 		return result;
@@ -70,34 +75,43 @@ public class RequestPrisonerController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, params = "save")
-	public ModelAndView createRequest(Request requestForm, @RequestParam Integer activityId, BindingResult binding) {
+	public ModelAndView createRequest(Request requestForm, @RequestParam(required = false) String activityId,
+			BindingResult binding) {
 		ModelAndView result;
 
-		Request request = this.requestService.reconstruct(requestForm, activityId, binding);
+		try {
+			Assert.isTrue(StringUtils.isNumeric(activityId));
+			Integer activityId2 = Integer.parseInt(activityId);
+			Request request = this.requestService.reconstructPrisoner(requestForm, activityId2, binding);
 
-		if (binding.hasErrors())
-			result = this.createEditModelAndView(requestForm);
-		else
-			try {
-				this.activityService.securityActivityForRequests(this.activityService.findOne(activityId));
-				this.requestService.assignRequest(request, activityId);
+			if (binding.hasErrors())
+				result = this.createEditModelAndView(requestForm);
+			else
+				try {
 
-				result = new ModelAndView("redirect:list.do");
+					this.activityService.securityActivityForRequests(this.activityService.findOne(activityId2));
+					this.requestService.assignRequest(request, activityId2);
 
-			} catch (Exception e) {
-				result = this.createEditModelAndView(request, "finder.commit.error");
-			}
+					result = new ModelAndView("redirect:list.do");
 
+				} catch (Exception e) {
+					result = this.createEditModelAndView(request, "finder.commit.error");
+				}
+
+		} catch (Exception e) {
+			result = new ModelAndView("redirect:list.do");
+		}
 		return result;
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
-	public ModelAndView deleteRequest(Integer requestId) {
+	public ModelAndView deleteRequest(@RequestParam(required = false) String requestId) {
 		ModelAndView result;
 
 		try {
-
-			this.requestService.deleteRequest(this.requestService.findeOne(requestId));
+			Assert.isTrue(StringUtils.isNumeric(requestId));
+			Integer requestId2 = Integer.parseInt(requestId);
+			this.requestService.deleteRequestFromPrisoner(this.requestService.findeOne(requestId2));
 
 			result = new ModelAndView("redirect:list.do");
 

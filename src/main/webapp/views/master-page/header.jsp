@@ -35,6 +35,7 @@
 					<li><a href="broadcast/warden/sendSecurityBreach.do"><spring:message code="master.page.administrator.broadcastSecurity" /></a></li>																					
 					<li><a href="salesman/warden/list.do"><spring:message code="master.page.salesman.list" /></a></li>
 					<li><a href="configuration/warden/list.do"><spring:message code="master.page.warden.configuration" /></a></li>
+					<li><a href="statistics/warden/show.do"><spring:message code="master.page.warden.statistics" /></a></li>
 				</ul></li>
 		</security:authorize>
 
