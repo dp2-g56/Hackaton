@@ -21,7 +21,7 @@ import domain.PriorityLvl;
 
 @Controller
 @RequestMapping("/broadcast/warden")
-public class AdministratorBroadcastMessage extends AbstractController {
+public class WardenBroadcastMessage extends AbstractController {
 
 	@Autowired
 	private WardenService			wardenService;
@@ -33,7 +33,7 @@ public class AdministratorBroadcastMessage extends AbstractController {
 	private ConfigurationService	configurationService;
 
 
-	public AdministratorBroadcastMessage() {
+	public WardenBroadcastMessage() {
 
 		super();
 	}
