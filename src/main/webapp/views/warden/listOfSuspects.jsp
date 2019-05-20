@@ -59,6 +59,8 @@ function show(id){
 		<display:column titleKey="prisoner.isSuspect" >
 			<jstl:out value="${row.isSuspect}" />
 		</display:column>
+		
+		
 
 				
 		<display:column  titleKey="prisoner.charges" > 
@@ -108,7 +110,7 @@ function show(id){
 										</jstl:if>
 										<select id="id" name="id">
 											<jstl:forEach items="${possibleCharges}" var="i">
-												<jstl:if test="${!row.charges.contains(i)}">
+												<jstl:if test="${!row.charges.contains(i) && i.isDraftMode == false}">
 													<option value="${i.id}">
 														${i.titleEnglish}
 													</option>

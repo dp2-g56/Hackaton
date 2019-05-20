@@ -36,6 +36,10 @@
 					<li><a href="salesman/warden/list.do"><spring:message code="master.page.salesman.list" /></a></li>
 					<li><a href="configuration/warden/list.do"><spring:message code="master.page.warden.configuration" /></a></li>
 					<li><a href="statistics/warden/show.do"><spring:message code="master.page.warden.statistics" /></a></li>
+					<li><a href="warden/charge/listAll.do"><spring:message code="master.page.warden.charges" /></a></li>
+					
+					
+					
 				</ul></li>
 		</security:authorize>
 

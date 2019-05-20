@@ -46,4 +46,7 @@ public class ChargeService {
 		return this.chargeRepository.getChargesNotAssignedToPrisoner(prisoner);
 	}
 
+	public List<Charge> getDraftCharges() {
+		return this.chargeRepository.getDraftCharges();
+	}
 }
