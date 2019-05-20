@@ -102,7 +102,7 @@ public class PrisonerWardenController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/listSuspects", method = RequestMethod.GET)
-	public ModelAndView listSuspects() throws ParseException {
+	public ModelAndView listSuspects() {
 		ModelAndView result;
 
 		try {
