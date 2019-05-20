@@ -1,36 +1,114 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
+import domain.Activity;
+import domain.Box;
+import domain.Curriculum;
+import domain.PersonalRecord;
+import domain.SocialWorker;
+import forms.FormObjectSocialWorker;
 import repositories.SocialWorkerRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
-import domain.Curriculum;
-import domain.PersonalRecord;
-import domain.SocialWorker;
 
 @Service
 @Transactional
 public class SocialWorkerService {
 
 	@Autowired
-	private SocialWorkerRepository	socialWorkerRepository;
+	private SocialWorkerRepository socialWorkerRepository;
 
 	@Autowired
-	private CurriculumService		curriculumService;
+	private CurriculumService curriculumService;
 
+	@Autowired
+	private BoxService boxService;
 
 	// ----------------------------------------CRUD
 	// METHODS--------------------------
 	// ------------------------------------------------------------------------------
+
+	public SocialWorker create() {
+		SocialWorker res = new SocialWorker();
+
+		// SE CREAN LAS LISTAS VACIAS
+		List<Box> boxes = new ArrayList<Box>();
+		List<Activity> activities = new ArrayList<Activity>();
+
+		// SE AÃ‘ADE EL USERNAME Y EL PASSWORD
+		UserAccount userAccountActor = new UserAccount();
+		userAccountActor.setUsername("");
+		userAccountActor.setPassword("");
+
+		// SE AÑADEN TODOS LOS ATRIBUTOS
+		res.setName("");
+		res.setMiddleName("");
+		res.setSurname("");
+		res.setPhoto("");
+		res.setBoxes(boxes);
+
+		res.setTitle("");
+		res.setActivities(activities);
+
+		List<Authority> authorities = new ArrayList<Authority>();
+
+		Authority authority = new Authority();
+		authority.setAuthority(Authority.SOCIALWORKER);
+		authorities.add(authority);
+
+		userAccountActor.setAuthorities(authorities);
+		// NOTLOCKED A TRUE EN LA INICIALIZACION, O SE CREARA UNA CUENTA BANEADA
+		userAccountActor.setIsNotLocked(true);
+
+		res.setUserAccount(userAccountActor);
+
+		return res;
+	}
+
+	public void saveSocialWorker(SocialWorker socialWorker) {
+
+		List<Box> boxes = new ArrayList<>();
+
+		// Boxes
+		Box box1 = this.boxService.createSystem();
+		box1.setName("SUSPICIOUSBOX");
+		Box saved1 = this.boxService.saveSystem(box1);
+		boxes.add(saved1);
+
+		Box box2 = this.boxService.createSystem();
+		box2.setName("TRASHBOX");
+		Box saved2 = this.boxService.saveSystem(box2);
+		boxes.add(saved2);
+
+		Box box3 = this.boxService.createSystem();
+		box3.setName("OUTBOX");
+		Box saved3 = this.boxService.saveSystem(box3);
+		boxes.add(saved3);
+
+		Box box4 = this.boxService.createSystem();
+		box4.setName("INBOX");
+		Box saved4 = this.boxService.saveSystem(box4);
+		boxes.add(saved4);
+
+		socialWorker.setBoxes(boxes);
+
+		this.socialWorkerRepository.save(socialWorker);
+
+	}
 
 	public SocialWorker save(SocialWorker SocialWorker) {
 		return this.socialWorkerRepository.save(SocialWorker);
@@ -41,7 +119,7 @@ public class SocialWorkerService {
 
 	/**
 	 * LoggedSocialWorker now contains the security of loggedAsSocialWorker
-	 * 
+	 *
 	 * @return
 	 */
 	public SocialWorker loggedSocialWorker() {
@@ -58,6 +136,61 @@ public class SocialWorkerService {
 		List<Authority> authorities = (List<Authority>) userAccount.getAuthorities();
 		Assert.isTrue(authorities.get(0).toString().equals("SOCIALWORKER"));
 
+	}
+
+	/// ----------------------------------------RECONSTRUCT
+	// ------------------------------------------------------------------------------
+
+	public SocialWorker reconstruct(FormObjectSocialWorker formSocialWorker, BindingResult binding) {
+		SocialWorker result = this.create();
+
+		result.setName(formSocialWorker.getName());
+		result.setMiddleName(formSocialWorker.getMiddleName());
+		result.setSurname(formSocialWorker.getSurname());
+		result.setPhoto(formSocialWorker.getPhoto());
+		result.setTitle(formSocialWorker.getTitle());
+
+		// USER ACCOUNT
+		UserAccount userAccount = new UserAccount();
+
+		// Authorities
+		List<Authority> authorities = new ArrayList<Authority>();
+		Authority authority = new Authority();
+		authority.setAuthority(Authority.SOCIALWORKER);
+		authorities.add(authority);
+		userAccount.setAuthorities(authorities);
+
+		// Username
+		userAccount.setUsername(formSocialWorker.getUsername());
+
+		// Password
+		Md5PasswordEncoder encoder;
+		encoder = new Md5PasswordEncoder();
+		userAccount.setPassword(encoder.encodePassword(formSocialWorker.getPassword(), null));
+
+		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+
+		// Confirmacion contrasena
+		if (!formSocialWorker.getPassword().equals(formSocialWorker.getConfirmPassword()))
+			if (locale.contains("ES"))
+				binding.addError(new FieldError("formPrisoner", "password", formSocialWorker.getPassword(), false, null,
+						null, "Las contrasenas no coinciden"));
+			else
+				binding.addError(new FieldError("formPrisoner", "password", formSocialWorker.getPassword(), false, null,
+						null, "Passwords don't match"));
+
+		// Confirmacion terminos y condiciones
+		if (!formSocialWorker.getTermsAndConditions())
+			if (locale.contains("ES"))
+				binding.addError(
+						new FieldError("formPrisoner", "termsAndConditions", formSocialWorker.getTermsAndConditions(),
+								false, null, null, "Debe aceptar los terminos y condiciones"));
+			else
+				binding.addError(
+						new FieldError("formPrisoner", "termsAndConditions", formSocialWorker.getTermsAndConditions(),
+								false, null, null, "You must accept the terms and conditions"));
+
+		return result;
 	}
 
 	public void saveNewSocialWorker(SocialWorker SocialWorker) {
