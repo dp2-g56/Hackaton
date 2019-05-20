@@ -9,24 +9,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import domain.Curriculum;
+import domain.PersonalRecord;
+import domain.SocialWorker;
 import repositories.SocialWorkerRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
-import domain.Curriculum;
-import domain.PersonalRecord;
-import domain.SocialWorker;
 
 @Service
 @Transactional
 public class SocialWorkerService {
 
 	@Autowired
-	private SocialWorkerRepository	socialWorkerRepository;
+	private SocialWorkerRepository socialWorkerRepository;
 
 	@Autowired
-	private CurriculumService		curriculumService;
-
+	private CurriculumService curriculumService;
 
 	// ----------------------------------------CRUD
 	// METHODS--------------------------
@@ -41,7 +40,7 @@ public class SocialWorkerService {
 
 	/**
 	 * LoggedSocialWorker now contains the security of loggedAsSocialWorker
-	 * 
+	 *
 	 * @return
 	 */
 	public SocialWorker loggedSocialWorker() {
