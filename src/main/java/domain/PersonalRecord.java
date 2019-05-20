@@ -4,6 +4,7 @@ package domain;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
+import javax.validation.Valid;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
@@ -13,14 +14,13 @@ import org.hibernate.validator.constraints.URL;
 @Access(AccessType.PROPERTY)
 public class PersonalRecord extends DomainEntity {
 
-	private String	fullName;
-	private String	photo;
-	private String	email;
-	private String	phoneNumber;
-	private String	urlLinkedInProfile;
+	private String fullName;
+	private String photo;
+	private String email;
+	private String phoneNumber;
+	private String urlLinkedInProfile;
 
-
-	public PersonalRecord() {		//Created for Json purposes
+	public PersonalRecord() { // Created for Json purposes
 		super();
 	}
 
@@ -53,7 +53,7 @@ public class PersonalRecord extends DomainEntity {
 		this.email = email;
 	}
 
-	@NotBlank
+	@Valid
 	public String getPhoneNumber() {
 		return this.phoneNumber;
 	}

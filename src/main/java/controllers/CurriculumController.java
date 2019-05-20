@@ -3,35 +3,37 @@ package controllers;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import security.LoginService;
-import security.UserAccount;
-import services.ActorService;
-import services.PersonalRecordService;
-import services.SocialWorkerService;
 import domain.Actor;
 import domain.Curriculum;
 import domain.PersonalRecord;
 import domain.SocialWorker;
+import services.ActorService;
+import services.CurriculumService;
+import services.PersonalRecordService;
+import services.SocialWorkerService;
 
 @Controller
 @RequestMapping("/curriculum")
 public class CurriculumController extends AbstractController {
 
 	@Autowired
-	private SocialWorkerService		socialWorkerService;
+	private SocialWorkerService socialWorkerService;
 	@Autowired
-	private PersonalRecordService	personalRecordService;
+	private PersonalRecordService personalRecordService;
 	@Autowired
-	private ActorService			actorService;
-
+	private ActorService actorService;
+	@Autowired
+	private CurriculumService curriculumService;
 
 	public CurriculumController() {
 		super();
@@ -39,31 +41,28 @@ public class CurriculumController extends AbstractController {
 
 	@RequestMapping(value = "/socialWorker/show", method = RequestMethod.GET)
 	public ModelAndView showCurriculumSocialWorker() {
-
 		ModelAndView result;
-		SocialWorker socialWorker = this.socialWorkerService.getSocialWorkerByUsername(LoginService.getPrincipal().getUsername());
-		Curriculum curriculum = socialWorker.getCurriculum();
 
-		if (curriculum == null) {
-			UserAccount userAccount;
-			userAccount = LoginService.getPrincipal();
-			Actor logguedActor = new Actor();
+		try {
+			try {
+				Curriculum curriculum = this.curriculumService.getCurriculumOfLoggedSocialWorker();
 
-			result = new ModelAndView("authenticated/showProfile");
+				result = new ModelAndView("curriculum/socialWorker/show");
 
-			logguedActor = this.actorService.getActorByUsername(userAccount.getUsername());
+				SocialWorker socialWorker = this.socialWorkerService.loggedSocialWorker();
+				result.addObject("socialId", socialWorker.getId());
+				result.addObject("curriculum", curriculum);
+				result.addObject("requestURI", "curriculum/socialWorker/show.do");
+			} catch (Throwable oops) {
+				Actor actor = this.actorService.loggedActor();
 
-			result.addObject("curriculum", null);
+				result = new ModelAndView("authenticated/showProfile");
 
-			result.addObject("actor", logguedActor);
-			result.addObject("requestURI", "authenticated/showProfile.do");
-		} else {
-
-			result = new ModelAndView("curriculum/socialWorker/show");
-
-			result.addObject("socialId", socialWorker.getId());
-			result.addObject("curriculum", curriculum);
-			result.addObject("requestURI", "curriculum/socialWorker/show.do");
+				result.addObject("curriculum", null);
+				result.addObject("actor", actor);
+			}
+		} catch (Throwable oops2) {
+			result = new ModelAndView("redirect:/");
 		}
 
 		return result;
@@ -80,19 +79,23 @@ public class CurriculumController extends AbstractController {
 		return result;
 
 	}
+
 	@RequestMapping(value = "/socialWorker/editPersonalRecord", method = RequestMethod.GET)
-	public ModelAndView edit(@RequestParam int personalRecordId) {
-
+	public ModelAndView edit(@RequestParam(required = false) String personalRecordId) {
 		ModelAndView result;
-		PersonalRecord personalRecord = this.personalRecordService.findOne(personalRecordId);
-		SocialWorker socialWorker = this.socialWorkerService.getSocialWorkerByUsername(LoginService.getPrincipal().getUsername());
 
-		if (personalRecord == null || socialWorker.getCurriculum() == null || socialWorker.getCurriculum().getPersonalRecord().getId() != personalRecordId) {
-			result = new ModelAndView("redirect:show.do");
-		} else {
+		try {
+			Assert.isTrue(StringUtils.isNumeric(personalRecordId));
+			int personalRecordIdInt = Integer.parseInt(personalRecordId);
+
+			PersonalRecord personalRecord = this.personalRecordService
+					.getPersonalRecordAsSocialWorker(personalRecordIdInt);
 
 			result = this.createEditModelAndView(personalRecord);
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:show.do");
 		}
+
 		return result;
 
 	}
@@ -101,21 +104,19 @@ public class CurriculumController extends AbstractController {
 	public ModelAndView addCurriculum(@Valid PersonalRecord personalRecord, BindingResult binding) {
 		ModelAndView result;
 
-		if (binding.hasErrors()) {
+		if (binding.hasErrors())
 			result = this.createEditModelAndView(personalRecord);
-		} else {
+		else
 			try {
-				if (personalRecord.getId() == 0) {
+				if (personalRecord.getId() == 0)
 					this.socialWorkerService.addCurriculum(personalRecord);
-				} else {
+				else
 					this.socialWorkerService.updateCurriculum(personalRecord);
-				}
 				result = new ModelAndView("redirect:show.do");
 
 			} catch (Throwable oops) {
 				result = this.createEditModelAndView(personalRecord, "commit.error");
 			}
-		}
 		return result;
 	}
 
