@@ -34,7 +34,23 @@
 
 	</form:form>
 	
+	<jstl:choose>
+	
+	<jstl:when test="${finder}">
+	
+		<acme:cancel url="/finder/visitor/list.do" code="visit.cancel" />
+	
+	</jstl:when>
+	
+	<jstl:otherwise>
+		
 	<acme:cancel url="/anonymous/prisoner/list.do" code="visit.cancel" />
+	
+	</jstl:otherwise>
+	
+	
+	</jstl:choose>
+
 
 
 </security:authorize>
