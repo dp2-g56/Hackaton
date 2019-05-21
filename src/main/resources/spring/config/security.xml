@@ -38,6 +38,7 @@
 		<security:intercept-url pattern="/anonymous/prisoner/**" access="permitAll" />
 		<security:intercept-url pattern="/anonymous/charge/**" access="permitAll" />
 		<security:intercept-url pattern="/product/anonymous/**" access="permitAll" />
+		<security:intercept-url pattern="/anonymous/socialWorker/**" access="permitAll" />
 		
 	<!-- WARDEN -->
 		<security:intercept-url pattern="/warden/freePrisoners/**" access="hasRole('WARDEN')" />

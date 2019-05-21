@@ -125,9 +125,36 @@ public class SocialProfileController extends AbstractController {
 				SalesMan salesman = this.salesManService.findOne(logguedActor.getId());
 				result.addObject("salesman", salesman);
 			}
+			if (authorities.get(0).toString().equals("SOCIALWORKER")) {
+				SocialWorker socialWorker = this.socialWorkerService.findOne(logguedActor.getId());
+				result.addObject("socialWorker", socialWorker);
+			}
 		} catch (Throwable oops) {
 			result = new ModelAndView("redirect:/");
 		}
+
+		return result;
+	}
+
+	@RequestMapping(value = "/editProfile", method = RequestMethod.POST, params = "saveSocialWorker")
+	public ModelAndView saveSocialWorker(SocialWorker socialWorker, BindingResult binding) {
+		ModelAndView result;
+
+		SocialWorker socialWorkerActor;
+		socialWorkerActor = this.socialWorkerService.reconstruct(socialWorker, binding);
+
+		if (binding.hasErrors()) {
+			result = new ModelAndView("authenticated/editProfile");
+			result.addObject("socialWorker", socialWorkerActor);
+		} else
+			try {
+				this.socialWorkerService.saveEdit(socialWorkerActor);
+				result = new ModelAndView("redirect:/authenticated/showProfile.do");
+			} catch (Throwable oops) {
+				result = new ModelAndView("authenticated/editProfile");
+				result.addObject("socialWorker", socialWorkerActor);
+				result.addObject("message", "socialWorker.save.commit.error");
+			}
 
 		return result;
 	}
@@ -224,6 +251,9 @@ public class SocialProfileController extends AbstractController {
 
 			if (authorities.get(0).toString().equals("SALESMAN"))
 				this.salesManService.deleteLoggedSalesman();
+
+			if (authorities.get(0).toString().equals("SOCIALWORKER"))
+				this.socialWorkerService.deleteLogguedSocialWorker();
 		} catch (Throwable oops) {
 			result = new ModelAndView("redirect:/");
 		}

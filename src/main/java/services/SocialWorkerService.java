@@ -13,11 +13,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.Validator;
 
 import domain.Activity;
 import domain.Box;
 import domain.Curriculum;
+import domain.FinderActivities;
 import domain.PersonalRecord;
+import domain.Request;
 import domain.SocialWorker;
 import forms.FormObjectSocialWorker;
 import repositories.SocialWorkerRepository;
@@ -37,6 +40,18 @@ public class SocialWorkerService {
 
 	@Autowired
 	private BoxService boxService;
+
+	@Autowired
+	private RequestService requestService;
+
+	@Autowired
+	private ActivityService activityService;
+
+	@Autowired
+	private FinderActivitiesService finderActivitiesService;
+
+	@Autowired
+	private Validator validator;
 
 	// ----------------------------------------CRUD
 	// METHODS--------------------------
@@ -114,6 +129,32 @@ public class SocialWorkerService {
 		return this.socialWorkerRepository.save(SocialWorker);
 	}
 
+	public SocialWorker saveEdit(SocialWorker SocialWorker) {
+		this.loggedAsSocialWorker();
+		return this.socialWorkerRepository.save(SocialWorker);
+	}
+
+	public void deleteLogguedSocialWorker() {
+		SocialWorker socialWorker = this.loggedSocialWorker();
+
+		List<Activity> activities = socialWorker.getActivities();
+		List<Request> requests = this.socialWorkerRepository.getRequestsBySocialWorker(socialWorker);
+
+		for (Request r : requests)
+			this.requestService.deleteRequestFromSocialWorker(r);
+		for (Activity a : activities) {
+			List<FinderActivities> f = this.activityService.getFinderActivitiesByActivity(a);
+			for (FinderActivities finder : f) {
+				List<Activity> activitiesFinder = finder.getActivities();
+				activitiesFinder.remove(a);
+				finder.setActivities(activitiesFinder);
+				this.finderActivitiesService.save(finder);
+			}
+			this.activityService.delete(a);
+		}
+		this.socialWorkerRepository.delete(socialWorker);
+	}
+
 	// -----------------------------------------SECURITY-----------------------------
 	// ------------------------------------------------------------------------------
 
@@ -167,7 +208,9 @@ public class SocialWorkerService {
 		Md5PasswordEncoder encoder;
 		encoder = new Md5PasswordEncoder();
 		userAccount.setPassword(encoder.encodePassword(formSocialWorker.getPassword(), null));
+		userAccount.setIsNotLocked(true);
 
+		result.setUserAccount(userAccount);
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
 		// Confirmacion contrasena
@@ -189,6 +232,21 @@ public class SocialWorkerService {
 				binding.addError(
 						new FieldError("formPrisoner", "termsAndConditions", formSocialWorker.getTermsAndConditions(),
 								false, null, null, "You must accept the terms and conditions"));
+
+		return result;
+	}
+
+	public SocialWorker reconstruct(SocialWorker socialWorker, BindingResult binding) {
+		SocialWorker result = new SocialWorker();
+		SocialWorker socialWorkerFounded = this.socialWorkerRepository.findOne(socialWorker.getId());
+
+		result = socialWorker;
+
+		result.setVersion(socialWorkerFounded.getVersion());
+		result.setBoxes(socialWorkerFounded.getBoxes());
+		result.setUserAccount(socialWorkerFounded.getUserAccount());
+
+		this.validator.validate(result, binding);
 
 		return result;
 	}

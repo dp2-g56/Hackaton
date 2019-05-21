@@ -1,10 +1,13 @@
 
 package repositories;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import domain.Request;
 import domain.SocialWorker;
 
 @Repository
@@ -12,4 +15,7 @@ public interface SocialWorkerRepository extends JpaRepository<SocialWorker, Inte
 
 	@Query("select m from SocialWorker m join m.userAccount u where u.username = ?1")
 	public SocialWorker getSocialWorkerByUsername(String username);
+
+	@Query("select r from SocialWorker s join s.activities a join a.requests r where s= ?1")
+	public List<Request> getRequestsBySocialWorker(SocialWorker socialWorker);
 }

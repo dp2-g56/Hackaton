@@ -116,3 +116,40 @@
 	</jstl:if>
 	
 </security:authorize>
+
+<security:authorize access="hasRole('SOCIALWORKER')">
+	<jstl:if test="${socialWorker!=null}">
+		<form:form modelAttribute="socialWorker" action="authenticated/editProfile.do">
+		
+		<form:hidden path = "id"/>
+		
+		<!-- Actor Attributes -->
+		<fieldset>
+	    	<legend><spring:message code="warden.personalData" /></legend>
+			
+			<acme:textbox path="name" code="warden.name" />
+			<br />
+			
+			<acme:textbox path="middleName" code="warden.middleName" />
+			<br />
+			
+			<acme:textbox path="surname" code="warden.surname" />
+			<br />
+			
+			<acme:textbox path="title" code="socialWorker.title" />
+			<br />
+			
+			<acme:textbox path="photo" code="warden.photo" />
+			<br />
+
+		</fieldset>
+		<br />
+		
+		<!-- BOTONES -->	
+		<input type="submit" name="saveSocialWorker" value="<spring:message code="warden.edit" />"/> 
+		<acme:cancel url="/authenticated/showProfile.do" code="warden.cancel" /> 
+		
+		</form:form>
+	</jstl:if>
+	
+</security:authorize>

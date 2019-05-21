@@ -38,4 +38,10 @@
 	<definition name="termsAndConditionsEN" extends="master.page">	
 		<put-attribute name="body" value="/views/anonymous/termsAndConditionsEN.jsp" />
 	</definition>
+	
+	
+	<definition name="anonymous/socialWorker/create" extends="master.page">	
+		<put-attribute name="title" value="Registrarse como trabajador social" />
+		<put-attribute name="body" value="/views/anonymous/registerSocialWorker.jsp" />
+	</definition>
 </tiles-definitions>

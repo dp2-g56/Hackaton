@@ -4,33 +4,110 @@ package controllers;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import services.ConfigurationService;
-import services.PrisonerService;
 import domain.Charge;
 import domain.Prisoner;
+import domain.SocialWorker;
+import forms.FormObjectSocialWorker;
+import services.ConfigurationService;
+import services.PrisonerService;
+import services.SocialWorkerService;
 
 @Controller
 @RequestMapping("/anonymous")
 public class AnonymousController extends AbstractController {
 
 	@Autowired
-	private PrisonerService			prisonerService;
+	private PrisonerService prisonerService;
 
 	@Autowired
-	private ConfigurationService	configurationService;
+	private ConfigurationService configurationService;
 
+	@Autowired
+	private SocialWorkerService socialWorkerService;
 
 	public AnonymousController() {
 		super();
+	}
+
+	// -------------------------------------------------------------------
+	// ---------------------------REGISTER--------------------------------
+
+	@RequestMapping(value = "/socialWorker/create", method = RequestMethod.GET)
+	public ModelAndView registerAsSocialWorker() {
+		ModelAndView result;
+		try {
+			FormObjectSocialWorker formObjectSocialWorker = new FormObjectSocialWorker();
+			formObjectSocialWorker.setTermsAndConditions(false);
+
+			result = this.createEditModelAndView(formObjectSocialWorker);
+
+		} catch (Exception e) {
+
+			result = new ModelAndView("redirect:/anonymous/socialWorker/create.do");
+		}
+
+		return result;
+
+	}
+
+	@RequestMapping(value = "/socialWorker/create", method = RequestMethod.POST, params = "save")
+	public ModelAndView save(@Valid FormObjectSocialWorker formObjectSocialWorker, BindingResult binding) {
+		try {
+			ModelAndView result;
+
+			SocialWorker socialWorker = new SocialWorker();
+			socialWorker = this.socialWorkerService.create();
+			// Reconstruccion
+			socialWorker = this.socialWorkerService.reconstruct(formObjectSocialWorker, binding);
+
+			if (binding.hasErrors())
+				result = this.createEditModelAndView(formObjectSocialWorker);
+			else
+				try {
+					this.socialWorkerService.saveSocialWorker(socialWorker);
+
+					result = new ModelAndView("redirect:/security/login.do");
+
+				} catch (Throwable oops) {
+					result = this.createEditModelAndView(formObjectSocialWorker, "socialWorker.duplicated.user");
+
+				}
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:/anonymous/socialWorker/create.do");
+		}
+	}
+
+	protected ModelAndView createEditModelAndView(FormObjectSocialWorker formObjectSocialWorker) {
+		ModelAndView result;
+
+		result = this.createEditModelAndView(formObjectSocialWorker, null);
+
+		return result;
+	}
+
+	protected ModelAndView createEditModelAndView(FormObjectSocialWorker formObjectSocialWorker, String messageCode) {
+		ModelAndView result;
+
+		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+
+		result = new ModelAndView("anonymous/socialWorker/create");
+		result.addObject("formObjectSocialWorker", formObjectSocialWorker);
+		result.addObject("message", messageCode);
+		result.addObject("locale", locale);
+
+		return result;
 	}
 
 	// -------------------------------------------------------------------
