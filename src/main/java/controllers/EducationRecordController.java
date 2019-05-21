@@ -3,9 +3,11 @@ package controllers;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,27 +15,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import domain.Curriculum;
+import domain.EducationRecord;
+import domain.SocialWorker;
 import security.LoginService;
 import services.CurriculumService;
 import services.EducationRecordService;
 import services.SocialWorkerService;
-import domain.Curriculum;
-import domain.EducationRecord;
-import domain.SocialWorker;
 
 @Controller
 @RequestMapping("/curriculum")
 public class EducationRecordController extends AbstractController {
 
 	@Autowired
-	private EducationRecordService	educationRecordService;
+	private EducationRecordService educationRecordService;
 	@Autowired
-	private SocialWorkerService		socialWorkerService;
+	private SocialWorkerService socialWorkerService;
 	@Autowired
-	private CurriculumService		curriculumService;
+	private CurriculumService curriculumService;
 
-
-	//Constructor
+	// Constructor
 	public EducationRecordController() {
 		super();
 	}
@@ -43,33 +44,39 @@ public class EducationRecordController extends AbstractController {
 
 		ModelAndView result;
 
-		SocialWorker socialWorker = this.socialWorkerService.getSocialWorkerByUsername(LoginService.getPrincipal().getUsername());
-		Curriculum curriculum = socialWorker.getCurriculum();
+		try {
+			SocialWorker socialWorker = this.socialWorkerService
+					.getSocialWorkerByUsername(LoginService.getPrincipal().getUsername());
+			Curriculum curriculum = socialWorker.getCurriculum();
+			Assert.notNull(curriculum);
 
-		if (curriculum == null) {
-			result = new ModelAndView("redirect:show.do");
-		} else {
 			EducationRecord educationRecord = this.educationRecordService.create();
 
 			result = this.createEditModelAndView(educationRecord);
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:show.do");
 		}
+
 		return result;
 
 	}
 
 	@RequestMapping(value = "/socialWorker/editEducationRecord", method = RequestMethod.GET)
-	public ModelAndView editEducationRecord(@RequestParam int educationRecordId) {
+	public ModelAndView editEducationRecord(@RequestParam String educationRecordId) {
 
 		ModelAndView result;
-		EducationRecord educationRecord = this.educationRecordService.findOne(educationRecordId);
-		SocialWorker socialWorker = this.socialWorkerService.getSocialWorkerByUsername(LoginService.getPrincipal().getUsername());
 
-		if (educationRecord == null || socialWorker.getCurriculum() == null || !socialWorker.getCurriculum().getEducationRecords().contains(educationRecord)) {
-			result = new ModelAndView("redirect:show.do");
-		} else {
+		try {
+			Assert.isTrue(StringUtils.isNumeric(educationRecordId));
+			Integer educationRecordIdInt = Integer.parseInt(educationRecordId);
 
+			EducationRecord educationRecord = this.educationRecordService
+					.getEducationRecordOfLoggedSocialWorker(educationRecordIdInt);
 			result = this.createEditModelAndView(educationRecord);
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:show.do");
 		}
+
 		return result;
 
 	}
@@ -80,30 +87,29 @@ public class EducationRecordController extends AbstractController {
 
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
-		if (educationRecord.getEndDateStudy() != null && educationRecord.getStartDateStudy() != null && educationRecord.getStartDateStudy().after(educationRecord.getEndDateStudy())) {
-			if (locale.contains("ES")) {
-				binding.addError(new FieldError("educationRecord", "startDate", educationRecord.getStartDateStudy(), false, null, null, "La fecha de fin no puede ser anterior a la de inicio"));
-			} else {
-				binding.addError(new FieldError("educationRecord", "startDate", educationRecord.getStartDateStudy(), false, null, null, "The end date can not be before the start date"));
-			}
-		}
+		if (educationRecord.getEndDateStudy() != null && educationRecord.getStartDateStudy() != null
+				&& educationRecord.getStartDateStudy().after(educationRecord.getEndDateStudy()))
+			if (locale.contains("ES"))
+				binding.addError(new FieldError("educationRecord", "startDate", educationRecord.getStartDateStudy(),
+						false, null, null, "La fecha de fin no puede ser anterior a la de inicio"));
+			else
+				binding.addError(new FieldError("educationRecord", "startDate", educationRecord.getStartDateStudy(),
+						false, null, null, "The end date can not be before the start date"));
 
-		if (binding.hasErrors()) {
+		if (binding.hasErrors())
 			result = this.createEditModelAndView(educationRecord);
-		} else {
+		else
 			try {
-				if (educationRecord.getId() == 0) {
+				if (educationRecord.getId() == 0)
 					this.curriculumService.addEducationRecord(educationRecord);
-				} else {
+				else
 					this.curriculumService.updateEducationRecord(educationRecord);
-				}
 
 				result = new ModelAndView("redirect:show.do");
 
 			} catch (Throwable oops) {
 				result = this.createEditModelAndView(educationRecord, "commit.error");
 			}
-		}
 		return result;
 	}
 
