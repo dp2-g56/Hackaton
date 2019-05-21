@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
+import domain.Curriculum;
 import domain.EducationRecord;
 import domain.MiscellaneousRecord;
 import domain.PersonalRecord;
@@ -89,7 +91,10 @@ public class CurriculumAndRecordsServicesTest extends AbstractTest {
 
 			super.authenticate(socialWorker);
 
-			this.curriculumService.getCurriculumOfLoggedSocialWorker();
+			Curriculum curriculum = this.curriculumService.getCurriculumOfLoggedSocialWorker();
+
+			Assert.isTrue(this.socialWorkerService.getSocialWorkerByUsername(socialWorker).getCurriculum()
+					.getId() == curriculum.getId());
 
 			super.unauthenticate();
 		} catch (Throwable oops) {
