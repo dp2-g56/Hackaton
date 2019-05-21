@@ -35,6 +35,7 @@ public class BoxController extends AbstractController {
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView list() {
+		this.actorService.loggedAsActor();
 
 		ModelAndView result;
 		List<Box> boxes = new ArrayList<>();
@@ -51,6 +52,7 @@ public class BoxController extends AbstractController {
 	//Create
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView create() {
+		this.actorService.loggedAsActor();
 		ModelAndView result;
 		Box box;
 
@@ -63,6 +65,7 @@ public class BoxController extends AbstractController {
 	//Save
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
 	public ModelAndView save(Box box, BindingResult binding) {
+		this.actorService.loggedAsActor();
 		ModelAndView result;
 
 		box = this.boxService.reconstruct(box, binding);
@@ -82,6 +85,7 @@ public class BoxController extends AbstractController {
 	//Create
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public ModelAndView edit(@RequestParam int boxId) {
+		this.actorService.loggedAsActor();
 		ModelAndView result;
 		Box box;
 
@@ -96,6 +100,7 @@ public class BoxController extends AbstractController {
 	//Save
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
 	public ModelAndView delete(@RequestParam int rowId) {
+		this.actorService.loggedAsActor();
 		ModelAndView result;
 		Actor actor = this.actorService.loggedActor();
 

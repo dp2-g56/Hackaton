@@ -97,6 +97,8 @@ public class MessageService {
 		Actor actorRecieved = this.actorService.getActorByUsername(message.getRecipient());
 		Actor senderActor = this.actorService.getActorByUsername(message.getSender());
 
+		Assert.isTrue(senderActor.getUserAccount().getUsername().equals(message.getSender()));
+
 		Box boxRecieved = new Box();
 		Box boxSusupicious = new Box();
 		Box boxSent = new Box();
@@ -128,6 +130,7 @@ public class MessageService {
 
 			if (this.prisonerService.booleanLogedAsPrisoner()) {
 				Prisoner prisoner = this.prisonerService.loggedPrisoner();
+
 				if (prisoner.getCrimeRate() != 1.0) {
 					valueCrim = prisoner.getCrimeRate() + 0.05;
 					String s = String.format("%.2f", valueCrim);
@@ -468,5 +471,9 @@ public class MessageService {
 		this.actorService.save(v);
 		this.actorService.save(p);
 
+	}
+
+	public void flush() {
+		this.messageRepository.flush();
 	}
 }
