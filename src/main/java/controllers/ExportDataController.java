@@ -30,10 +30,13 @@ public class ExportDataController {
 
 	@Autowired
 	public WardenService	wardenService;
+
 	@Autowired
 	public GuardService		guardService;
+
 	@Autowired
 	public SalesManService	salesManService;
+
 	@Autowired
 	public VisitorService	visitorService;
 
@@ -95,7 +98,7 @@ public class ExportDataController {
 
 		// Defines el nombre del archivo y la extension
 		response.setContentType("text/txt");
-		response.setHeader("Content-Disposition", "attachment;filename=exportDataWarden.txt");
+		response.setHeader("Content-Disposition", "attachment;filename=exportDataGuard.txt");
 
 		// Con estos comandos permites su descarga cuando clickas
 		ServletOutputStream outStream = response.getOutputStream();
