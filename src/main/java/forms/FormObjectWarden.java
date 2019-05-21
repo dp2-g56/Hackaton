@@ -1,6 +1,7 @@
 package forms;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -18,6 +19,7 @@ public class FormObjectWarden {
 	private String surname;
 	private String middleName;
 	private String photo;
+	private String email;
 
 	// FORM
 	private Boolean termsAndConditions;
@@ -95,6 +97,16 @@ public class FormObjectWarden {
 
 	public void setTermsAndConditions(Boolean termsAndConditions) {
 		this.termsAndConditions = termsAndConditions;
+	}
+
+	@NotBlank
+	@Pattern(regexp = "[\\w.%-]+\\@[-.\\w]+\\.[A-Za-z]{2,4}|[\\w.%-]+\\<+[\\w.%-]+\\@[-.\\w]+\\.[A-Za-z]{2,4}|[\\w.%-]+\\<[\\w.%-]+\\@+\\>|[\\w.%-]+", message = "Email doesn't follow the pattern, must be identifier@domain.asd or alias <identifier@domain.asd>")
+	public String getEmail() {
+		return this.email;
+	}
+
+	public void setEmail(final String email) {
+		this.email = email;
 	}
 
 }
