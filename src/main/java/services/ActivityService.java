@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import domain.Activity;
+import domain.FinderActivities;
 import domain.Prisoner;
 import domain.SocialWorker;
 import repositories.ActivityRepository;
@@ -36,11 +37,19 @@ public class ActivityService {
 		return this.activityRepository.findOne(id);
 	}
 
+	public void delete(Activity activity) {
+		this.activityRepository.delete(activity);
+	}
+
 	public List<Prisoner> getPrisonersPerActivity(Activity a) {
 		this.socialWorkerService.loggedAsSocialWorker();
 		List<Prisoner> res = new ArrayList<Prisoner>();
 		res = this.activityRepository.getPrisonersPerActivity(a);
 		return res;
+	}
+
+	public List<FinderActivities> getFinderActivitiesByActivity(Activity a) {
+		return this.activityRepository.getFindersByActivity(a);
 	}
 
 	public Activity save(Activity activity) {
