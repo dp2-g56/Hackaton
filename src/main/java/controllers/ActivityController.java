@@ -36,11 +36,10 @@ public class ActivityController extends AbstractController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView list() {
 		ModelAndView result;
-		List<Activity> activities;
 
 		SocialWorker sw = this.socialWorkerService.loggedSocialWorker();
 
-		activities = sw.getActivities();
+		List<Activity> activities = this.activityService.getFinalActivitiesSocialWorker(sw);
 
 		result = new ModelAndView("activity/socialworker/list");
 		result.addObject("activities", activities);

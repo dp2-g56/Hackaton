@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import domain.Activity;
 import domain.Prisoner;
+import domain.SocialWorker;
 
 @Repository
 public interface ActivityRepository extends JpaRepository<Activity, Integer> {
@@ -21,5 +22,8 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 
 	@Query("select p from Activity a join a.requests r join r.prisoner p where r.status = 'APPROVED' and a = ?1")
 	public List<Prisoner> getPrisonersPerActivity(Activity a);
+
+	@Query("select a from SocialWorker s join s.activities a where a.isFinalMode = true and s = ?1")
+	public List<Activity> getFinalActivitiesSocialWorker(SocialWorker sw);
 
 }

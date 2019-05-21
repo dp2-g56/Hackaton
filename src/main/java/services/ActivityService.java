@@ -14,6 +14,7 @@ import org.springframework.util.Assert;
 
 import domain.Activity;
 import domain.Prisoner;
+import domain.SocialWorker;
 import repositories.ActivityRepository;
 
 @Service
@@ -64,5 +65,9 @@ public class ActivityService {
 
 		return this.activityRepository.getPostActivities(date);
 
+	}
+
+	public List<Activity> getFinalActivitiesSocialWorker(SocialWorker sw) {
+		return this.activityRepository.getFinalActivitiesSocialWorker(sw);
 	}
 }

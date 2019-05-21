@@ -1384,6 +1384,7 @@
 						<property name="realizationDate" value="09/12/2021 13:30" />
 						<property name="maxAssistant" value="5" />
 						<property name="rewardPoints" value="100" />
+						<property name="isFinalMode" value="true" />
 						<property name="requests">
 						    <list>
 						    	<ref bean="request1" />
@@ -1399,6 +1400,7 @@
 						<property name="realizationDate" value="09/12/2019 13:30" />
 						<property name="maxAssistant" value="2" />
 						<property name="rewardPoints" value="10" />
+						<property name="isFinalMode" value="true" />
 						<property name="requests">
 						    <list>
 						    	<ref bean="request2" />
@@ -1413,6 +1415,7 @@
 						<property name="realizationDate" value="09/12/2019 13:30" />
 						<property name="maxAssistant" value="8" />
 						<property name="rewardPoints" value="1" />
+						<property name="isFinalMode" value="true" />
 						<property name="requests">
 						    <list>
 						    	<ref bean="request3" />
@@ -1427,6 +1430,7 @@
 						<property name="realizationDate" value="09/12/2019 13:30" />
 						<property name="maxAssistant" value="20" />
 						<property name="rewardPoints" value="5" />
+						<property name="isFinalMode" value="false" />
 						<property name="requests">
 						    <list>
 							</list>
