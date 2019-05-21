@@ -23,28 +23,24 @@ import domain.Product;
 import domain.SalesMan;
 import domain.Visitor;
 import domain.Warden;
-import services.GuardService;
-import services.SalesManService;
-import services.WardenService;
 
 @Controller
 @RequestMapping("/export")
 public class ExportDataController {
 
 	@Autowired
-	public WardenService wardenService;
+	public WardenService	wardenService;
 	@Autowired
 	public GuardService		guardService;
-
 	@Autowired
-	public GuardService guardService;
-
+	public SalesManService	salesManService;
 	@Autowired
-	public SalesManService salesManService;
+	public VisitorService	visitorService;
+
 
 	@RequestMapping(value = "/warden", method = RequestMethod.GET)
-	public @ResponseBody String export(@RequestParam(value = "id", defaultValue = "-1") int id,
-			HttpServletResponse response) throws IOException {
+	public @ResponseBody
+	String export(@RequestParam(value = "id", defaultValue = "-1") int id, HttpServletResponse response) throws IOException {
 
 		this.wardenService.loggedAsWarden();
 
@@ -76,8 +72,8 @@ public class ExportDataController {
 	}
 
 	@RequestMapping(value = "/guard", method = RequestMethod.GET)
-	public @ResponseBody String exportGuard(@RequestParam(value = "id", defaultValue = "-1") int id,
-			HttpServletResponse response) throws IOException {
+	public @ResponseBody
+	String exportGuard(@RequestParam(value = "id", defaultValue = "-1") int id, HttpServletResponse response) throws IOException {
 
 		this.guardService.loggedAsGuard();
 
@@ -112,8 +108,8 @@ public class ExportDataController {
 	}
 
 	@RequestMapping(value = "/salesman", method = RequestMethod.GET)
-	public @ResponseBody String exportSalesman(@RequestParam(value = "id", defaultValue = "-1") int id,
-			HttpServletResponse response) throws IOException {
+	public @ResponseBody
+	String exportSalesman(@RequestParam(value = "id", defaultValue = "-1") int id, HttpServletResponse response) throws IOException {
 
 		this.salesManService.loggedAsSalesMan();
 

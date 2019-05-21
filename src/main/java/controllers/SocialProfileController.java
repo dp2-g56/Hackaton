@@ -20,6 +20,7 @@ import services.GuardService;
 import services.PrisonerService;
 import services.SalesManService;
 import services.SocialWorkerService;
+import services.VisitorService;
 import services.WardenService;
 import domain.Actor;
 import domain.Configuration;
@@ -35,21 +36,22 @@ import domain.Warden;
 public class SocialProfileController extends AbstractController {
 
 	@Autowired
-	private ActorService actorService;
+	private ActorService			actorService;
 	@Autowired
-	private SocialWorkerService socialWorkerService;
+	private SocialWorkerService		socialWorkerService;
 	@Autowired
-	private PrisonerService prisonerService;
+	private PrisonerService			prisonerService;
 	@Autowired
-	private SalesManService salesManService;
+	private SalesManService			salesManService;
 	@Autowired
-	private WardenService wardenService;
+	private WardenService			wardenService;
 	@Autowired
-	private GuardService guardService;
+	private GuardService			guardService;
 	@Autowired
 	private VisitorService			visitorService;
 	@Autowired
 	private ConfigurationService	configurationService;
+
 
 	// -------------------------------------------------------------------
 	// ---------------------------LIST
