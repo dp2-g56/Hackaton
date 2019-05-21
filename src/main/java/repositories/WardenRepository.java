@@ -9,12 +9,16 @@ import org.springframework.stereotype.Repository;
 
 import domain.Charge;
 import domain.Request;
+import domain.TypeProduct;
 import domain.Visit;
 import domain.Visitor;
 import domain.Warden;
 
 @Repository
 public interface WardenRepository extends JpaRepository<Warden, Integer> {
+
+	@Query("select t from TypeProduct t, Product p where t = p.type")
+	public List<TypeProduct> getProductTypesAssigned();
 
 	@Query("select m from Warden m join m.userAccount u where u.username = ?1")
 	public Warden getWardenByUsername(String username);
@@ -36,7 +40,13 @@ public interface WardenRepository extends JpaRepository<Warden, Integer> {
 	public List<Visitor> getVisitorsMostVisitsToAPrisoner();
 
 	/** Option 2 for getVisitorsMostVisitsToAPrisoner() **/
-	//select distinct d.visitor from Visit d where (select max(cast((select count(p) from Visit p where p.prisoner = c.prisoner and p.visitor = c.visitor and p.visitStatus = 'PERMITTED' and p.date < (NOW())) as integer)) from Visit c where c.visitStatus = 'PERMITTED' and c.date < (NOW())) = (select count(i) from Visit i where i.prisoner = d.prisoner and i.visitor = d.visitor and i.visitStatus = 'PERMITTED' and i.date < (NOW())) and d.visitStatus = 'PERMITTED' and d.date < (NOW())
+	// select distinct d.visitor from Visit d where (select max(cast((select
+	// count(p) from Visit p where p.prisoner = c.prisoner and p.visitor =
+	// c.visitor and p.visitStatus = 'PERMITTED' and p.date < (NOW())) as
+	// integer)) from Visit c where c.visitStatus = 'PERMITTED' and c.date <
+	// (NOW())) = (select count(i) from Visit i where i.prisoner = d.prisoner
+	// and i.visitor = d.visitor and i.visitStatus = 'PERMITTED' and i.date <
+	// (NOW())) and d.visitStatus = 'PERMITTED' and d.date < (NOW())
 
 	@Query("select j.userAccount.username from Prisoner j where (select max(cast((select count(v) from Visit v where v.prisoner = p and v.visitStatus = 'PERMITTED' and v.date < (NOW()) and v.visitor.id = ?1)as integer)) from Prisoner p) = (select count(v) from Visit v where v.prisoner = j and v.visitStatus = 'PERMITTED' and v.date < (NOW()) and v.visitor.id = ?1)")
 	public List<String> getPrisonersWithMostVisitToAVisitor(int visitorId);
@@ -47,7 +57,12 @@ public interface WardenRepository extends JpaRepository<Warden, Integer> {
 	public List<String> getPrisonersWithVisitsToMostDifferentVisitors();
 
 	/** Option 2 for getPrisonersWithVisitsToMostDifferentVisitors() **/
-	//select j from Prisoner j where j.freedom = false and (select max(cast((select count( distinct v2) from Prisoner p join p.visits v join v.visitor v2 where a = p and v.visitStatus = 'PERMITTED' and v.date < (NOW()))as integer)) from Prisoner a where a.freedom = false) = (select count( distinct v2) from Prisoner p join p.visits v join v.visitor v2 where j = p and v.visitStatus = 'PERMITTED' and v.date < (NOW()))
+	// select j from Prisoner j where j.freedom = false and (select
+	// max(cast((select count( distinct v2) from Prisoner p join p.visits v join
+	// v.visitor v2 where a = p and v.visitStatus = 'PERMITTED' and v.date <
+	// (NOW()))as integer)) from Prisoner a where a.freedom = false) = (select
+	// count( distinct v2) from Prisoner p join p.visits v join v.visitor v2
+	// where j = p and v.visitStatus = 'PERMITTED' and v.date < (NOW()))
 
 	/** Visitors with visits to most different Prisoners **/
 
@@ -55,7 +70,12 @@ public interface WardenRepository extends JpaRepository<Warden, Integer> {
 	public List<String> getVisitorsWithVisitsToMostDifferentPrisoners();
 
 	/** Option 2 for getVisitorsWithVisitsToMostDifferentPrisoners() **/
-	//select j from Visitor j where (select max(cast((select count( distinct p2) from Visitor p join p.visits v join v.prisoner p2 where a = p and v.visitStatus = 'PERMITTED' and v.date < (NOW()))as integer)) from Visitor a) = (select count( distinct p2) from Visitor p join p.visits v join v.prisoner p2 where j = p and v.visitStatus = 'PERMITTED' and v.date < (NOW()))
+	// select j from Visitor j where (select max(cast((select count( distinct
+	// p2) from Visitor p join p.visits v join v.prisoner p2 where a = p and
+	// v.visitStatus = 'PERMITTED' and v.date < (NOW()))as integer)) from
+	// Visitor a) = (select count( distinct p2) from Visitor p join p.visits v
+	// join v.prisoner p2 where j = p and v.visitStatus = 'PERMITTED' and v.date
+	// < (NOW()))
 
 	/** Ratio of carried out Visits with Report **/
 
@@ -77,7 +97,10 @@ public interface WardenRepository extends JpaRepository<Warden, Integer> {
 	@Query("select round((select count(p2)/cast(count(p3)as float) from Prisoner p2 where p2.freedom = false and (select count(v) from Prisoner p join p.visits v where p = p2 and v.visitStatus = 'PERMITTED' and v.date between (NOW() - 100000000) and (NOW())) = 0)*100, 2) from Prisoner p3 where p3.freedom = false")
 	public Float getRatioOfPrisonersWithoutVisitsLastMonth();
 
-	/** Visitors with at least 2 Visits to the same Prisoner in the last two months **/
+	/**
+	 * Visitors with at least 2 Visits to the same Prisoner in the last two
+	 * months
+	 **/
 
 	@Query("select round((select count(v)/cast(count(v3) as float) from Visitor v where (select count(distinct v2.prisoner) from Visit v2 where v2.visitStatus = 'PERMITTED'and v2.date between (NOW() - 200000000) and (NOW()) and v2.visitor = v) < (select count(v2) from Visit v2 where v2.visitStatus = 'PERMITTED'and v2.date between (NOW() - 200000000) and (NOW()) and v2.visitor = v))*100, 2) from Visitor v3")
 	public Float getRegularVisitorToAtLeastOnePrisoner();
@@ -107,7 +130,10 @@ public interface WardenRepository extends JpaRepository<Warden, Integer> {
 	@Query("select s.userAccount.username from SocialWorker s where (select count(a) from SocialWorker s2 join s2.activities a where s2 = s and a.maxAssistant = (select count(r) from Request r where r.activity = a and r.status = 'APPROVED')) = (select max(cast((select count(a2) from SocialWorker s3 join s3.activities a2 where s3 = s4 and a2.maxAssistant = (select count(r2) from Request r2 where r2.activity = a2 and r2.status = 'APPROVED'))as integer)) from SocialWorker s4)")
 	public List<String> getSocialWorkerMostActivitiesFull();
 
-	/** Prisoners with most Request to different Activities rejected and no accepted ones on those Activities **/
+	/**
+	 * Prisoners with most Request to different Activities rejected and no
+	 * accepted ones on those Activities
+	 **/
 
 	@Query("select p2.userAccount.username from Prisoner p2 where (select count(distinct a) from Prisoner p join p.requests s join s.activity a where  p = p2 and s.status = 'REJECTED' and (select count(r) from Request r where r.prisoner = p and r.activity = a and r.status = 'APPROVED') = 0) > 0 and p2.freedom = false order by(cast((select count(distinct a) from Prisoner p join p.requests s join s.activity a where  p = p2 and s.status = 'REJECTED' and (select count(r) from Request r where r.prisoner = p and r.activity = a and r.status = 'APPROVED') = 0)as integer)) desc")
 	public List<String> getPrisonersMostRejectedRequestToDifferentActivitiesAndNoApprovedOnThoseActivities();
@@ -123,7 +149,13 @@ public interface WardenRepository extends JpaRepository<Warden, Integer> {
 	public List<String> getActivitiesLargestNumberPrisoners();
 
 	/** Option 2 for getActivitiesLargestNumberPrisoners() **/
-	//select a2.title from Activity a2 where a2.realizationDate > (NOW()) and (select count(distinct r.prisoner) from Activity a join a.requests r where a.realizationDate > (NOW()) and a = a2 and r.status = 'APPROVED') = (select max(cast((select count(distinct r.prisoner) from Activity a join a.requests r where a.realizationDate > (NOW()) and a = d and r.status = 'APPROVED')as integer)) from Activity d where d.realizationDate > (NOW()))
+	// select a2.title from Activity a2 where a2.realizationDate > (NOW()) and
+	// (select count(distinct r.prisoner) from Activity a join a.requests r
+	// where a.realizationDate > (NOW()) and a = a2 and r.status = 'APPROVED') =
+	// (select max(cast((select count(distinct r.prisoner) from Activity a join
+	// a.requests r where a.realizationDate > (NOW()) and a = d and r.status =
+	// 'APPROVED')as integer)) from Activity d where d.realizationDate >
+	// (NOW()))
 
 	/** Activities with the largest average crime rate **/
 

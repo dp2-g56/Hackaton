@@ -25,6 +25,7 @@ import domain.Guard;
 import domain.Message;
 import domain.Prisoner;
 import domain.Request;
+import domain.TypeProduct;
 import domain.Visit;
 import domain.VisitStatus;
 import domain.Visitor;
@@ -419,9 +420,9 @@ public class WardenService {
 		Map<String, List<String>> result = new HashMap<String, List<String>>();
 		List<Visitor> visitors = this.wardenRepository.getVisitorsMostVisitsToAPrisoner();
 
-		for (Visitor v : visitors) {
-			result.put(v.getUserAccount().getUsername(), this.wardenRepository.getPrisonersWithMostVisitToAVisitor(v.getId()));
-		}
+		for (Visitor v : visitors)
+			result.put(v.getUserAccount().getUsername(),
+					this.wardenRepository.getPrisonersWithMostVisitToAVisitor(v.getId()));
 		return result;
 	}
 
@@ -439,9 +440,8 @@ public class WardenService {
 
 	public List<String> getTop3PrisonersLowestCrimeRate() {
 		List<String> result = this.wardenRepository.getTop3PrisonersLowestCrimeRate();
-		if (result.size() > 3) {
+		if (result.size() > 3)
 			return result.subList(0, 2);
-		}
 		return result;
 	}
 
@@ -450,7 +450,8 @@ public class WardenService {
 	}
 
 	public List<String> getPrisonersMostRejectedRequestToDifferentActivitiesAndNoApprovedOnThoseActivities() {
-		return this.wardenRepository.getPrisonersMostRejectedRequestToDifferentActivitiesAndNoApprovedOnThoseActivities();
+		return this.wardenRepository
+				.getPrisonersMostRejectedRequestToDifferentActivitiesAndNoApprovedOnThoseActivities();
 	}
 
 	public List<String> getActivitiesLargestNumberPrisoners() {
@@ -475,9 +476,12 @@ public class WardenService {
 
 	public List<String> getTop5PrisonersParticipatedMostActivitiesLastMonth() {
 		List<String> result = this.wardenRepository.getTop5PrisonersParticipatedMostActivitiesLastMonth();
-		if (result.size() > 5) {
+		if (result.size() > 5)
 			return result.subList(0, 4);
-		}
 		return result;
+	}
+
+	public List<TypeProduct> getProductTypesAssigned() {
+		return this.wardenRepository.getProductTypesAssigned();
 	}
 }
