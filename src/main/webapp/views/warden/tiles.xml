@@ -84,6 +84,16 @@
 		<put-attribute name="title" value="List of types" /> 
 		<put-attribute name="body" value="/views/warden/typesProducts.jsp" />
 	</definition>
+
+	<definition name="warden/addSpam" extends="master.page">	
+		<put-attribute name="title" value="Add a spam word" /> 
+		<put-attribute name="body" value="/views/warden/addSpam.jsp" />
+	</definition>
+	
+	<definition name="warden/addType" extends="master.page">	
+		<put-attribute name="title" value="Add a product type" /> 
+		<put-attribute name="body" value="/views/warden/addType.jsp" />
+	</definition>
 	
 	<definition name="prisoner/warden/addCharge" extends="master.page">	
 		<put-attribute name="title" value="Add a charge" /> 
@@ -104,6 +114,5 @@
 		<put-attribute name="title" value="Create charge" /> 
 		<put-attribute name="body" value="/views/warden/editCharge.jsp" />
 	</definition>
-	
 
 </tiles-definitions>

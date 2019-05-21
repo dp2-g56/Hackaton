@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import domain.Configuration;
@@ -104,6 +105,38 @@ public class ConfigurationWardenController extends AbstractController {
 		}
 	}
 
+	@RequestMapping(value = "/addSpam", method = RequestMethod.GET)
+	public ModelAndView addSpam() {
+		try {
+			ModelAndView result;
+
+			Configuration configuration = this.configurationService.getConfiguration();
+
+			result = new ModelAndView("warden/addSpam");
+			result.addObject("configuration", configuration);
+
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:/");
+		}
+	}
+
+	@RequestMapping(value = "/addType", method = RequestMethod.GET)
+	public ModelAndView addType() {
+		try {
+			ModelAndView result;
+
+			Configuration configuration = this.configurationService.getConfiguration();
+
+			result = new ModelAndView("warden/addType");
+			result.addObject("configuration", configuration);
+
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:/");
+		}
+	}
+
 	@RequestMapping(value = "/save", method = RequestMethod.POST, params = "save")
 	public ModelAndView save(Configuration configuration, BindingResult binding) {
 		try {
@@ -117,6 +150,50 @@ public class ConfigurationWardenController extends AbstractController {
 				try {
 					this.configurationService.save(configurationR);
 					result = new ModelAndView("redirect:list.do");
+				} catch (Throwable oops) {
+					result = this.createEditModelAndView(configuration, "warden.commit.error");
+				}
+
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:/");
+		}
+	}
+
+	@RequestMapping(value = "/addSpam", method = RequestMethod.POST, params = "add")
+	public ModelAndView saveSpam(@RequestParam String spam, Configuration configuration, BindingResult binding) {
+		try {
+			ModelAndView result;
+
+			if (binding.hasErrors())
+				result = this.createEditModelAndView(configuration);
+			else
+				try {
+					this.configurationService.addSpamWords(spam, binding);
+					result = new ModelAndView("redirect:listSpam.do");
+				} catch (Throwable oops) {
+					result = this.createEditModelAndView(configuration, "warden.commit.error");
+				}
+
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:/");
+		}
+	}
+
+	@RequestMapping(value = "/addType", method = RequestMethod.POST, params = "add")
+	public ModelAndView saveType(@RequestParam String typeProductEN, @RequestParam String typeProductES,
+			Configuration configuration, BindingResult binding) {
+		try {
+			ModelAndView result;
+
+			if (binding.hasErrors())
+				result = this.createEditModelAndView(configuration);
+			else
+				try {
+					this.configurationService.addTypeProducts(typeProductEN, typeProductES, binding);
+
+					result = new ModelAndView("redirect:listTypeProd.do");
 				} catch (Throwable oops) {
 					result = this.createEditModelAndView(configuration, "warden.commit.error");
 				}
