@@ -24,20 +24,13 @@
 						code="master.page.warden" /></a>
 				<ul>
 					<li class="arrow"></li>
-					
-					
-					
-					
 					<li><a href="broadcast/warden/send.do"><spring:message code="master.page.administrator.broadcast" /></a></li>																							
 					<li><a href="broadcast/warden/sendSecurityBreach.do"><spring:message code="master.page.administrator.broadcastSecurity" /></a></li>																					
 					<li><a href="salesman/warden/list.do"><spring:message code="master.page.salesman.list" /></a></li>
 					<li><a href="configuration/warden/list.do"><spring:message code="master.page.warden.configuration" /></a></li>
 					<li><a href="statistics/warden/show.do"><spring:message code="master.page.warden.statistics" /></a></li>
-					
-					
-					
-					
 				</ul></li>
+				
 				<li><a class="fNiv"><spring:message
 						code="master.page.warden.registerList" /></a>
 				<ul>		
@@ -127,6 +120,17 @@
 		</security:authorize>
 		
 		<security:authorize access="isAnonymous()">
+			<li><a class="fNiv"><spring:message
+						code="master.page.register" /></a>
+				<ul>
+					<li class="arrow"></li>
+						<li><a href="anonymous/visitor/create.do"><spring:message code="master.page.registerVisitor" /> </a></li>
+				</ul></li>
+						
+		</security:authorize>
+		
+		<security:authorize access="isAnonymous()">
+	
 		<li><a href="anonymous/prisoner/list.do"><spring:message code="master.page.listOfPrisoners" /> </a></li>
 		</security:authorize>
 		
