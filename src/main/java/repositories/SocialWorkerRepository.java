@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import domain.FinderActivities;
+import domain.Prisoner;
 import domain.Request;
 import domain.SocialWorker;
 
@@ -18,4 +20,7 @@ public interface SocialWorkerRepository extends JpaRepository<SocialWorker, Inte
 
 	@Query("select r from SocialWorker s join s.activities a join a.requests r where s= ?1")
 	public List<Request> getRequestsBySocialWorker(SocialWorker socialWorker);
+
+	@Query("select p from Prisoner p join p.finderActivities f where f= ?1")
+	public Prisoner getPrisonerFromFinder(FinderActivities finderActiviti1es);
 }

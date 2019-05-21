@@ -15,16 +15,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 
-
 import domain.Activity;
 import domain.Box;
 import domain.Curriculum;
 import domain.FinderActivities;
 import domain.PersonalRecord;
+import domain.Prisoner;
 import domain.Request;
 import domain.SocialWorker;
 import forms.FormObjectSocialWorker;
-
 import repositories.SocialWorkerRepository;
 import security.Authority;
 import security.LoginService;
@@ -53,8 +52,10 @@ public class SocialWorkerService {
 	private FinderActivitiesService finderActivitiesService;
 
 	@Autowired
-	private Validator validator;
+	private PrisonerService prisonerService;
 
+	@Autowired
+	private Validator validator;
 
 	// ----------------------------------------CRUD
 	// METHODS--------------------------
@@ -142,16 +143,25 @@ public class SocialWorkerService {
 
 		List<Activity> activities = socialWorker.getActivities();
 		List<Request> requests = this.socialWorkerRepository.getRequestsBySocialWorker(socialWorker);
+		List<Activity> activitiesVoid = new ArrayList<Activity>();
+		socialWorker.setActivities(activitiesVoid);
+		this.save(socialWorker);
 
 		for (Request r : requests)
-			this.requestService.deleteRequestFromSocialWorker(r);
+			this.requestService.deleteRequest(r);
 		for (Activity a : activities) {
 			List<FinderActivities> f = this.activityService.getFinderActivitiesByActivity(a);
 			for (FinderActivities finder : f) {
+
 				List<Activity> activitiesFinder = finder.getActivities();
 				activitiesFinder.remove(a);
 				finder.setActivities(activitiesFinder);
-				this.finderActivitiesService.save(finder);
+
+				FinderActivities finderSaved = this.finderActivitiesService.save(finder);
+				Prisoner prisoner = this.socialWorkerRepository.getPrisonerFromFinder(finder);
+
+				prisoner.setFinderActivities(finderSaved);
+				this.prisonerService.save(prisoner);
 			}
 			this.activityService.delete(a);
 		}

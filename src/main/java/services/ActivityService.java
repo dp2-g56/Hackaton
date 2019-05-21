@@ -48,7 +48,7 @@ public class ActivityService {
 	}
 
 	public List<FinderActivities> getFinderActivitiesByActivity(Activity a) {
-		return this.getFinderActivitiesByActivity(a);
+		return this.activityRepository.getFindersByActivity(a);
 	}
 
 	public Activity save(Activity activity) {

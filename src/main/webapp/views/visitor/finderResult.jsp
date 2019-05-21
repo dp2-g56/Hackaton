@@ -74,7 +74,7 @@
 			
 			<jstl:if test="${!warden}">
 				<spring:url var="chargesUrl"
-					value="/anonymous/charge/list.do?prisonerId={prisonerId}">
+					value="/finder/visitor/charges.do?prisonerId={prisonerId}">
 					<spring:param name="prisonerId" value="${row.id}" />
 				</spring:url>
 				<a href="${chargesUrl}"><spring:message code="prisoner.viewCharges" /></a>
@@ -94,7 +94,7 @@
 		
 				<display:column>
 					<jstl:if test="${(!row.freedom) && (!row.isIsolated)}">
-		       		<spring:url var="createVisitUrl" value="/visit/visitor/create.do?prisonerId={prisonerId}">
+		       		<spring:url var="createVisitUrl" value="/finder/visitor/createVisit.do?prisonerId={prisonerId}">
 		            	<spring:param name="prisonerId" value="${row.id}"/>
 		            	
 		        	</spring:url>
