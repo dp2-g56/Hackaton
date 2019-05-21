@@ -25,6 +25,7 @@ import domain.Guard;
 import domain.Message;
 import domain.Prisoner;
 import domain.Request;
+import domain.TypeProduct;
 import domain.Visit;
 import domain.VisitStatus;
 import domain.Visitor;
@@ -480,5 +481,9 @@ public class WardenService {
 		if (result.size() > 5)
 			return result.subList(0, 4);
 		return result;
+	}
+
+	public List<TypeProduct> getProductTypesAssigned() {
+		return this.wardenRepository.getProductTypesAssigned();
 	}
 }
