@@ -68,7 +68,7 @@ public class ProductPrisonerController extends AbstractController {
 
 	@RequestMapping(value = "/buy", method = RequestMethod.POST, params = "save")
 	public ModelAndView buyProductSave(@RequestParam(required = false) int productId,
-			@RequestParam(required = false) int quantity) {
+			@RequestParam(required = false) Integer quantity) {
 		ModelAndView result;
 
 		try {
@@ -84,6 +84,7 @@ public class ProductPrisonerController extends AbstractController {
 
 				Boolean stock = quantity <= product.getStock();
 				Boolean points = (product.getPrice() * quantity) <= prisoner.getPoints();
+				Boolean zeroOrNegative = quantity > 0;
 
 				if (!stock && !points)
 					message = "prisoner.purchase.stockAndPoints.error";
@@ -91,6 +92,8 @@ public class ProductPrisonerController extends AbstractController {
 					message = "prisoner.purchase.stock.error";
 				else if (!points)
 					message = "prisoner.purchase.points.error";
+				else if (!zeroOrNegative)
+					message = "product.purchase.zeroAndNegativeError";
 				else
 					message = "prisoner.purchase.error";
 
