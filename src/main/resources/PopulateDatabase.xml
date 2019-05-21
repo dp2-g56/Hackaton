@@ -284,6 +284,20 @@
 				<property name="isNotLocked" value="True" />
 			</bean>
 			
+		<!-- SOCIALWORKER3 -->
+			<bean id="userAccount20" class="security.UserAccount">
+				<property name="username" value="socialWorker3" />
+				<property name="password" value="7bc934aaa46117d4021cba2e0f76b127" />
+				<property name="authorities">
+					<list>
+						<bean class="security.Authority">
+							<property name="authority" value="SOCIALWORKER" />
+						</bean>
+					</list>
+				</property>
+				<property name="isNotLocked" value="True" />
+			</bean>
+			
 	<!-- PRISONER -->
 		<!-- PRISONER1 -->
 			<bean id="userAccount16" class="security.UserAccount">
@@ -520,9 +534,9 @@
 				<property name="surname" value="Leader" />
 				<property name="photo" value="https://www.url.com/example" />
 				
-				<property name="emergencyEmail" value="@gmail.com" />
+				<property name="emergencyEmail" value="email@gmail.com" />
 				<property name="phoneNumber" value="+34655888777" />
-				<property name="email" value="@gmail.com" />
+				<property name="email" value="email@gmail.com" />
 				<property name="address" value="Despacho" />
 				<property name="finder" ref="finderVisitor2" />
 				
@@ -554,9 +568,9 @@
 				<property name="surname" value="Killer" />
 				<property name="photo" value="https://www.url.com/example" />
 				
-				<property name="emergencyEmail" value="@gmail.com" />
+				<property name="emergencyEmail" value="email@gmail.com" />
 				<property name="phoneNumber" value="+34655888777" />
-				<property name="email" value="@gmail.com" />
+				<property name="email" value="email@gmail.com" />
 				<property name="address" value="Despacho" />
 				<property name="finder" ref="finderVisitor3" />
 				
@@ -584,9 +598,9 @@
 				<property name="surname" value="Valentine" />
 				<property name="photo" value="https://www.url.com/example" />
 				
-				<property name="emergencyEmail" value="@gmail.com" />
+				<property name="emergencyEmail" value="email@gmail.com" />
 				<property name="phoneNumber" value="+34655888777" />
-				<property name="email" value="@gmail.com" />
+				<property name="email" value="email@gmail.com" />
 				<property name="address" value="Despacho" />
 				<property name="finder" ref="finderVisitor4" />
 				
@@ -719,6 +733,7 @@
 				<property name="surname" value="Worker2" />
 				<property name="photo" value="https://www.url.com/example" />
 				<property name="title" value="Social Enterprise 2" />
+				<property name="curriculum" ref="curriculum2" />
 				<property name="activities">
 					<list>
 					</list>
@@ -733,6 +748,29 @@
 					</list>
 				</property>
 				<property name="userAccount" ref="userAccount15" />
+			</bean>
+			
+		<!-- SOCIALWORKER3 -->
+			<bean id="SocialWorker3" class="domain.SocialWorker">
+				<property name="name" value="Social" />
+				<property name="middleName" value="----" />
+				<property name="surname" value="Worker3" />
+				<property name="photo" value="https://www.url.com/example" />
+				<property name="title" value="Social Enterprise 3" />
+				<property name="activities">
+					<list>
+					</list>
+				</property>
+				
+				<property name="boxes">
+					<list>
+						<ref bean="inBoxSocialWorker3" />
+						<ref bean="outBoxSocialWorker3" />
+						<ref bean="trashBoxSocialWorker3" />
+						<ref bean="suspiciousBoxSocialWorker3" />
+					</list>
+				</property>
+				<property name="userAccount" ref="userAccount20" />
 			</bean>
 			
 	<!-- PRISONER -->
@@ -1253,6 +1291,26 @@
 				<property name="personalRecord" ref="personalRecord1" />
 			</bean>
 			
+			<bean id="curriculum2" class="domain.Curriculum">
+				<property name="ticker" value="181127-pUE3lA" />
+				<property name="personalRecord" ref="personalRecord2" />
+				<property name="miscellaneousRecords">
+					<list>
+						<ref bean="miscellaneousRecord2" />
+					</list>
+				</property>
+				<property name="educationRecords">
+					<list>
+						<ref bean="educationRecord2" />
+					</list>
+				</property>
+				<property name="professionalRecords">
+					<list>
+						<ref bean="professionalRecord2" />
+					</list>
+				</property>
+			</bean>
+			
 			<!-- RECORDS -->
 				<!-- PERSONAL RECORD -->
 					<bean id="personalRecord1" class="domain.PersonalRecord">
@@ -1260,6 +1318,14 @@
 						<property name="photo" value="https://www.photo.com" />
 						<property name="email" value="email@gmail.com" />
 						<property name="phoneNumber" value="+34710125963" />
+						<property name="urlLinkedInProfile" value="https://www.linkedin.com" />
+					</bean>
+					
+					<bean id="personalRecord2" class="domain.PersonalRecord">
+						<property name="fullName" value="Personal" />
+						<property name="photo" value="https://www.photo.com" />
+						<property name="email" value="email@gmail.com" />
+						<property name="phoneNumber" value="+34710125944" />
 						<property name="urlLinkedInProfile" value="https://www.linkedin.com" />
 					</bean>
 				
@@ -1272,14 +1338,35 @@
 							<property name="linkAttachment" value="https://www.attachment.com" />
 						</bean>
 						
+						<bean id="professionalRecord2" class="domain.ProfessionalRecord">
+							<property name="nameCompany" value="Proffesional S.L." />
+							<property name="startDate" value="11/09/2009 23:59" />
+							<property name="endDate" value="11/09/2013 23:59" />
+							<property name="role" value="Admin" />
+							<property name="linkAttachment" value="https://www.attachment.com" />
+						</bean>
+						
 				<!-- MISCELLANEOUS RECORD -->
 						<bean id="miscellaneousRecord1" class="domain.MiscellaneousRecord">
+							<property name="title" value="Miscellaneous" />
+							<property name="linkAttachment" value="https://www.attachment.com" />
+						</bean>
+						
+						<bean id="miscellaneousRecord2" class="domain.MiscellaneousRecord">
 							<property name="title" value="Miscellaneous" />
 							<property name="linkAttachment" value="https://www.attachment.com" />
 						</bean>
 				
 				<!-- EDUCATIONAL RECORD -->
 					<bean id="educationRecord1" class="domain.EducationRecord">
+						<property name="title" value="Title of record" />
+						<property name="startDateStudy" value="09/11/2018 12:30" />
+						<property name="endDateStudy" value="09/12/2018 13:30" />
+						<property name="institution" value="Name of institution" />
+						<property name="link" value="https://www.url.com/example3" />
+					</bean>
+					
+					<bean id="educationRecord2" class="domain.EducationRecord">
 						<property name="title" value="Title of record" />
 						<property name="startDateStudy" value="09/11/2018 12:30" />
 						<property name="endDateStudy" value="09/12/2018 13:30" />
@@ -2032,6 +2119,43 @@
 				</bean>
 				
 				<bean class="domain.Box" id="suspiciousBoxSocialWorker2">
+						<property value="SUSPICIOUSBOX" name="name" />
+						<property value="true" name="isSystem" />
+						<property name="messages">
+						    <list>
+							</list>
+						</property>
+				</bean>
+				
+		<!-- SOCIALWORKER3 -->
+				<bean class="domain.Box" id="inBoxSocialWorker3">
+						<property value="INBOX" name="name" />
+						<property value="true" name="isSystem" />
+						<property name="messages">
+						    <list>
+							</list>
+						</property>
+				</bean>
+				
+				<bean class="domain.Box" id="outBoxSocialWorker3">
+						<property value="OUTBOX" name="name" />
+						<property value="true" name="isSystem" />
+						<property name="messages">
+						    <list>
+							</list>
+						</property>
+				</bean>
+				
+				<bean class="domain.Box" id="trashBoxSocialWorker3">
+						<property value="TRASHBOX" name="name" />
+						<property value="true" name="isSystem" />
+						<property name="messages">
+						    <list>
+							</list>
+						</property>
+				</bean>
+				
+				<bean class="domain.Box" id="suspiciousBoxSocialWorker3">
 						<property value="SUSPICIOUSBOX" name="name" />
 						<property value="true" name="isSystem" />
 						<property name="messages">

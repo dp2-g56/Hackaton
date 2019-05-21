@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 
+
 import domain.Activity;
 import domain.Box;
 import domain.Curriculum;
@@ -23,6 +24,7 @@ import domain.PersonalRecord;
 import domain.Request;
 import domain.SocialWorker;
 import forms.FormObjectSocialWorker;
+
 import repositories.SocialWorkerRepository;
 import security.Authority;
 import security.LoginService;
@@ -53,6 +55,7 @@ public class SocialWorkerService {
 	@Autowired
 	private Validator validator;
 
+
 	// ----------------------------------------CRUD
 	// METHODS--------------------------
 	// ------------------------------------------------------------------------------
@@ -69,7 +72,7 @@ public class SocialWorkerService {
 		userAccountActor.setUsername("");
 		userAccountActor.setPassword("");
 
-		// SE AÑADEN TODOS LOS ATRIBUTOS
+		// SE Aï¿½ADEN TODOS LOS ATRIBUTOS
 		res.setName("");
 		res.setMiddleName("");
 		res.setSurname("");
