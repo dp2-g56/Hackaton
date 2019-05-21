@@ -116,3 +116,49 @@
 	</jstl:if>
 	
 </security:authorize>
+
+
+<security:authorize access="hasRole('VISITOR')">
+	<jstl:if test="${visitor!=null}">
+		<form:form modelAttribute="visitor" action="authenticated/editProfile.do">
+		
+		<form:hidden path = "id"/>
+		
+		<!-- Actor Attributes -->
+		<fieldset>
+	    	<legend><spring:message code="warden.personalData" /></legend>
+			
+			<acme:textbox path="name" code="warden.name" />
+			<br />
+			
+			<acme:textbox path="middleName" code="warden.middleName" />
+			<br />
+			
+			<acme:textbox path="surname" code="warden.surname" />
+			<br />
+			
+			<acme:textbox path="photo" code="warden.photo" />
+			<br />
+			
+			<acme:textbox path="phoneNumber" code="visitor.phoneNumber" />
+			<br />
+			
+			<acme:textbox path="email" code="visitor.email" />
+			<br />
+			
+			<acme:textbox path="emergencyEmail" code="visitor.emergencyEmail" />
+			<br />
+			
+			<acme:textbox path="address" code="visitor.address" />
+			<br />
+		</fieldset>
+		<br />
+		
+		<!-- BOTONES -->	
+		<input type="submit" name="saveVisitor" value="<spring:message code="warden.edit" />"/> 
+		<acme:cancel url="/authenticated/showProfile.do" code="warden.cancel" /> 
+		
+		</form:form>
+	</jstl:if>
+	
+</security:authorize>
