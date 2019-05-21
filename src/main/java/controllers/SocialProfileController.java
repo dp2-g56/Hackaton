@@ -197,7 +197,7 @@ public class SocialProfileController extends AbstractController {
 		return result;
 	}
 
-	@RequestMapping(value = "/editProfile", method = RequestMethod.POST, params = "saveSalesman")
+	@RequestMapping(value = "/editProfile", method = RequestMethod.POST, params = "saveSalesMan")
 	public ModelAndView saveSalesman(SalesMan salesman, BindingResult binding) {
 		ModelAndView result;
 
