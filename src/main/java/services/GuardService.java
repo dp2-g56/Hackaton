@@ -174,7 +174,7 @@ public class GuardService {
 	}
 
 	public void saveGuard(Guard guard) {
-		this.loggedAsGuard();
+		this.wardenService.loggedAsWarden();
 
 		List<Box> boxes = new ArrayList<>();
 

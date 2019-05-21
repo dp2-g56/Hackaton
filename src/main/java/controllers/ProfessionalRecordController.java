@@ -3,9 +3,11 @@ package controllers;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,61 +15,67 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import domain.Curriculum;
+import domain.ProfessionalRecord;
+import domain.SocialWorker;
 import security.LoginService;
 import services.CurriculumService;
 import services.ProfessionalRecordService;
 import services.SocialWorkerService;
-import domain.Curriculum;
-import domain.ProfessionalRecord;
-import domain.SocialWorker;
 
 @Controller
 @RequestMapping("/curriculum")
 public class ProfessionalRecordController extends AbstractController {
 
 	@Autowired
-	private ProfessionalRecordService	professionalRecordService;
+	private ProfessionalRecordService professionalRecordService;
 	@Autowired
-	private SocialWorkerService			socialWorkerService;
+	private SocialWorkerService socialWorkerService;
 	@Autowired
-	private CurriculumService			curriculumService;
+	private CurriculumService curriculumService;
 
-
-	//Constructor
+	// Constructor
 	public ProfessionalRecordController() {
 		super();
 	}
 
 	@RequestMapping(value = "/socialWorker/addProfessionalRecord", method = RequestMethod.GET)
 	public ModelAndView addProfessionalRecord() {
-
 		ModelAndView result;
-		SocialWorker socialWorker = this.socialWorkerService.getSocialWorkerByUsername(LoginService.getPrincipal().getUsername());
-		Curriculum curriculum = socialWorker.getCurriculum();
 
-		if (curriculum == null) {
-			result = new ModelAndView("redirect:show.do");
-		} else {
+		try {
+			SocialWorker socialWorker = this.socialWorkerService
+					.getSocialWorkerByUsername(LoginService.getPrincipal().getUsername());
+			Curriculum curriculum = socialWorker.getCurriculum();
+			Assert.notNull(curriculum);
+
 			ProfessionalRecord professionalRecord = this.professionalRecordService.create();
 			result = this.createEditModelAndView(professionalRecord);
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:show.do");
 		}
+
 		return result;
 
 	}
 
 	@RequestMapping(value = "/socialWorker/editProfessionalRecord", method = RequestMethod.GET)
-	public ModelAndView editProfessionalRecord(@RequestParam int professionalRecordId) {
+	public ModelAndView editProfessionalRecord(@RequestParam(required = false) String professionalRecordId) {
 
 		ModelAndView result;
-		ProfessionalRecord professionalRecord = this.professionalRecordService.findOne(professionalRecordId);
-		SocialWorker socialWorker = this.socialWorkerService.getSocialWorkerByUsername(LoginService.getPrincipal().getUsername());
 
-		if (professionalRecord == null || socialWorker.getCurriculum() == null || !socialWorker.getCurriculum().getProfessionalRecords().contains(professionalRecord)) {
-			result = new ModelAndView("redirect:show.do");
-		} else {
+		try {
+			Assert.isTrue(StringUtils.isNumeric(professionalRecordId));
+			Integer professionalRecordIdInt = Integer.parseInt(professionalRecordId);
+
+			ProfessionalRecord professionalRecord = this.professionalRecordService
+					.getProfessionalRecordOfLoggedSocialWorker(professionalRecordIdInt);
 
 			result = this.createEditModelAndView(professionalRecord);
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:show.do");
 		}
+
 		return result;
 
 	}
@@ -78,32 +86,32 @@ public class ProfessionalRecordController extends AbstractController {
 
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
-		if (professionalRecord.getEndDate() != null && professionalRecord.getStartDate() != null && professionalRecord.getStartDate().after(professionalRecord.getEndDate())) {
-			if (locale.contains("ES")) {
-				binding.addError(new FieldError("professionalRecord", "startDate", professionalRecord.getStartDate(), false, null, null, "La fecha de fin no puede ser anterior a la de inicio"));
-			} else {
-				binding.addError(new FieldError("professionalRecord", "startDate", professionalRecord.getStartDate(), false, null, null, "The end date can not be before the start date"));
-			}
-		}
+		if (professionalRecord.getEndDate() != null && professionalRecord.getStartDate() != null
+				&& professionalRecord.getStartDate().after(professionalRecord.getEndDate()))
+			if (locale.contains("ES"))
+				binding.addError(new FieldError("professionalRecord", "startDate", professionalRecord.getStartDate(),
+						false, null, null, "La fecha de fin no puede ser anterior a la de inicio"));
+			else
+				binding.addError(new FieldError("professionalRecord", "startDate", professionalRecord.getStartDate(),
+						false, null, null, "The end date can not be before the start date"));
 
-		if (binding.hasErrors()) {
+		if (binding.hasErrors())
 			result = this.createEditModelAndView(professionalRecord);
-		} else {
+		else
 			try {
-				if (professionalRecord.getId() == 0) {
+				if (professionalRecord.getId() == 0)
 					this.curriculumService.addProfessionalRecord(professionalRecord);
-				} else {
+				else
 					this.curriculumService.updateProfessionalRecord(professionalRecord);
-				}
 
 				result = new ModelAndView("redirect:show.do");
 
 			} catch (Throwable oops) {
 				result = this.createEditModelAndView(professionalRecord, "commit.error");
 			}
-		}
 		return result;
 	}
+
 	@RequestMapping(value = "/socialWorker/editProfessionalRecord", method = RequestMethod.POST, params = "delete")
 	public ModelAndView delete(@Valid ProfessionalRecord professionalRecord, BindingResult binding) {
 		ModelAndView result;

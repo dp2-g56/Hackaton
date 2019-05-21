@@ -5,11 +5,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
 
-public class FormObjectGuard {
+public class FormObjectVisitor {
 
 	// USER ACCOUNT
 	private String	username;
@@ -26,11 +25,13 @@ public class FormObjectGuard {
 	private Boolean	termsAndConditions;
 
 	// GUARD
-	private String	phone;
+	private String	phoneNumber;
+	private String	emailEmergency;
 	private String	email;
+	private String	address;
 
 
-	public FormObjectGuard() {
+	public FormObjectVisitor() {
 		this.termsAndConditions = false;
 	}
 
@@ -106,16 +107,6 @@ public class FormObjectGuard {
 	}
 
 	@NotBlank
-	public String getPhone() {
-		return this.phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	@NotBlank
-	@Email
 	@Pattern(regexp = "[\\w.%-]+\\@[-.\\w]+\\.[A-Za-z]{2,4}|[\\w.%-]+\\<+[\\w.%-]+\\@[-.\\w]+\\.[A-Za-z]{2,4}|[\\w.%-]+\\<[\\w.%-]+\\@+\\>|[\\w.%-]+",
 		message = "Email doesn't follow the pattern, must be identifier@domain.asd or alias <identifier@domain.asd>")
 	public String getEmail() {
@@ -124,5 +115,34 @@ public class FormObjectGuard {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	@NotBlank
+	public String getPhoneNumber() {
+		return this.phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	@NotBlank
+	@Pattern(regexp = "[\\w.%-]+\\@[-.\\w]+\\.[A-Za-z]{2,4}|[\\w.%-]+\\<+[\\w.%-]+\\@[-.\\w]+\\.[A-Za-z]{2,4}|[\\w.%-]+\\<[\\w.%-]+\\@+\\>|[\\w.%-]+",
+		message = "Email doesn't follow the pattern, must be identifier@domain.asd or alias <identifier@domain.asd>")
+	public String getEmailEmergency() {
+		return this.emailEmergency;
+	}
+
+	public void setEmailEmergency(String emailEmergency) {
+		this.emailEmergency = emailEmergency;
+	}
+
+	@NotBlank
+	public String getAddress() {
+		return this.address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 }
