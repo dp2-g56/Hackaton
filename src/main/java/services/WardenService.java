@@ -2,6 +2,7 @@
 package services;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.springframework.validation.Validator;
 import domain.ActivityStatus;
 import domain.Actor;
 import domain.Box;
+import domain.Charge;
 import domain.Guard;
 import domain.Message;
 import domain.Prisoner;
@@ -60,6 +62,12 @@ public class WardenService {
 
 	@Autowired
 	private PrisonerService prisonerService;
+
+	@Autowired
+	private VisitService visitService;
+
+	@Autowired
+	private RequestService requestService;
 
 	// ----------------------------------------CRUD
 	// METHODS--------------------------
@@ -226,21 +234,35 @@ public class WardenService {
 	public void isolatePrisoner(Prisoner prisoner) {
 		this.loggedAsWarden();
 		List<Prisoner> suspects = this.prisonerService.getSuspectPrisoners();
-		Assert.isTrue(prisoner != null && suspects.contains(prisoner));
+		Assert.notNull(prisoner);
+		Assert.isTrue(suspects.contains(prisoner));
 
 		List<Visit> visits = this.wardenRepository.getFutureVisitsByPrisoner(prisoner.getId());
 		List<Request> requests = this.wardenRepository.getRequestToFutureActivitiesByPrisoner(prisoner.getId());
 
-		for (Visit v : visits)
+		for (Visit v : visits) {
 			v.setVisitStatus(VisitStatus.REJECTED);
+			this.visitService.save(v);
+		}
 		for (Request r : requests) {
 			r.setRejectReason("Isolated");
 			r.setStatus(ActivityStatus.REJECTED);
+			this.requestService.save(r);
 		}
 
 		prisoner.getUserAccount().setIsNotLocked(false);
-		prisoner.getCharges().add(this.wardenRepository.getSuspiciousCharge());
+		Charge charge = this.wardenRepository.getSuspiciousCharge();
+		prisoner.getCharges().add(charge);
 		prisoner.setIsIsolated(true);
+
+		Date exitDate = prisoner.getExitDate();
+		Calendar cExit = Calendar.getInstance();
+		cExit.setTime(exitDate);
+		cExit.add(Calendar.MONTH, charge.getMonth());
+		cExit.add(Calendar.YEAR, charge.getYear());
+		Date newExitDate = cExit.getTime();
+		prisoner.setExitDate(newExitDate);
+
 		this.prisonerService.save(prisoner);
 
 	}
