@@ -371,6 +371,8 @@
 						<ref bean="outBoxWarden1" />
 						<ref bean="trashBoxWarden1" />
 						<ref bean="suspiciousBoxWarden1" />
+						<ref bean="nosystemBox1" />
+						
 					</list>
 				</property>
 				<property name="userAccount" ref="userAccount1" />
@@ -1539,36 +1541,49 @@
 						<property value="true" name="isSystem" />
 						<property name="messages">
 						    <list>
+						    	<ref bean="message1" />
 							</list>
 						</property>
 				</bean>
 				
-				<bean class="domain.Box" id="outBoxWarden1">
-						<property value="OUTBOX" name="name" />
-						<property value="true" name="isSystem" />
+					<bean class="domain.Box" id="outBoxWarden1">
+							<property value="OUTBOX" name="name" />
+							<property value="true" name="isSystem" />
+							<property name="messages">
+							    <list>
+								</list>
+							</property>
+					</bean>
+					
+					<bean class="domain.Box" id="trashBoxWarden1">
+							<property value="TRASHBOX" name="name" />
+							<property value="true" name="isSystem" />
+							<property name="messages">
+							    <list>
+							    	<ref bean="message3" />
+								</list>
+							</property>
+					</bean>
+					
+					<bean class="domain.Box" id="suspiciousBoxWarden1">
+							<property value="SUSPICIOUSBOX" name="name" />
+							<property value="true" name="isSystem" />
+							<property name="messages">
+							    <list>
+								</list>
+							</property>
+					</bean>
+
+				<bean class="domain.Box" id="nosystemBox1">
+						<property value="nosystemBox1" name="name" />
+						<property value="false" name="isSystem" />
 						<property name="messages">
 						    <list>
 							</list>
 						</property>
 				</bean>
 				
-				<bean class="domain.Box" id="trashBoxWarden1">
-						<property value="TRASHBOX" name="name" />
-						<property value="true" name="isSystem" />
-						<property name="messages">
-						    <list>
-							</list>
-						</property>
-				</bean>
 				
-				<bean class="domain.Box" id="suspiciousBoxWarden1">
-						<property value="SUSPICIOUSBOX" name="name" />
-						<property value="true" name="isSystem" />
-						<property name="messages">
-						    <list>
-							</list>
-						</property>
-				</bean>
 				
 			<!-- WARDEN2 -->
 				<bean class="domain.Box" id="inBoxWarden2">
@@ -1576,6 +1591,7 @@
 						<property value="true" name="isSystem" />
 						<property name="messages">
 						    <list>
+						    	<ref bean="message2" />
 							</list>
 						</property>
 				</bean>
@@ -2335,6 +2351,51 @@
 						<property name="typeProductEN" value="Sewing" />
 						<property name="typeProductES" value="Costura" />
 				</bean>
+				
+			
+		<bean class="domain.Message" id="message1">
+			<property value="11/11/2011 11:11" name="moment" />
+			<property value="This is a sent message by admin1" name="subject" />
+			<property value="from admin1 to admin2" name="body" />
+			<property value="LOW" name="priority" />
+			<property value="tag" name="tags"/>
+				
+			<property value="warden1" name="sender" /> 
+			
+			<property value="warden2" name="recipient" />
+				
+
+		</bean>
+		
+		<bean class="domain.Message" id="message2">
+			<property value="11/11/2011 11:11" name="moment" />
+			<property value="This is a sent message by admin1" name="subject" />
+			<property value="from admin1 to admin2" name="body" />
+			<property value="LOW" name="priority" />
+			<property value="tag" name="tags"/>
+				
+			<property value="warden1" name="sender" /> 
+			
+			<property value="warden2" name="recipient" />
+				
+
+		</bean>
+		
+		<bean class="domain.Message" id="message3">
+			<property value="11/11/2011 11:11" name="moment" />
+			<property value="This is a sent message by admin1" name="subject" />
+			<property value="from admin1 to admin2" name="body" />
+			<property value="LOW" name="priority" />
+			<property value="tag" name="tags"/>
+				
+			<property value="warden2" name="sender" /> 
+			
+			<property value="warden1" name="recipient" />
+				
+
+		</bean>
+				
+				
 				
 				
 </beans>
