@@ -21,6 +21,13 @@
 	<img src="${actor.photo}" alt="${actor.photo}"></td>
 		</tr>
 		
+	<security:authorize access="hasRole('WARDEN')">	
+		<tr>
+			<td><spring:message code="warden.email" />:</td>
+			<td><jstl:out value="${warden.email}" /></td>
+		</tr>
+	</security:authorize>	
+	
 	<security:authorize access="hasRole('VISITOR')">	
 		<tr>
 			<td><spring:message code="visitor.email" />:</td>

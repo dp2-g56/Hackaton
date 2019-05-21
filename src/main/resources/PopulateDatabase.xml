@@ -363,6 +363,7 @@
 				<property name="middleName" value="El de Cuba" />
 				<property name="surname" value="Alonso Valenzuela" />
 				<property name="photo" value="https://www.url.com/example" />
+				<property name="email" value="warden@email.com" />
 			
 				<property name="boxes">
 					<list>
@@ -381,6 +382,7 @@
 				<property name="middleName" value="El que esta fuera" />
 				<property name="surname" value="Hermoso" />
 				<property name="photo" value="https://www.finiquito.com/example" />
+				<property name="email" value="warden@email.com" />
 			
 				<property name="boxes">
 					<list>

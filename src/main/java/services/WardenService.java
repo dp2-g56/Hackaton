@@ -88,6 +88,7 @@ public class WardenService {
 		s.setSurname("");
 		s.setPhoto("");
 		s.setBoxes(boxes);
+		s.setEmail("");
 
 		List<Authority> authorities = new ArrayList<Authority>();
 
@@ -174,6 +175,7 @@ public class WardenService {
 		result.setMiddleName(formWarden.getMiddleName());
 		result.setSurname(formWarden.getSurname());
 		result.setPhoto(formWarden.getPhoto());
+		result.setEmail(formWarden.getEmail());
 
 		// USER ACCOUNT
 		UserAccount userAccount = new UserAccount();
