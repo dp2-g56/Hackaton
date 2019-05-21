@@ -49,8 +49,7 @@
 		<security:intercept-url pattern="/guard/warden/**" access="hasRole('WARDEN')" />
 		<security:intercept-url pattern="/broadcast/warden/**" access="hasRole('WARDEN')" />
 		<security:intercept-url pattern="/configuration/warden/**" access="hasRole('WARDEN')" />
-		
-		
+		<security:intercept-url pattern="/statistics/warden/**" access="hasRole('WARDEN')" />
 		
 	<!-- PRISONER -->
 		<security:intercept-url pattern="/visit/prisoner/**" 	access="hasRole('PRISONER')" />
@@ -59,7 +58,7 @@
 		<security:intercept-url pattern="/product/salesman/prisoner/**" 	access="hasRole('PRISONER')" />
 		<security:intercept-url pattern="/product/prisoner/**" 	access="hasRole('PRISONER')" />
 		<security:intercept-url pattern="/finderActivities/prisoner/**" 	access="hasRole('PRISONER')" />
-		<security:intercept-url pattern="/request/prisoner/**" 	access="hasRole('PRISONER')" />
+		<security:intercept-url pattern="/request/prisoner/**" 	access="hasRole('PRISONER')" /> 
 	
 	<!-- VISITOR -->
 		<security:intercept-url pattern="/visit/visitor/**" 	access="hasRole('VISITOR')" />
@@ -72,6 +71,7 @@
 	<!-- SOCIAL WORKER -->
 	<security:intercept-url pattern="/curriculum/socialWorker/**" 	access="hasRole('SOCIALWORKER')" />
 	<security:intercept-url pattern="/activity/socialworker/**" 	access="hasRole('SOCIALWORKER')" />
+	<security:intercept-url pattern="/request/socialworker/**" 	access="hasRole('SOCIALWORKER')" />
 	<!-- SALESMAN -->
 	<security:intercept-url pattern="/product/salesman/**" 	access="hasRole('SALESMAN')" />
 	

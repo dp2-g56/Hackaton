@@ -70,5 +70,20 @@
 		<put-attribute name="body"
 			value="/views/prisoner/createRequest.jsp" />
 	</definition>
+	
+	<definition name="prisoner/store" extends="master.page">	
+		<put-attribute name="title" value="Store" />
+		<put-attribute name="body" value="/views/anonymous/listOfProducts.jsp" />
+	</definition>
+	
+	<definition name="prisoner/buy" extends="master.page">	
+		<put-attribute name="title" value="Buy product" />
+		<put-attribute name="body" value="/views/prisoner/buyProduct.jsp" />
+	</definition>
+	
+	<definition name="prisoner/purchasedProducts" extends="master.page">	
+		<put-attribute name="title" value="Purchased products" />
+		<put-attribute name="body" value="/views/prisoner/prisonerProducts.jsp" />
+	</definition>
 
 </tiles-definitions>

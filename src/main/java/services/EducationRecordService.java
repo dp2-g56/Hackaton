@@ -7,17 +7,21 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
-import repositories.EducationRecordRepository;
 import domain.EducationRecord;
+import domain.SocialWorker;
+import repositories.EducationRecordRepository;
 
 @Service
 @Transactional
 public class EducationRecordService {
 
 	@Autowired
-	private EducationRecordRepository	educationRecordRepository;
+	private EducationRecordRepository educationRecordRepository;
 
+	@Autowired
+	private SocialWorkerService socialProfileService;
 
 	public EducationRecord create() {
 
@@ -36,6 +40,7 @@ public class EducationRecordService {
 
 		return this.educationRecordRepository.findAll();
 	}
+
 	public EducationRecord findOne(Integer id) {
 		return this.educationRecordRepository.findOne(id);
 	}
@@ -46,6 +51,14 @@ public class EducationRecordService {
 
 	public void delete(EducationRecord educationRecord) {
 		this.educationRecordRepository.delete(educationRecord);
+	}
+
+	public EducationRecord getEducationRecordOfLoggedSocialWorker(int educationRecordId) {
+		SocialWorker socialWorker = this.socialProfileService.loggedSocialWorker();
+		EducationRecord educationRecord = this.educationRecordRepository
+				.getEducationReportOfSocialWorker(socialWorker.getId(), educationRecordId);
+		Assert.notNull(educationRecord);
+		return educationRecord;
 	}
 
 }

@@ -1,6 +1,8 @@
 
 package services;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -14,6 +16,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 
 import domain.Configuration;
+import domain.Prisoner;
 import domain.Product;
 import domain.SalesMan;
 import repositories.ProductRepository;
@@ -30,6 +33,9 @@ public class ProductService {
 
 	@Autowired
 	private ConfigurationService configurationService;
+
+	@Autowired
+	private PrisonerService prisonerService;
 
 	@Autowired
 	private Validator validator;
@@ -54,6 +60,7 @@ public class ProductService {
 		product.setName("");
 		product.setPrice(1);
 		product.setStock(1);
+		product.setQuantity(0);
 		product.setType(null);
 
 		return product;
@@ -68,7 +75,7 @@ public class ProductService {
 	}
 
 	public Product reconstruct(Product product, BindingResult binding) {
-		Product result = new Product();
+		Product result = this.create();
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
 		if (product.getId() == 0)
@@ -137,6 +144,63 @@ public class ProductService {
 
 	public void deleteProductToDeleteSalesman(Product product) {
 		this.productRepository.delete(product);
+	}
+
+	public Product getProductAsPrisonerToBuy(int productId) {
+		this.prisonerService.loggedAsPrisoner();
+		Product product = this.findOne(productId);
+		Assert.notNull(product);
+		Assert.isTrue(product.getIsDraftMode() == false && product.getStock() > 0);
+		return product;
+	}
+
+	public void buyProductAsPrisoner(int productId, int quantity) {
+		Prisoner prisoner = this.prisonerService.securityAndPrisoner();
+		Product product = this.findOne(productId);
+
+		// Comprobaciones basicas
+		Assert.notNull(product);
+		Assert.isTrue(product.getIsDraftMode() == false);
+		Assert.isTrue(product.getStock() > 0);
+
+		// Comprobaciones de limite de stock y puntos del prisionero
+		Assert.isTrue(quantity <= product.getStock());
+		Assert.isTrue((product.getPrice() * quantity) <= prisoner.getPoints());
+
+		// Aumentamos los puntos del vendedor
+		SalesMan salesman = this.salesManService.getSalesManOfProduct(productId);
+		Integer totalPointsOfSM = salesman.getPoints() + (product.getPrice() * quantity);
+		salesman.setPoints(totalPointsOfSM);
+		this.salesManService.save(salesman);
+
+		// Reducimos el stock del producto
+		Integer totalStock = product.getStock() - quantity;
+		product.setStock(totalStock);
+		this.save(product);
+
+		// Creamos y guardamos el nuevo producto copia del prisionero
+		Product productOfP = new Product();
+		productOfP.setName(product.getName());
+		productOfP.setDescription(product.getDescription());
+		productOfP.setIsDraftMode(product.getIsDraftMode());
+		productOfP.setPrice(product.getPrice());
+		productOfP.setStock(0);
+		productOfP.setType(product.getType());
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.MILLISECOND, -1);
+		Date moment = c.getTime();
+		productOfP.setPurchaseMoment(moment);
+		productOfP.setQuantity(quantity);
+		Product newProduct = this.save(productOfP);
+
+		// Asignamos la copia del producto al prisionero y reducimos su numero
+		// de puntos
+		List<Product> productsOfP = prisoner.getProducts();
+		productsOfP.add(newProduct);
+		Integer totalPointsOfP = prisoner.getPoints() - (product.getPrice() * quantity);
+		prisoner.setPoints(totalPointsOfP);
+		prisoner.setProducts(productsOfP);
+		this.prisonerService.save(prisoner);
 	}
 
 }

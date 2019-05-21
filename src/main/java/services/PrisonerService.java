@@ -343,4 +343,34 @@ public class PrisonerService {
 	public List<Prisoner> getPrisonersWithProductsOfASalesMan(int salesmanId) {
 		return this.prisonerRepository.getPrisonersWithProductsOfASalesMan(salesmanId);
 	}
+
+	public List<Product> getProductsOfLoggedPrisoner() {
+		return this.securityAndPrisoner().getProducts();
+	}
+
+	public Date dateToGetFree(Prisoner prisoner) throws ParseException {
+
+		Integer months = this.prisonerRepository.totalMonthsOfCharges(prisoner);
+		Integer years = this.prisonerRepository.totalYearsOfCharges(prisoner);
+
+		Calendar exitCalendar = Calendar.getInstance();
+		exitCalendar.setTime(prisoner.getIncomeDate());
+
+		exitCalendar.add(Calendar.YEAR, years);
+		exitCalendar.add(Calendar.MONTH, months);
+
+		return exitCalendar.getTime();
+	}
+
+	public void calculateExitDateForProsioner(Prisoner p) throws ParseException {
+
+		Date date = this.dateToGetFree(p);
+
+		p.setExitDate(date);
+		this.save(p);
+	}
+
+	public List<Prisoner> getPrisonersToBeFree() {
+		return this.prisonerRepository.getPrisonersToBeFree();
+	}
 }

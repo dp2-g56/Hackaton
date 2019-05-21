@@ -29,6 +29,14 @@ public interface PrisonerRepository extends JpaRepository<Prisoner, Integer> {
 	public List<Prisoner> getSuspectPrisoners();
 
 	@Query("select distinct p from Prisoner p join p.products p1 where p1 in (select p2 from SalesMan s join s.products p2 where s.id = ?1)")
-	List<Prisoner> getPrisonersWithProductsOfASalesMan(int salesmanId);
+	public List<Prisoner> getPrisonersWithProductsOfASalesMan(int salesmanId);
 
+	@Query("select sum(c.year) from Prisoner p join p.charges c where p = ?1")
+	public Integer totalYearsOfCharges(Prisoner p);
+
+	@Query("select sum(c.month) from Prisoner p join p.charges c where p = ?1")
+	public Integer totalMonthsOfCharges(Prisoner p);
+
+	@Query("select p from Prisoner p where p.exitDate <= NOW()")
+	public List<Prisoner> getPrisonersToBeFree();
 }
