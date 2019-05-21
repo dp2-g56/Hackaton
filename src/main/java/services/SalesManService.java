@@ -255,4 +255,10 @@ public class SalesManService {
 		return this.salesManRepository.getSalesManOfProduct(productId);
 	}
 
+	public List<Product> getProductsOfLoggedSalesman() {
+		SalesMan salesman = this.loggedSalesMan();
+		List<Product> products = salesman.getProducts();
+		return products;
+	}
+
 }
