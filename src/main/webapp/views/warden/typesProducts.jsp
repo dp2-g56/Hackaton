@@ -22,7 +22,7 @@
 			<jstl:out value="${row.typeProductES}" />
 		</display:column>
 		
-		<display:column titleKey="">
+		<display:column>
 		<spring:url var="deleteUrl" value="/configuration/warden/deleteType.do">
 				<spring:param name="typeId" value="${row.id}"/>
 			</spring:url>

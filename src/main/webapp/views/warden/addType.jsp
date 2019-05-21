@@ -10,10 +10,13 @@
 <security:authorize access="hasRole('WARDEN')">
 
 	<form action="configuration/warden/addType.do" name="addType" id="addType" method="post">
-			
+		
+		<p><spring:message code="type.productEN" /></p>	
 		<input type="text" name="typeProductEN" value="${typeProductEN}" required />
 		
+		<p><spring:message code="type.productES" /></p>
 		<input type="text" name="typeProductES" value="${typeProductES}" required />
+		<br/>
 	
 		<input type="submit" name="add" value="<spring:message code="type.addType" />"/> 
 
