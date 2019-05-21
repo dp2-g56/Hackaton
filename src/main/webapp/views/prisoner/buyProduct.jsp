@@ -17,12 +17,30 @@ function mult() {
 	document.getElementById("totalCost").value = r;
 }
 
+function esEntero(numero){
+    if (numero % 1 == 0) {
+        alert ("Es un numero entero");
+    } else {
+        alert ("Es un numero decimal");
+    }
+}
+
 function conf() {
 	m1 = document.getElementById("price").value;
 	m2 = document.getElementById("quantity").value;
+	
 	r = m1*m2;
 	
-	return alert('<spring:message code="product.purchase.confirmation"/> ' + r + ' <spring:message code="product.points"/>');
+	if (r % 1 == 0) {
+		if(r>0) {
+			return alert('<spring:message code="product.purchase.confirmation"/> ' + r + ' <spring:message code="product.points"/>');
+		} else {
+			return alert('<spring:message code="product.purchase.zeroAndNegativeError"/>');
+		}
+    } else {
+        alert ('<spring:message code="product.purchase.decimalError"/>');
+    }
+
 }
 </script>
 
@@ -65,11 +83,11 @@ function conf() {
 		<input type="hidden" id="price" value="${product.price}">
 		
 		<span><spring:message code="product.quantity"/>:</span>
-		<input type="text" id="quantity" name="quantity" value="1" onchange="mult();">
+		<input type="number" id="quantity" name="quantity" min="1" value="1" onchange="mult();">
 		<br/>
 		
 		<span><spring:message code="product.total"/>:</span>
-		<input type="text" id="totalCost" value="${product.price}"/>
+		<input type="text" id="totalCost" value="${product.price}" readonly/>
 		<br/><br/>
 	
 		<input type="submit" name="save" value="<spring:message code ='product.buy'/>" onclick="conf();"/>
