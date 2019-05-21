@@ -5,8 +5,17 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -36,6 +45,14 @@ public class FinderService {
 
 	@Autowired
 	private Validator validator;
+
+	/** Logger. */
+	private static Logger LOG = LoggerFactory.getLogger(Prisoner.class);
+	/** JPA Persistence Unit. */
+	@PersistenceContext(type = PersistenceContextType.EXTENDED, name = "prisonerPU")
+	private EntityManager em;
+	/** Hibernate Full Text Entity Manager. */
+	private FullTextEntityManager ftem;
 
 	// CRUDS ----------------------------------------------
 
@@ -159,6 +176,37 @@ public class FinderService {
 		this.validator.validate(res, binding);
 
 		return res;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public List<Prisoner> search(Finder finder) {
+		// Create a Query Builder
+
+		QueryBuilder qb = this.getFullTextEntityManager().getSearchFactory().buildQueryBuilder()
+				.forEntity(Prisoner.class).get();
+		// Create a Lucene Full Text Query
+
+		org.apache.lucene.search.Query luceneQuery = qb.bool()
+				.must(qb.keyword().onFields("name", "surname", "middlename").matching(finder.getKeyWord())
+						.createQuery())
+				.must(qb.keyword().onField("charge").matching(finder.getCharge()).createQuery()).createQuery();
+		Query fullTextQuery = this.getFullTextEntityManager().createFullTextQuery(luceneQuery, Prisoner.class);
+		// Run Query and print out results to console
+		List<Prisoner> prisoners = fullTextQuery.getResultList();
+		return prisoners;
+	}
+
+	/**
+	 * Convenience method to get Full Test Entity Manager. Protected scope to
+	 * assist mocking in Unit Tests.
+	 *
+	 * @return Full Text Entity Manager.
+	 */
+	protected FullTextEntityManager getFullTextEntityManager() {
+		if (this.ftem == null)
+			this.ftem = Search.getFullTextEntityManager(this.em);
+		return this.ftem;
 	}
 
 }

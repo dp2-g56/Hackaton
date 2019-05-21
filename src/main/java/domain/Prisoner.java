@@ -19,28 +19,30 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
+@Indexed
 @Entity
 @Access(AccessType.PROPERTY)
 public class Prisoner extends Actor {
 
-	private Double				crimeRate;
-	private String				ticker;
-	private Date				incomeDate;
-	private Date				exitDate;
-	private Boolean				isIsolated;
-	private Boolean				isSuspect;
-	private Integer				points;
-	private Boolean				freedom;
+	private Double crimeRate;
+	private String ticker;
+	private Date incomeDate;
+	private Date exitDate;
+	private Boolean isIsolated;
+	private Boolean isSuspect;
+	private Integer points;
+	private Boolean freedom;
 
-	private List<Charge>		charges;
-	private List<Request>		requests;
-	private List<Product>		products;
-	private FinderActivities	finderActivities;
-	private List<Visit>			visits;
-
+	private List<Charge> charges;
+	private List<Request> requests;
+	private List<Product> products;
+	private FinderActivities finderActivities;
+	private List<Visit> visits;
 
 	@NotNull
 	@Min(-1)
@@ -120,6 +122,7 @@ public class Prisoner extends Actor {
 		this.freedom = freedom;
 	}
 
+	@Field
 	@ManyToMany
 	public List<Charge> getCharges() {
 		return this.charges;

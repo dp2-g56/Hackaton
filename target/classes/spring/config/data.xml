@@ -28,7 +28,7 @@
 
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"	destroy-method="close">
 		<property name="driverClass" value="com.mysql.jdbc.Driver" />
-		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/Acme-Shout" />
+		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/Acme-Alcatraz" />
 		<property name="user" value="acme-user" />
 		<property name="password" value="ACME-Us3r-P@ssw0rd" />
 		<property name="minPoolSize" value="1" />
@@ -38,7 +38,7 @@
 	<!-- JPA -->
 
 	<bean id="persistenceUnit" class="java.lang.String">
-		<constructor-arg value="Acme-Shout" />
+		<constructor-arg value="Acme-Alcatraz" />
 	</bean>
 
 	<bean id="sqlDialect" class="java.lang.String">
@@ -53,5 +53,34 @@
 		<prop key="hibernate.ejb.entitymanager_factory_name">entity-manager</prop>		
 		<prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
 	</util:properties>
+	
+	
+		<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- <property name="packagesToScan" value="com.cor.demo.jpa.entity" /> -->
+		<property name="jpaVendorAdapter">
+		<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+		<property name="showSql" value="true" />
+		<property name="generateDdl" value="true" />
+		</bean>
+		</property>
+		<property name="jpaPropertyMap">
+		<map>
+		<entry key="hibernate.hbm2ddl.auto" value="update" />
+		<entry key="hibernate.format_sql" value="true" />
+		<entry key="hibernate.use_sql_comments" value="false" />
+		<entry key="hibernate.show_sql" value="false" />
+		<entry key="hibernate.search.default.indexBase" value="/var/lucene/indexes" />
+		</map>
+		</property>
+		</bean>
 
+
+
+		<!-- Transaction Manager -->
+		<bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+		</bean>
+		<tx:annotation-driven transaction-manager="txManager" />
 </beans>

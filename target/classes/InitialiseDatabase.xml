@@ -16,17 +16,69 @@
 	">
 
 	<!-- User accounts -->
-
+	
 	<bean id="userAccount1" class="security.UserAccount">
-		<property name="username" value="admin" />
-		<property name="password" value="21232f297a57a5a743894a0e4a801fc3" />
+		<property name="username" value="warden" />
+		<property name="password" value="170e46bf5e0cafab00cac3a650910837" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
-					<property name="authority" value="ADMIN" />
+					<property name="authority" value="WARDEN" />
 				</bean>
 			</list>
 		</property>
+		<property name="isNotLocked" value="True" />
 	</bean>
-
+	
+	<bean id="warden" class="domain.Warden">
+		<property name="name" value="Warden" />
+		<property name="middleName" value="Warden" />
+		<property name="surname" value="Warden" />
+		<property name="photo" value="https://www.url.com/example" />	
+		<property name="boxes">
+			<list>
+				<ref bean="inBoxWarden" />
+				<ref bean="outBoxWarden" />
+				<ref bean="trashBoxWarden" />
+				<ref bean="suspiciousBoxWarden" />
+			</list>
+		</property>
+		<property name="userAccount" ref="userAccount1" />
+	</bean>
+	
+	<bean class="domain.Box" id="inBoxWarden">
+		<property value="INBOX" name="name" />
+		<property value="true" name="isSystem" />
+		<property name="messages">
+			<list>
+			</list>
+		</property>
+		</bean>
+				
+	<bean class="domain.Box" id="outBoxWarden">
+		<property value="OUTBOX" name="name" />
+		<property value="true" name="isSystem" />
+		<property name="messages">
+			<list>
+			</list>
+		</property>
+	</bean>
+				
+	<bean class="domain.Box" id="trashBoxWarden">
+		<property value="TRASHBOX" name="name" />
+		<property value="true" name="isSystem" />
+		<property name="messages">
+			<list>
+			</list>
+		</property>
+	</bean>
+				
+	<bean class="domain.Box" id="suspiciousBoxWarden">
+		<property value="SUSPICIOUSBOX" name="name" />
+		<property value="true" name="isSystem" />
+		<property name="messages">
+			<list>
+			</list>
+		</property>
+	</bean>
 </beans>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+ 
 <!-- 
 	* converters.xml 
 	* 
@@ -17,8 +17,60 @@
 	">
 
 	<util:list id="converters">
-		<!-- Add your own converters using entries of the following form: <bean 
-			class="converters.Class1ToClass2" /> -->
+			
+			<bean class="converters.ActorToStringConverter" />
+			<bean class="converters.StringToActorConverter" />
+			
+			<bean class="converters.ChargeToStringConverter" />
+			<bean class="converters.StringToChargeConverter" />
+			
+			<bean class="converters.FinderToStringConverter" />
+			<bean class="converters.StringToFinderConverter" />
+			
+			<bean class="converters.GuardToStringConverter" />
+			<bean class="converters.StringToGuardConverter" />
+			
+			<bean class="converters.PrisonerToStringConverter" />
+			<bean class="converters.StringToPrisonerConverter" />
+			
+			<bean class="converters.ReportToStringConverter" />
+			<bean class="converters.StringToReportConverter" />
+			
+			<bean class="converters.VisitorToStringConverter" />
+			<bean class="converters.StringToVisitorConverter" />
+			
+			<bean class="converters.VisitToStringConverter" />
+			<bean class="converters.StringToVisitConverter" />
+			
+			<bean class="converters.WardenToStringConverter" />
+			<bean class="converters.StringToWardenConverter" />
+			
+			<bean class="converters.SocialWorkerToStringConverter" />
+			<bean class="converters.StringToSocialWorkerConverter" />
+			
+			<bean class="converters.CurriculumToStringConverter" />
+			<bean class="converters.StringToCurriculumConverter" />
+			
+			<bean class="converters.PersonalRecordToStringConverter" />
+			<bean class="converters.StringToPersonalRecordConverter" />
+			
+			<bean class="converters.EducationRecordToStringConverter" />
+			<bean class="converters.StringToEducationRecordConverter" />
+			
+			<bean class="converters.MiscellaneousRecordToStringConverter" />
+			<bean class="converters.StringToMiscellaneousRecordConverter" />
+			
+			<bean class="converters.ProfessionalRecordToStringConverter" />
+			<bean class="converters.StringToProfessionalRecordConverter" />
+			
+			<bean class="converters.MessageToStringConverter" />
+			<bean class="converters.StringToMessageConverter" />
+			
+			<bean class="converters.BoxToStringConverter" />
+			<bean class="converters.StringToBoxConverter" />
+			
+			<bean class="converters.TypeProductToStringConverter" />
+			<bean class="converters.StringToTypeProductConverter" />
 	</util:list>
 
 </beans>

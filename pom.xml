@@ -245,6 +245,12 @@
 			<artifactId>hibernate-c3p0</artifactId>
 			<version>4.2.3.Final</version>
 		</dependency>
+		
+		<dependency>
+		   <groupId>org.hibernate</groupId>
+		   <artifactId>hibernate-search-orm</artifactId>
+		   <version>5.11.1.Final</version>
+		</dependency>
 
 		<!-- Javax -->
 
@@ -318,6 +324,9 @@
    			<artifactId>commons-lang3</artifactId>
     		<version>3.7</version>
 		</dependency>
+		
+		<!-- Lucene -->
+		
 
 	</dependencies>
 
