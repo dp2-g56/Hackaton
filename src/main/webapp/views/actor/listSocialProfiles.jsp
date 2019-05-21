@@ -20,6 +20,30 @@
 			<td>
 	<img src="${actor.photo}" alt="${actor.photo}"></td>
 		</tr>
+		
+	<security:authorize access="hasRole('VISITOR')">	
+		<tr>
+			<td><spring:message code="visitor.email" />:</td>
+			<td><jstl:out value="${visitor.email}" /></td>
+		</tr>
+		
+		<tr>
+			<td><spring:message code="visitor.emergencyEmail" />:</td>
+			<td><jstl:out value="${visitor.emergencyEmail}" /></td>
+		</tr>
+		
+		<tr>
+			<td><spring:message code="visitor.phoneNumber" />:</td>
+			<td><jstl:out value="${visitor.phoneNumber}" /></td>
+		</tr>
+		
+		<tr>
+			<td><spring:message code="visitor.address" />:</td>
+			<td><jstl:out value="${visitor.address}" /></td>
+		</tr>
+		
+		</security:authorize>
+		
 	<security:authorize access="hasRole('PRISONER')">
 		<tr>
 			<td><spring:message code="prisoner.incomeDate"/>:</td>
@@ -140,6 +164,23 @@
 			<strong><spring:message code="delete.user"/></strong>
 		</a> / 
 		<spring:url var="exportDataUrl" value="export/salesman.do">
+			<spring:param name="id" value="${actor.id}"/>
+		</spring:url>
+		<a href="${exportDataUrl}">
+			<strong><spring:message code="export.data.user"/></strong>
+		</a>
+	</security:authorize>
+	
+	<security:authorize access="hasRole('VISITOR')">
+		<spring:url var="editProfileUrl" value="authenticated/editProfile.do"/>
+		<a href="${editProfileUrl}">
+			<strong><spring:message code="actor.editProfile" /></strong>
+		</a> / 
+		<spring:url var="deleteUserUrl" value="authenticated/deleteUser.do"/>
+		<a href="${deleteUserUrl}" onClick="return confirm('<spring:message code="delete.user.confirmation" />')">
+			<strong><spring:message code="delete.user"/></strong>
+		</a> / 
+		<spring:url var="exportDataUrl" value="export/visitor.do">
 			<spring:param name="id" value="${actor.id}"/>
 		</spring:url>
 		<a href="${exportDataUrl}">

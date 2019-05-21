@@ -18,17 +18,10 @@
 			<jstl:out value="${row}" />
 		</display:column>
 		
-		<display:column titleKey="">
+		<display:column>
 		<spring:url var="deleteUrl" value="/configuration/warden/deleteSpam.do">
-				<spring:param name="spamId" value="${row.id}"/>
+		<spring:param name="spamWord" value="${row}" />
 			</spring:url>
-			<spring:url var="editUrl" value="/configuration/warden/editSpam.do">
-				<spring:param name="spamId" value="${row.id}"/>
-			</spring:url>
-			<a href="${editUrl}">
-				<spring:message code="spam.edit" var = "editMessage" />
-				<jstl:out value="${editMessage}"/>
-			</a> / 
 			<a href="${deleteUrl}" onclick="return confirm('<spring:message code="spam.delete.confirmation" />')">
 				<spring:message code="spam.delete" var = "deleteMessage" />
 				<jstl:out value="${deleteMessage}"/>
@@ -39,5 +32,7 @@
 	
 	<acme:cancel code="spam.back"
 		url="/configuration/warden/list.do" />
+	<acme:cancel code="spam.add"
+		url="/configuration/warden/addSpam.do" />
 
 </security:authorize>

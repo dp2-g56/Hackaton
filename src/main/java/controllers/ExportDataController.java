@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+
 import domain.Curriculum;
 import domain.EducationRecord;
+
+import services.VisitorService;
 import domain.Guard;
 import domain.MiscellaneousRecord;
 import domain.PersonalRecord;
@@ -28,26 +31,33 @@ import services.GuardService;
 import services.SalesManService;
 import services.SocialWorkerService;
 import services.WardenService;
+import domain.Visitor;
+
+
 
 @Controller
 @RequestMapping("/export")
 public class ExportDataController {
 
 	@Autowired
-	public WardenService wardenService;
+	public WardenService	wardenService;
 
 	@Autowired
-	public GuardService guardService;
+	public GuardService		guardService;
 
 	@Autowired
-	public SalesManService salesManService;
+	public SalesManService	salesManService;
+
+	@Autowired
+	public VisitorService	visitorService;
+
 
 	@Autowired
 	public SocialWorkerService socialWorkerService;
 
 	@RequestMapping(value = "/warden", method = RequestMethod.GET)
-	public @ResponseBody String export(@RequestParam(value = "id", defaultValue = "-1") int id,
-			HttpServletResponse response) throws IOException {
+	public @ResponseBody
+	String export(@RequestParam(value = "id", defaultValue = "-1") int id, HttpServletResponse response) throws IOException {
 
 		this.wardenService.loggedAsWarden();
 
@@ -79,8 +89,8 @@ public class ExportDataController {
 	}
 
 	@RequestMapping(value = "/guard", method = RequestMethod.GET)
-	public @ResponseBody String exportGuard(@RequestParam(value = "id", defaultValue = "-1") int id,
-			HttpServletResponse response) throws IOException {
+	public @ResponseBody
+	String exportGuard(@RequestParam(value = "id", defaultValue = "-1") int id, HttpServletResponse response) throws IOException {
 
 		this.guardService.loggedAsGuard();
 
@@ -102,7 +112,7 @@ public class ExportDataController {
 
 		// Defines el nombre del archivo y la extension
 		response.setContentType("text/txt");
-		response.setHeader("Content-Disposition", "attachment;filename=exportDataWarden.txt");
+		response.setHeader("Content-Disposition", "attachment;filename=exportDataGuard.txt");
 
 		// Con estos comandos permites su descarga cuando clickas
 		ServletOutputStream outStream = response.getOutputStream();
@@ -115,8 +125,8 @@ public class ExportDataController {
 	}
 
 	@RequestMapping(value = "/salesman", method = RequestMethod.GET)
-	public @ResponseBody String exportSalesman(@RequestParam(value = "id", defaultValue = "-1") int id,
-			HttpServletResponse response) throws IOException {
+	public @ResponseBody
+	String exportSalesman(@RequestParam(value = "id", defaultValue = "-1") int id, HttpServletResponse response) throws IOException {
 
 		this.salesManService.loggedAsSalesMan();
 
@@ -145,7 +155,7 @@ public class ExportDataController {
 			sb.append("- Description: " + p.getDescription()).append(System.getProperty("line.separator"));
 			sb.append("- Price: " + p.getPrice()).append(System.getProperty("line.separator"));
 			sb.append("- Stock: " + p.getStock()).append(System.getProperty("line.separator"));
-			sb.append("- ¿Is draft mode?: " + p.getIsDraftMode()).append(System.getProperty("line.separator"));
+			sb.append("- ï¿½Is draft mode?: " + p.getIsDraftMode()).append(System.getProperty("line.separator"));
 			sb.append(System.getProperty("line.separator"));
 		}
 
@@ -163,6 +173,49 @@ public class ExportDataController {
 		return sb.toString();
 	}
 
+	@RequestMapping(value = "/visitor", method = RequestMethod.GET)
+	public @ResponseBody
+	String exportVisitor(@RequestParam(value = "id", defaultValue = "-1") int id, HttpServletResponse response) throws IOException {
+
+		this.visitorService.loggedAsVisitor();
+
+		Visitor visitor = new Visitor();
+		visitor = this.visitorService.findOne(id);
+
+
+		// Defines un StringBuilder para construir tu string
+		StringBuilder sb = new StringBuilder();
+
+		// linea
+		sb.append("Personal data:").append(System.getProperty("line.separator"));
+
+		sb.append("- Name: " + visitor.getName()).append(System.getProperty("line.separator"));
+		sb.append("- Middle name: " + visitor.getMiddleName()).append(System.getProperty("line.separator"));
+		sb.append("- Surname: " + visitor.getSurname()).append(System.getProperty("line.separator"));
+		sb.append("- Photo: " + visitor.getPhoto()).append(System.getProperty("line.separator"));
+		sb.append("- Email: " + visitor.getEmail()).append(System.getProperty("line.separator"));
+		sb.append("- Emergency email: " + visitor.getEmergencyEmail()).append(System.getProperty("line.separator"));
+		sb.append("- Phone: " + visitor.getPhoneNumber()).append(System.getProperty("line.separator"));
+		sb.append("- Address: " + visitor.getAddress()).append(System.getProperty("line.separator"));
+
+		
+		// Defines el nombre del archivo y la extension
+		response.setContentType("text/txt");
+		response.setHeader("Content-Disposition", "attachment;filename=exportDataWarden.txt");
+
+		// Con estos comandos permites su descarga cuando clickas
+		ServletOutputStream outStream = response.getOutputStream();
+		outStream.println(sb.toString());
+		outStream.flush();
+		outStream.close();
+
+		// El return no llega nunca, es del metodo viejo
+		return sb.toString();
+		
+
+	}
+
+
 	@RequestMapping(value = "/socialWorker", method = RequestMethod.GET)
 	public @ResponseBody String exportSocialWorker(@RequestParam(value = "id", defaultValue = "-1") int id,
 			HttpServletResponse response) throws IOException {
@@ -172,11 +225,12 @@ public class ExportDataController {
 		SocialWorker socialWorker = new SocialWorker();
 		socialWorker = this.socialWorkerService.findOne(id);
 
-		// Defines un StringBuilder para construir tu string
-		StringBuilder sb = new StringBuilder();
+			// Defines un StringBuilder para construir tu string
+			StringBuilder sb = new StringBuilder();
 
-		// linea
-		sb.append("Personal data:").append(System.getProperty("line.separator"));
+			// linea
+			sb.append("Personal data:").append(System.getProperty("line.separator"));
+
 		sb.append("- Name: " + socialWorker.getName()).append(System.getProperty("line.separator"));
 		sb.append("- Middle name: " + socialWorker.getMiddleName()).append(System.getProperty("line.separator"));
 		sb.append("- Surname: " + socialWorker.getSurname()).append(System.getProperty("line.separator"));
@@ -261,7 +315,7 @@ public class ExportDataController {
 
 		// El return no llega nunca, es del metodo viejo
 		return sb.toString();
-
 	}
 
+	
 }

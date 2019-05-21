@@ -39,6 +39,8 @@
 		<security:intercept-url pattern="/anonymous/charge/**" access="permitAll" />
 		<security:intercept-url pattern="/product/anonymous/**" access="permitAll" />
 		<security:intercept-url pattern="/anonymous/socialWorker/**" access="permitAll" />
+		<security:intercept-url pattern="/anonymous/**" access="permitAll" />
+
 		
 	<!-- WARDEN -->
 		<security:intercept-url pattern="/warden/freePrisoners/**" access="hasRole('WARDEN')" />
@@ -70,11 +72,11 @@
 		<security:intercept-url pattern="/visit/report/create.do" 	access="hasRole('GUARD')" />
 	
 	<!-- SOCIAL WORKER -->
-	<security:intercept-url pattern="/curriculum/socialWorker/**" 	access="hasRole('SOCIALWORKER')" />
-	<security:intercept-url pattern="/activity/socialworker/**" 	access="hasRole('SOCIALWORKER')" />
-	<security:intercept-url pattern="/request/socialworker/**" 	access="hasRole('SOCIALWORKER')" />
+		<security:intercept-url pattern="/curriculum/socialWorker/**" 	access="hasRole('SOCIALWORKER')" />
+		<security:intercept-url pattern="/activity/socialworker/**" 	access="hasRole('SOCIALWORKER')" />
+		<security:intercept-url pattern="/request/socialworker/**" 	access="hasRole('SOCIALWORKER')" />
 	<!-- SALESMAN -->
-	<security:intercept-url pattern="/product/salesman/**" 	access="hasRole('SALESMAN')" />
+		<security:intercept-url pattern="/product/salesman/**" 	access="hasRole('SALESMAN')" />
 	
 	<!-- AUTHENTICATED -->
 		<security:intercept-url pattern="/authenticated/**" access="isAuthenticated()" />
@@ -90,6 +92,9 @@
 
 	<!-- NONE -->
 		<security:intercept-url pattern="/**" access="hasRole('NONE')" />
+		
+		
+		
 
 		<security:form-login login-page="/security/login.do"
 			password-parameter="password" username-parameter="username"

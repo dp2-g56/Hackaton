@@ -17,31 +17,28 @@
 		<display:column titleKey="type.en">
 			<jstl:out value="${row.typeProductEN}" />
 		</display:column>
-		
+
 		<display:column titleKey="type.es">
 			<jstl:out value="${row.typeProductES}" />
 		</display:column>
-		
-		<display:column titleKey="">
-		<spring:url var="deleteUrl" value="/configuration/warden/deleteType.do">
-				<spring:param name="typeId" value="${row.id}"/>
-			</spring:url>
-			<spring:url var="editUrl" value="/configuration/warden/editType.do">
-				<spring:param name="typeId" value="${row.id}"/>
-			</spring:url>
-			<a href="${editUrl}">
-				<spring:message code="spam.edit" var = "editMessage" />
-				<jstl:out value="${editMessage}"/>
-			</a> / 
-			<a href="${deleteUrl}" onclick="return confirm('<spring:message code="type.delete.confirmation" />')">
-				<spring:message code="spam.delete" var = "deleteMessage" />
-				<jstl:out value="${deleteMessage}"/>
-			</a>
+
+		<display:column>
+			<jstl:if test="${t.contains(row)}">
+				<spring:url var="deleteUrl"
+					value="/configuration/warden/deleteType.do">
+					<spring:param name="dataTypeId" value="${row.id}" />
+				</spring:url>
+				<a href="${deleteUrl}"
+					onclick="return confirm('<spring:message code="type.delete.confirmation" />')">
+					<spring:message code="spam.delete" var="deleteMessage" /> <jstl:out
+						value="${deleteMessage}" />
+				</a>
+			</jstl:if>
 		</display:column>
 
 	</display:table>
-	
-	<acme:cancel code="spam.back"
-		url="/configuration/warden/list.do" />
+
+	<acme:cancel code="spam.back" url="/configuration/warden/list.do" />
+	<acme:cancel code="type.add" url="/configuration/warden/addType.do" />
 
 </security:authorize>
