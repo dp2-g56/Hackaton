@@ -38,6 +38,12 @@
 	<definition name="termsAndConditionsES" extends="master.page">	
 		<put-attribute name="body" value="/views/anonymous/termsAndConditionsES.jsp" />
 	</definition>
+	
+		
+	<definition name="anonymous/socialWorker/create" extends="master.page">	
+		<put-attribute name="title" value="Register as Social Worker" />
+		<put-attribute name="body" value="/views/anonymous/registerSocialWorker.jsp" />
+	</definition>
 
 	<definition name="anonymous/visitor/create" extends="master.page">	
 		<put-attribute name="title" value="Register as visitor" />
