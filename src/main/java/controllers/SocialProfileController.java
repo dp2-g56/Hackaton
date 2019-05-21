@@ -11,6 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import domain.Actor;
+import domain.Configuration;
+import domain.Guard;
+import domain.Prisoner;
+import domain.SalesMan;
+import domain.SocialWorker;
+import domain.Visitor;
+import domain.Warden;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
@@ -22,36 +30,27 @@ import services.SalesManService;
 import services.SocialWorkerService;
 import services.VisitorService;
 import services.WardenService;
-import domain.Actor;
-import domain.Configuration;
-import domain.Guard;
-import domain.Prisoner;
-import domain.SalesMan;
-import domain.SocialWorker;
-import domain.Visitor;
-import domain.Warden;
 
 @Controller
 @RequestMapping("/authenticated")
 public class SocialProfileController extends AbstractController {
 
 	@Autowired
-	private ActorService			actorService;
+	private ActorService actorService;
 	@Autowired
-	private SocialWorkerService		socialWorkerService;
+	private SocialWorkerService socialWorkerService;
 	@Autowired
-	private PrisonerService			prisonerService;
+	private PrisonerService prisonerService;
 	@Autowired
-	private SalesManService			salesManService;
+	private SalesManService salesManService;
 	@Autowired
-	private WardenService			wardenService;
+	private WardenService wardenService;
 	@Autowired
-	private GuardService			guardService;
+	private GuardService guardService;
 	@Autowired
-	private VisitorService			visitorService;
+	private VisitorService visitorService;
 	@Autowired
-	private ConfigurationService	configurationService;
-
+	private ConfigurationService configurationService;
 
 	// -------------------------------------------------------------------
 	// ---------------------------LIST
@@ -101,6 +100,11 @@ public class SocialProfileController extends AbstractController {
 				Visitor visitor = this.visitorService.findOne(logguedActor.getId());
 
 				result.addObject("visitor", visitor);
+			}
+			if (authorities.get(0).toString().equals("WARDEN")) {
+				Warden warden = this.wardenService.findOne(logguedActor.getId());
+
+				result.addObject("warden", warden);
 			}
 
 			result.addObject("actor", logguedActor);

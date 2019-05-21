@@ -51,6 +51,9 @@
 		<acme:textbox path="surname" code="warden.surname" />
 		<br />
 		
+		<acme:textbox path="email" code="warden.email" />
+		<br />
+		
 		<acme:textbox path="photo" code="warden.photo" />
 		<br />
 	</fieldset>
