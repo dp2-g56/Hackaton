@@ -22,7 +22,7 @@
 			<jstl:out value="${row.typeProductES}" />
 		</display:column>
 		
-		<display:column titleKey="">
+		<display:column>
 		<spring:url var="deleteUrl" value="/configuration/warden/deleteType.do">
 				<spring:param name="typeId" value="${row.id}"/>
 			</spring:url>
@@ -43,5 +43,7 @@
 	
 	<acme:cancel code="spam.back"
 		url="/configuration/warden/list.do" />
+		<acme:cancel code="type.add"
+		url="/configuration/warden/addType.do" />
 
 </security:authorize>
