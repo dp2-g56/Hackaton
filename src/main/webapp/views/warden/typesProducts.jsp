@@ -43,5 +43,7 @@
 	
 	<acme:cancel code="spam.back"
 		url="/configuration/warden/list.do" />
+		<acme:cancel code="type.add"
+		url="/configuration/warden/addType.do" />
 
 </security:authorize>
