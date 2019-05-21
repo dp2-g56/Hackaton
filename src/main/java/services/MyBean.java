@@ -29,6 +29,6 @@ public class MyBean {
 				this.prisonerService.save(p);
 			}
 
-		System.out.println("Hola Müller, Ponme A++");
+		System.out.println("Log: Checked sucesfully the list of prissoner to get free");
 	}
 }

@@ -171,9 +171,9 @@ public class ConfigurationService {
 			TypeProduct p = new TypeProduct();
 			p.setTypeProductEN(typeEN);
 			p.setTypeProductES(typeES);
-			this.typeProductService.save(p);
+			TypeProduct saved = this.typeProductService.save(p);
 			List<TypeProduct> lp = configuration.getTypeProducts();
-			lp.add(p);
+			lp.add(saved);
 			configuration.setTypeProducts(lp);
 			this.configurationRepository.save(configuration);
 		}
