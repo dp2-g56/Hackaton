@@ -14,9 +14,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import services.GuardService;
+import services.SalesManService;
+import services.VisitorService;
+import services.WardenService;
 import domain.Guard;
 import domain.Product;
 import domain.SalesMan;
+import domain.Visitor;
 import domain.Warden;
 import services.GuardService;
 import services.SalesManService;
@@ -28,6 +33,8 @@ public class ExportDataController {
 
 	@Autowired
 	public WardenService wardenService;
+	@Autowired
+	public GuardService		guardService;
 
 	@Autowired
 	public GuardService guardService;
@@ -142,6 +149,43 @@ public class ExportDataController {
 		// Defines el nombre del archivo y la extension
 		response.setContentType("text/txt");
 		response.setHeader("Content-Disposition", "attachment;filename=exportDataSalesman.txt");
+
+		// Con estos comandos permites su descarga cuando clickas
+		ServletOutputStream outStream = response.getOutputStream();
+		outStream.println(sb.toString());
+		outStream.flush();
+		outStream.close();
+
+		// El return no llega nunca, es del metodo viejo
+		return sb.toString();
+	}
+
+	@RequestMapping(value = "/visitor", method = RequestMethod.GET)
+	public @ResponseBody
+	String exportVisitor(@RequestParam(value = "id", defaultValue = "-1") int id, HttpServletResponse response) throws IOException {
+
+		this.visitorService.loggedAsVisitor();
+
+		Visitor visitor = new Visitor();
+		visitor = this.visitorService.findOne(id);
+
+		// Defines un StringBuilder para construir tu string
+		StringBuilder sb = new StringBuilder();
+
+		// linea
+		sb.append("Personal data:").append(System.getProperty("line.separator"));
+		sb.append("- Name: " + visitor.getName()).append(System.getProperty("line.separator"));
+		sb.append("- Middle name: " + visitor.getMiddleName()).append(System.getProperty("line.separator"));
+		sb.append("- Surname: " + visitor.getSurname()).append(System.getProperty("line.separator"));
+		sb.append("- Photo: " + visitor.getPhoto()).append(System.getProperty("line.separator"));
+		sb.append("- Email: " + visitor.getEmail()).append(System.getProperty("line.separator"));
+		sb.append("- Emergency email: " + visitor.getEmergencyEmail()).append(System.getProperty("line.separator"));
+		sb.append("- Phone: " + visitor.getPhoneNumber()).append(System.getProperty("line.separator"));
+		sb.append("- Address: " + visitor.getAddress()).append(System.getProperty("line.separator"));
+
+		// Defines el nombre del archivo y la extension
+		response.setContentType("text/txt");
+		response.setHeader("Content-Disposition", "attachment;filename=exportDataVisitor.txt");
 
 		// Con estos comandos permites su descarga cuando clickas
 		ServletOutputStream outStream = response.getOutputStream();
