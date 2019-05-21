@@ -20,13 +20,8 @@
 		
 		<display:column>
 		<spring:url var="deleteUrl" value="/configuration/warden/deleteSpam.do">
+		<spring:param name="spamWord" value="${row}" />
 			</spring:url>
-			<spring:url var="editUrl" value="/configuration/warden/editSpam.do">
-			</spring:url>
-			<a href="${editUrl}">
-				<spring:message code="spam.edit" var = "editMessage" />
-				<jstl:out value="${editMessage}"/>
-			</a> / 
 			<a href="${deleteUrl}" onclick="return confirm('<spring:message code="spam.delete.confirmation" />')">
 				<spring:message code="spam.delete" var = "deleteMessage" />
 				<jstl:out value="${deleteMessage}"/>

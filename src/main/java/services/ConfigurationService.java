@@ -126,23 +126,13 @@ public class ConfigurationService {
 		}
 	}
 
-	public void deleteSpamWords(String word, BindingResult binding) {
+	public void deleteSpamWords(String word) {
 		this.wardenService.loggedAsWarden();
-		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 		Configuration configuration = this.configurationRepository.configuration();
 		List<String> spamWords = configuration.getSpamWords();
-		if (!spamWords.contains(word)) {
-			if (locale.contains("ES"))
-				binding.addError(new FieldError("spamWords", "word", word, false, null, null,
-						"La palabra no esta contenida en la lista de palabras spam."));
-			else
-				binding.addError(new FieldError("spamWords", "word", word, false, null, null,
-						"The word isn't already contained in the list of spam words."));
-		} else {
-			spamWords.remove(word);
-			configuration.setSpamWords(spamWords);
-			this.configurationRepository.save(configuration);
-		}
+		spamWords.remove(word);
+		configuration.setSpamWords(spamWords);
+		this.configurationRepository.save(configuration);
 	}
 
 	public void addTypeProducts(String typeEN, String typeES, BindingResult binding) {
@@ -179,7 +169,7 @@ public class ConfigurationService {
 		}
 	}
 
-	public void deleteTypeProducts(int id, BindingResult binding) {
+	public void deleteTypeProducts(int id) {
 		this.wardenService.loggedAsWarden();
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 		Configuration configuration = this.configurationRepository.configuration();

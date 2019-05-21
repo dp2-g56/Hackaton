@@ -68,7 +68,7 @@ public class ProductPrisonerController extends AbstractController {
 
 	@RequestMapping(value = "/buy", method = RequestMethod.POST, params = "save")
 	public ModelAndView buyProductSave(@RequestParam(required = false) int productId,
-			@RequestParam(required = false) Integer quantity) {
+			@RequestParam(required = false) int quantity) {
 		ModelAndView result;
 
 		try {

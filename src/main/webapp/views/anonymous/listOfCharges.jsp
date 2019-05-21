@@ -27,11 +27,30 @@
 	</display:table>
 	
 	<jstl:if test="${!warden}">
+	
+			<jstl:choose>
+			
+			<jstl:when test="${finder}">
+			
+			<spring:url var="backUrl" value="/finder/visitor/list.do">
+			</spring:url>
+			<a href="${backUrl}">
+				<spring:message code="charge.back" />
+			</a>
+			
+			</jstl:when>
+			<jstl:otherwise>
+			
 			<spring:url var="backUrl" value="/anonymous/prisoner/list.do">
 			</spring:url>
 			<a href="${backUrl}">
 				<spring:message code="charge.back" />
 			</a>
+			
+			</jstl:otherwise>
+			
+			</jstl:choose>
+
 	</jstl:if>
 	
 <jstl:if test="${warden}">

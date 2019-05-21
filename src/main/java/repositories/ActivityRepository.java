@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import domain.Activity;
+import domain.FinderActivities;
 import domain.Prisoner;
 
 @Repository
@@ -21,5 +22,8 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 
 	@Query("select p from Activity a join a.requests r join r.prisoner p where r.status = 'APPROVED' and a = ?1")
 	public List<Prisoner> getPrisonersPerActivity(Activity a);
+
+	@Query("select f from FinderActivities f join f.activities a where a=?1")
+	public List<FinderActivities> getFindersByActivity(Activity a);
 
 }

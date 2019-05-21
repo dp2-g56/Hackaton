@@ -1,6 +1,7 @@
 package controllers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +11,19 @@ import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import domain.Charge;
 import domain.Finder;
+import domain.Prisoner;
+import domain.Reason;
+import domain.Visit;
 import domain.Visitor;
 import services.ChargeService;
 import services.FinderService;
+import services.PrisonerService;
+import services.VisitService;
 import services.VisitorService;
 
 @Controller
@@ -31,6 +38,12 @@ public class FinderVisitorController extends AbstractController {
 
 	@Autowired
 	private ChargeService chargeService;
+
+	@Autowired
+	private PrisonerService prisonerService;
+
+	@Autowired
+	private VisitService visitService;
 
 	// Constructors -----------------------------------------------------------
 
@@ -54,6 +67,82 @@ public class FinderVisitorController extends AbstractController {
 
 		return result;
 
+	}
+
+	@RequestMapping(value = "/charges", method = RequestMethod.GET)
+	public ModelAndView listCharge(@RequestParam int prisonerId) {
+
+		ModelAndView result;
+
+		Prisoner prisoner = this.prisonerService.findOne(prisonerId);
+
+		if (prisoner == null)
+			return this.list();
+
+		List<Charge> charges = prisoner.getCharges();
+
+		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+
+		result = new ModelAndView("anonymous/charge/list");
+		result.addObject("charges", charges);
+		result.addObject("locale", locale);
+		result.addObject("finder", true);
+		result.addObject("requestURI", "anonymous/charge/list.do");
+		result.addObject("warden", false);
+
+		return result;
+	}
+
+	// Create as Visitor
+	@RequestMapping(value = "/createVisit", method = RequestMethod.GET)
+	public ModelAndView createVisitVisitor(@RequestParam int prisonerId) {
+		ModelAndView result;
+
+		Prisoner prisoner = this.prisonerService.findOne(prisonerId);
+
+		if (prisoner == null)
+			return this.list();
+
+		if (prisoner.getFreedom() || prisoner.getIsIsolated())
+			return this.list();
+
+		Visit visit = this.visitService.createAsVisitor(prisoner);
+
+		List<Reason> reasons = Arrays.asList(Reason.values());
+
+		result = this.createEditModelAndView(visit);
+		result.addObject("visit", visit);
+		result.addObject("prisoner", visit.getPrisoner());
+		result.addObject("finder", true);
+		result.addObject("reasons", reasons);
+		result.addObject("requestURI", "visit/visitor/create.do");
+
+		return result;
+	}
+
+	// PROTECTED MODEL AND VIEW AS VISITOR
+	protected ModelAndView createEditModelAndView(Visit visit) {
+		ModelAndView result;
+
+		result = this.createEditModelAndView(visit, null);
+
+		return result;
+	}
+
+	protected ModelAndView createEditModelAndView(Visit visit, String messageCode) {
+		ModelAndView result;
+
+		Prisoner prisoner = visit.getPrisoner();
+		List<Reason> reasons = Arrays.asList(Reason.values());
+
+		result = new ModelAndView("visit/visitor/edit");
+
+		result.addObject("visit", visit);
+		result.addObject("message", messageCode);
+		result.addObject("prisoner", prisoner);
+		result.addObject("reasons", reasons);
+
+		return result;
 	}
 
 	// Edit -----------------------------------------------------------------

@@ -25,5 +25,8 @@
 		</display:column>	
 
 	</display:table>
+	
+	<acme:cancel code="spam.back"
+		url="/activity/socialworker/list.do" />
 
 </security:authorize>

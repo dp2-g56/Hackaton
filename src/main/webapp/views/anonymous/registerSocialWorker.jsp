@@ -8,9 +8,7 @@
 <%@taglib prefix="acme" tagdir="/WEB-INF/tags" %>
 
 
-<security:authorize access="hasRole('WARDEN')">
-
-<form:form modelAttribute="formWarden" action="warden/warden/register.do">
+<form:form modelAttribute="formObjectSocialWorker" action="anonymous/socialWorker/create.do">
 
 	<!-- ELECCIÓN DEL FORMATO DE LA FECHA -->
 	<jstl:if test="${locale =='EN'}">
@@ -26,13 +24,13 @@
 	<fieldset>
     	<legend><spring:message code="warden.userAccountData" /></legend>
 	
-		<acme:textbox path="username" code="warden.username" />
+		<acme:textbox path="username" code="guard.username" />
 		<br />
 		
-		<acme:password path="password" code="warden.password" />
+		<acme:password path="password" code="guard.password" />
 		<br />
 		
-		<acme:password path="confirmPassword" code="warden.confirmPassword" />
+		<acme:password path="confirmPassword" code="guard.confirmPassword" />
 		<br />
 	
 	</fieldset>
@@ -41,21 +39,23 @@
 	<!-- Actor Attributes -->
 	<fieldset>
     	<legend><spring:message code="warden.personalData" /></legend>
-		
-		<acme:textbox path="name" code="warden.name" />
+    	
+    	<acme:textbox path="title" code="socialWorker.title" />
 		<br />
 		
-		<acme:textbox path="middleName" code="warden.middleName" />
+		<acme:textbox path="name" code="guard.name" />
 		<br />
 		
-		<acme:textbox path="surname" code="warden.surname" />
+		<acme:textbox path="middleName" code="guard.middleName" />
 		<br />
 		
-		<acme:textbox path="email" code="warden.email" />
+		<acme:textbox path="surname" code="guard.surname" />
 		<br />
 		
-		<acme:textbox path="photo" code="warden.photo" />
+		<acme:textbox path="photo" code="guard.photo" />
 		<br />
+		
+		
 	</fieldset>
 	<br />
 	
@@ -73,9 +73,10 @@
 	<br />
 
 	<!-- BOTONES -->	
-	<input type="submit" name="save" value="<spring:message code="warden.save" />"/> 
+	<input type="submit" name="save" value="<spring:message code="warden.save" />" /> 
 	<acme:cancel url="/" code="warden.cancel" /> 
 	
 	</form:form>
 	
-</security:authorize>
+	
+	

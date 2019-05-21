@@ -14,15 +14,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+
+import domain.Curriculum;
+import domain.EducationRecord;
+
+import services.VisitorService;
+import domain.Guard;
+import domain.MiscellaneousRecord;
+import domain.PersonalRecord;
+import domain.Product;
+import domain.ProfessionalRecord;
+import domain.SalesMan;
+import domain.SocialWorker;
+import domain.Warden;
 import services.GuardService;
 import services.SalesManService;
-import services.VisitorService;
+import services.SocialWorkerService;
 import services.WardenService;
-import domain.Guard;
-import domain.Product;
-import domain.SalesMan;
 import domain.Visitor;
-import domain.Warden;
+
+
 
 @Controller
 @RequestMapping("/export")
@@ -40,6 +51,9 @@ public class ExportDataController {
 	@Autowired
 	public VisitorService	visitorService;
 
+
+	@Autowired
+	public SocialWorkerService socialWorkerService;
 
 	@RequestMapping(value = "/warden", method = RequestMethod.GET)
 	public @ResponseBody
@@ -141,7 +155,7 @@ public class ExportDataController {
 			sb.append("- Description: " + p.getDescription()).append(System.getProperty("line.separator"));
 			sb.append("- Price: " + p.getPrice()).append(System.getProperty("line.separator"));
 			sb.append("- Stock: " + p.getStock()).append(System.getProperty("line.separator"));
-			sb.append("- ¿Is draft mode?: " + p.getIsDraftMode()).append(System.getProperty("line.separator"));
+			sb.append("- ï¿½Is draft mode?: " + p.getIsDraftMode()).append(System.getProperty("line.separator"));
 			sb.append(System.getProperty("line.separator"));
 		}
 
@@ -168,11 +182,13 @@ public class ExportDataController {
 		Visitor visitor = new Visitor();
 		visitor = this.visitorService.findOne(id);
 
+
 		// Defines un StringBuilder para construir tu string
 		StringBuilder sb = new StringBuilder();
 
 		// linea
 		sb.append("Personal data:").append(System.getProperty("line.separator"));
+
 		sb.append("- Name: " + visitor.getName()).append(System.getProperty("line.separator"));
 		sb.append("- Middle name: " + visitor.getMiddleName()).append(System.getProperty("line.separator"));
 		sb.append("- Surname: " + visitor.getSurname()).append(System.getProperty("line.separator"));
@@ -182,9 +198,114 @@ public class ExportDataController {
 		sb.append("- Phone: " + visitor.getPhoneNumber()).append(System.getProperty("line.separator"));
 		sb.append("- Address: " + visitor.getAddress()).append(System.getProperty("line.separator"));
 
+		
 		// Defines el nombre del archivo y la extension
 		response.setContentType("text/txt");
-		response.setHeader("Content-Disposition", "attachment;filename=exportDataVisitor.txt");
+		response.setHeader("Content-Disposition", "attachment;filename=exportDataWarden.txt");
+
+		// Con estos comandos permites su descarga cuando clickas
+		ServletOutputStream outStream = response.getOutputStream();
+		outStream.println(sb.toString());
+		outStream.flush();
+		outStream.close();
+
+		// El return no llega nunca, es del metodo viejo
+		return sb.toString();
+		
+
+	}
+
+
+	@RequestMapping(value = "/socialWorker", method = RequestMethod.GET)
+	public @ResponseBody String exportSocialWorker(@RequestParam(value = "id", defaultValue = "-1") int id,
+			HttpServletResponse response) throws IOException {
+
+		this.socialWorkerService.loggedAsSocialWorker();
+
+		SocialWorker socialWorker = new SocialWorker();
+		socialWorker = this.socialWorkerService.findOne(id);
+
+			// Defines un StringBuilder para construir tu string
+			StringBuilder sb = new StringBuilder();
+
+			// linea
+			sb.append("Personal data:").append(System.getProperty("line.separator"));
+
+		sb.append("- Name: " + socialWorker.getName()).append(System.getProperty("line.separator"));
+		sb.append("- Middle name: " + socialWorker.getMiddleName()).append(System.getProperty("line.separator"));
+		sb.append("- Surname: " + socialWorker.getSurname()).append(System.getProperty("line.separator"));
+		sb.append("- Photo: " + socialWorker.getPhoto()).append(System.getProperty("line.separator"));
+		sb.append("- Title: " + socialWorker.getTitle()).append(System.getProperty("line.separator"));
+
+		sb.append("").append(System.getProperty("line.separator"));
+
+		Curriculum curriculum = socialWorker.getCurriculum();
+		PersonalRecord personalRecord = curriculum.getPersonalRecord();
+		List<MiscellaneousRecord> miscellaneousRecords = curriculum.getMiscellaneousRecords();
+		List<EducationRecord> educationRecords = curriculum.getEducationRecords();
+		List<ProfessionalRecord> professionalRecords = curriculum.getProfessionalRecords();
+
+		sb.append("Curriculum: ").append(System.getProperty("line.separator"));
+
+		sb.append("").append(System.getProperty("line.separator"));
+
+		sb.append("- Personal Record: ").append(System.getProperty("line.separator"));
+
+		sb.append("").append(System.getProperty("line.separator"));
+
+		sb.append("-Full Name: " + personalRecord.getFullName()).append(System.getProperty("line.separator"));
+		sb.append("-Phone Number: " + personalRecord.getPhoneNumber()).append(System.getProperty("line.separator"));
+		sb.append("-Email: " + personalRecord.getEmail()).append(System.getProperty("line.separator"));
+		sb.append("-Photo: " + personalRecord.getPhoto()).append(System.getProperty("line.separator"));
+		sb.append("-Linkedin Profile link: " + personalRecord.getUrlLinkedInProfile())
+				.append(System.getProperty("line.separator"));
+
+		sb.append("").append(System.getProperty("line.separator"));
+		sb.append("Education Records: ").append(System.getProperty("line.separator"));
+
+		for (int i = 0; i < educationRecords.size(); i++) {
+			sb.append("").append(System.getProperty("line.separator"));
+			sb.append("Education Record " + i + 1 + ": ").append(System.getProperty("line.separator"));
+			sb.append("-Title: " + educationRecords.get(i).getTitle()).append(System.getProperty("line.separator"));
+			sb.append("-Link: " + educationRecords.get(i).getLink()).append(System.getProperty("line.separator"));
+			sb.append("-Institution: " + educationRecords.get(i).getInstitution())
+					.append(System.getProperty("line.separator"));
+			sb.append("-Start Date: " + educationRecords.get(i).getStartDateStudy())
+					.append(System.getProperty("line.separator"));
+			sb.append("-End Date: " + educationRecords.get(i).getEndDateStudy())
+					.append(System.getProperty("line.separator"));
+		}
+		sb.append("").append(System.getProperty("line.separator"));
+		sb.append("Professional Records: ").append(System.getProperty("line.separator"));
+
+		for (int i = 0; i < professionalRecords.size(); i++) {
+			sb.append("").append(System.getProperty("line.separator"));
+			sb.append("Education Record " + i + 1 + ": ").append(System.getProperty("line.separator"));
+			sb.append("-Comapny Name: " + professionalRecords.get(i).getNameCompany())
+					.append(System.getProperty("line.separator"));
+			sb.append("-Attachment link: " + professionalRecords.get(i).getLinkAttachment())
+					.append(System.getProperty("line.separator"));
+			sb.append("-Role: " + professionalRecords.get(i).getRole()).append(System.getProperty("line.separator"));
+			sb.append("-Start date: " + professionalRecords.get(i).getStartDate())
+					.append(System.getProperty("line.separator"));
+			sb.append("-End date: " + professionalRecords.get(i).getEndDate())
+					.append(System.getProperty("line.separator"));
+		}
+		sb.append("").append(System.getProperty("line.separator"));
+		sb.append("Miscellaneous Records: ").append(System.getProperty("line.separator"));
+
+		for (int i = 0; i < miscellaneousRecords.size(); i++) {
+			sb.append("").append(System.getProperty("line.separator"));
+			sb.append("Miscellaneous Record " + i + 1 + ": ").append(System.getProperty("line.separator"));
+			sb.append("-Title: " + miscellaneousRecords.get(i).getTitle()).append(System.getProperty("line.separator"));
+			sb.append("-Attachment link: " + miscellaneousRecords.get(i).getLinkAttachment())
+					.append(System.getProperty("line.separator"));
+
+		}
+
+		// Defines el nombre del archivo y la extension
+		response.setContentType("text/txt");
+		response.setHeader("Content-Disposition", "attachment;filename=exportDataWarden.txt");
 
 		// Con estos comandos permites su descarga cuando clickas
 		ServletOutputStream outStream = response.getOutputStream();
@@ -196,4 +317,5 @@ public class ExportDataController {
 		return sb.toString();
 	}
 
+	
 }
