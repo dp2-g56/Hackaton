@@ -41,7 +41,9 @@
 		<!-- Buttons -->
 
 		<input type="submit" name="save" value="<spring:message code="button.save" />"/>
+		<jstl:if test="${professionalRecord.id > 0}">
 		<input type="submit" name="delete" value="<spring:message code="button.delete" />" onclick="return confirm('<spring:message code="delete.confirm" />')"/>
+		</jstl:if>
 		<acme:cancel url="/curriculum/socialWorker/show.do" code="button.cancel" /> 
 
 	</form:form>

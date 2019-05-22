@@ -5,23 +5,25 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import repositories.PersonalRecordRepository;
 import domain.PersonalRecord;
 import domain.SocialWorker;
-import repositories.PersonalRecordRepository;
 
 @Service
 @Transactional
 public class PersonalRecordService {
 
 	@Autowired
-	private PersonalRecordRepository personalRecordRepository;
+	private PersonalRecordRepository	personalRecordRepository;
 
 	@Autowired
-	private SocialWorkerService socialWorkerService;
+	private SocialWorkerService			socialWorkerService;
+
 
 	public PersonalRecord create() {
 
@@ -48,12 +50,14 @@ public class PersonalRecordService {
 		return this.personalRecordRepository.save(personalRecord);
 	}
 
-	public PersonalRecord getPersonalRecordAsSocialWorker(int personalRecordId) {
+	public PersonalRecord getPersonalRecordAsSocialWorker(String personalRecordId) {
 		SocialWorker socialWorker = this.socialWorkerService.loggedSocialWorker();
-		PersonalRecord personalRecord = this.personalRecordRepository
-				.getPersonalRecordOfSocialWorker(socialWorker.getId(), personalRecordId);
-		Assert.notNull(personalRecord);
+
+		Assert.isTrue(StringUtils.isNumeric(personalRecordId));
+		int personalRecordIdInt = Integer.parseInt(personalRecordId);
+
+		Assert.isTrue(socialWorker.getCurriculum().getPersonalRecord().getId() == personalRecordIdInt);
+		PersonalRecord personalRecord = this.personalRecordRepository.findOne(personalRecordIdInt);
 		return personalRecord;
 	}
-
 }
