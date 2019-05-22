@@ -92,4 +92,63 @@ public class WardenServiceTest extends AbstractTest {
 
 	}
 
+	@Test
+	public void statistics() {
+		// 1
+		System.out.println("ENTRA 1: " + this.wardenService.statistics().get(0));
+		Assert.isTrue(this.wardenService.statistics().get(0) == 50.);
+		System.out.println("SALE 1\n");
+
+		// 2
+		System.out.println("ENTRA 2: " + this.wardenService.statistics().get(1));
+		Assert.isTrue(this.wardenService.statistics().get(1) == 0.);
+		System.out.println("SALE 2\n");
+
+		// 3
+		System.out.println("ENTRA 3: " + this.wardenService.statistics().get(2));
+		Assert.isTrue(
+				this.wardenService.statistics().get(2) <= 66.68 && this.wardenService.statistics().get(2) >= 66.66);
+		System.out.println("SALE 3\n");
+
+//		// 4
+//		System.out.println("ENTRA 4: " + this.wardenService.statistics().get(3));
+//		Assert.isTrue(this.wardenService.statistics().get(3) == 0.);
+//		System.out.println("SALE 4\n");
+//
+//		// 5
+//		System.out.println("ENTRA 5: " + this.wardenService.statistics().get(4));
+//		Assert.isTrue(this.wardenService.statistics().get(4) == 0.);
+//		System.out.println("SALE 5\n");
+//
+//		// 6
+//		System.out.println("ENTRA 6: " + this.wardenService.statistics().get(5));
+//		Assert.isTrue(this.wardenService.statistics().get(5) == 0.);
+//		System.out.println("SALE 6\n");
+//
+//		// 7
+//		System.out.println("ENTRA 7: " + this.wardenService.statistics().get(6));
+//		Assert.isTrue(this.wardenService.statistics().get(6) == 0.);
+//		System.out.println("SALE 7\n");
+//
+//		// 8
+//		System.out.println("ENTRA 8: " + this.wardenService.statistics().get(7));
+//		Assert.isTrue(this.wardenService.statistics().get(7) == 0.);
+//		System.out.println("SALE 8\n");
+//
+//		// 9
+//		System.out.println("ENTRA 9: " + this.wardenService.statistics().get(8));
+//		Assert.isTrue(this.wardenService.statistics().get(8) == 0.);
+//		System.out.println("SALE 9\n");
+//
+//		// 10
+//		System.out.println("ENTRA 10: " + this.wardenService.statistics().get(9));
+//		Assert.isTrue(this.wardenService.statistics().get(9) == 0.);
+//		System.out.println("SALE 10\n");
+//
+//		// 11
+//		System.out.println("ENTRA 11: " + this.wardenService.statistics().get(10));
+//		Assert.isTrue(this.wardenService.statistics().get(10) == 0.);
+//		System.out.println("SALE 11\n");
+	}
+
 }
