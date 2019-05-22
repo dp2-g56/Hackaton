@@ -161,24 +161,30 @@ public class WardenController extends AbstractController {
 		ModelAndView result;
 		try {
 
-			if (binding.hasErrors())
-				result = this.createEditModelAndView(charge);
-			else
-				try {
+			if (charge.getMonth() == 0 && charge.getYear() == 0) {
+				result = this.createEditModelAndView(charge, "commit.yearsAndMothns");
+				return result;
+			} else {
 
-					this.chargeService.save(charge);
-					result = new ModelAndView("redirect:listAll.do");
+				if (binding.hasErrors())
+					result = this.createEditModelAndView(charge);
+				else
+					try {
 
-				} catch (Throwable oops) {
-					result = this.createEditModelAndView(charge, "commit.error");
-				}
+						this.chargeService.save(charge);
+						result = new ModelAndView("redirect:listAll.do");
 
-			return result;
+					} catch (Throwable oops) {
+						result = this.createEditModelAndView(charge, "commit.error");
+					}
+
+				return result;
+			}
 		} catch (Throwable oops) {
 			return new ModelAndView("redirect:/warden/charge/listAll");
 		}
-	}
 
+	}
 	@RequestMapping(value = "/charge/deleteCharge", method = RequestMethod.GET)
 	public ModelAndView deleteCharge(@RequestParam(required = false) String chargeId) {
 

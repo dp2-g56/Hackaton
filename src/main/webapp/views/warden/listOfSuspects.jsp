@@ -84,7 +84,7 @@ function show(id){
 		
 		
 		
-		<display:column> 
+		<display:column titleKey="prisoner.addChargesColum" > 
 		
 		<jstl:if test="${row.charges.size() < possibleCharges.size()}">	
 		
@@ -119,7 +119,7 @@ function show(id){
 										</select>
 									</td>
 									<td>
-										<input type="submit" name="save" value="<spring:message code="warden.edit" />"/> 
+										<input type="submit" name="save" value="<spring:message code="warden.addCharge" />"/> 
 									</td>
 								</tr>
 							</table>
