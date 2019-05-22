@@ -5,23 +5,25 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import repositories.EducationRecordRepository;
 import domain.EducationRecord;
 import domain.SocialWorker;
-import repositories.EducationRecordRepository;
 
 @Service
 @Transactional
 public class EducationRecordService {
 
 	@Autowired
-	private EducationRecordRepository educationRecordRepository;
+	private EducationRecordRepository	educationRecordRepository;
 
 	@Autowired
-	private SocialWorkerService socialProfileService;
+	private SocialWorkerService			socialProfileService;
+
 
 	public EducationRecord create() {
 
@@ -53,12 +55,15 @@ public class EducationRecordService {
 		this.educationRecordRepository.delete(educationRecord);
 	}
 
-	public EducationRecord getEducationRecordOfLoggedSocialWorker(int educationRecordId) {
+	public EducationRecord getEducationRecordOfLoggedSocialWorker(String educationRecordId) {
 		SocialWorker socialWorker = this.socialProfileService.loggedSocialWorker();
-		EducationRecord educationRecord = this.educationRecordRepository
-				.getEducationReportOfSocialWorker(socialWorker.getId(), educationRecordId);
+
+		Assert.isTrue(StringUtils.isNumeric(educationRecordId));
+		int educationRecordIdInt = Integer.parseInt(educationRecordId);
+
+		EducationRecord educationRecord = this.educationRecordRepository.findOne(educationRecordIdInt);
 		Assert.notNull(educationRecord);
+		Assert.isTrue(socialWorker.getCurriculum().getEducationRecords().contains(educationRecord));
 		return educationRecord;
 	}
-
 }

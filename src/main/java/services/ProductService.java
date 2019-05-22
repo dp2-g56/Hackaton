@@ -48,6 +48,10 @@ public class ProductService {
 		return this.productRepository.getProductsFinalMode();
 	}
 
+	public List<Product> getProductsFinalModeOfSalesMen() {
+		return this.productRepository.getProductsFinalModeOfSalesMen();
+	}
+
 	public List<Product> getProductsFinalModeWithStockBySalesMan(int salesManId) {
 		return this.productRepository.getProductsFinalModeWithStockBySalesMan(salesManId);
 	}
@@ -128,9 +132,17 @@ public class ProductService {
 	public void updateProduct(Product pro) {
 		SalesMan salesman = this.salesManService.loggedSalesMan();
 		Configuration configuration = this.configurationService.getConfiguration();
+		Assert.notNull(this.productRepository.getProductInDraftModeOfLoggedSalesMan(salesman.getId(), pro.getId()));
 		Assert.isTrue(configuration.getTypeProducts().contains(pro.getType()) && salesman.getProducts().contains(pro));
 		this.save(pro);
+	}
 
+	public void restockProduct(Product pro) {
+		SalesMan salesman = this.salesManService.loggedSalesMan();
+		Configuration configuration = this.configurationService.getConfiguration();
+		Assert.notNull(this.productRepository.getProductInFinalModeOfLoggedSalesMan(salesman.getId(), pro.getId()));
+		Assert.isTrue(configuration.getTypeProducts().contains(pro.getType()) && salesman.getProducts().contains(pro));
+		this.save(pro);
 	}
 
 	public void delete(Product product) {
@@ -202,6 +214,20 @@ public class ProductService {
 		prisoner.setPoints(totalPointsOfP);
 		prisoner.setProducts(productsOfP);
 		this.prisonerService.save(prisoner);
+	}
+
+	public Product getProductInDraftModeOfLoggedSalesMan(Integer productId) {
+		SalesMan salesMan = this.salesManService.loggedSalesMan();
+		Product product = this.productRepository.getProductInDraftModeOfLoggedSalesMan(salesMan.getId(), productId);
+		Assert.notNull(product);
+		return product;
+	}
+
+	public Product getProductInFinalModeOfLoggedSalesMan(Integer productId) {
+		SalesMan salesMan = this.salesManService.loggedSalesMan();
+		Product product = this.productRepository.getProductInFinalModeOfLoggedSalesMan(salesMan.getId(), productId);
+		Assert.notNull(product);
+		return product;
 	}
 
 }

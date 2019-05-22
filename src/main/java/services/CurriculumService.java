@@ -14,36 +14,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import repositories.CurriculumRepository;
+import utilities.RandomString;
 import domain.Curriculum;
 import domain.EducationRecord;
 import domain.MiscellaneousRecord;
 import domain.PersonalRecord;
 import domain.ProfessionalRecord;
 import domain.SocialWorker;
-import repositories.CurriculumRepository;
-import utilities.RandomString;
 
 @Service
 @Transactional
 public class CurriculumService {
 
 	@Autowired
-	private CurriculumRepository curriculumRepository;
+	private CurriculumRepository		curriculumRepository;
 
 	@Autowired
-	private PersonalRecordService personalRecordService;
+	private PersonalRecordService		personalRecordService;
 
 	@Autowired
-	private SocialWorkerService socialWorkerService;
+	private SocialWorkerService			socialWorkerService;
 
 	@Autowired
-	private EducationRecordService educationRecordService;
+	private EducationRecordService		educationRecordService;
 
 	@Autowired
-	private ProfessionalRecordService professionalRecordService;
+	private ProfessionalRecordService	professionalRecordService;
 
 	@Autowired
-	private MiscellaneousRecordService miscellaneousRecordService;
+	private MiscellaneousRecordService	miscellaneousRecordService;
+
 
 	public Curriculum create() {
 
@@ -82,8 +83,9 @@ public class CurriculumService {
 		date1 = df_in.format(date);
 		res = res + date1 + "-" + gen;
 
-		if (tickers.contains(res))
+		if (tickers.contains(res)) {
 			return this.generateTicker();
+		}
 		return res;
 	}
 
@@ -128,8 +130,7 @@ public class CurriculumService {
 		Curriculum curriculum = logguedSocialWorker.getCurriculum();
 
 		Assert.notNull(curriculum);
-		Assert.isTrue(educationRecord.getId() != 0
-				&& logguedSocialWorker.getCurriculum().getEducationRecords().contains(educationRecord));
+		Assert.isTrue(educationRecord.getId() != 0 && logguedSocialWorker.getCurriculum().getEducationRecords().contains(educationRecord));
 
 		this.educationRecordService.save(educationRecord);
 
@@ -164,8 +165,7 @@ public class CurriculumService {
 		Curriculum curriculum = logguedSocialWorker.getCurriculum();
 
 		Assert.notNull(curriculum);
-		Assert.isTrue(professionalRecord.getId() != 0
-				&& logguedSocialWorker.getCurriculum().getProfessionalRecords().contains(professionalRecord));
+		Assert.isTrue(professionalRecord.getId() != 0 && logguedSocialWorker.getCurriculum().getProfessionalRecords().contains(professionalRecord));
 
 		this.professionalRecordService.save(professionalRecord);
 
@@ -200,8 +200,7 @@ public class CurriculumService {
 		Curriculum curriculum = logguedSocialWorker.getCurriculum();
 
 		Assert.notNull(curriculum);
-		Assert.isTrue(miscellaneousRecord.getId() != 0
-				&& logguedSocialWorker.getCurriculum().getMiscellaneousRecords().contains(miscellaneousRecord));
+		Assert.isTrue(miscellaneousRecord.getId() != 0 && logguedSocialWorker.getCurriculum().getMiscellaneousRecords().contains(miscellaneousRecord));
 
 		this.miscellaneousRecordService.save(miscellaneousRecord);
 
