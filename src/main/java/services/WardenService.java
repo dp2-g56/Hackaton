@@ -508,4 +508,9 @@ public class WardenService {
 	public List<TypeProduct> getProductTypesAssigned() {
 		return this.wardenRepository.getProductTypesAssigned();
 	}
+
+	public Charge getSuspiciousCharge() {
+		return this.wardenRepository.getSuspiciousCharge();
+	}
+
 }
