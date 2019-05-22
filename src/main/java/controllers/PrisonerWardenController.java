@@ -107,9 +107,15 @@ public class PrisonerWardenController extends AbstractController {
 		try {
 			List<Prisoner> prisoners = this.prisonerService.getIncarceratedPrisoners();
 
+			List<Charge> possibleCharges = this.chargeService.findAll();
+
+			Charge charge = this.wardenService.getSuspiciousCharge();
+
+			possibleCharges.remove(charge);
+
 			result = new ModelAndView("prisoner/warden/listSuspects");
 			result.addObject("prisoners", prisoners);
-			result.addObject("possibleCharges", this.chargeService.findAll());
+			result.addObject("possibleCharges", possibleCharges);
 
 		} catch (Throwable oops) {
 			result = new ModelAndView("redirect:/");

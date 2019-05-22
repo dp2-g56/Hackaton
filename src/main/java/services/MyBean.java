@@ -2,6 +2,7 @@
 package services;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ public class MyBean {
 				this.prisonerService.save(p);
 			}
 
-		System.out.println("Log: Checked sucesfully the list of prissoner to get free");
+		Date date = new Date();
+
+		System.out.println("Log: " + date + " Checked sucesfully the list of prissoner to get free");
 	}
 }
