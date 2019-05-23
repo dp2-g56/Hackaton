@@ -59,8 +59,8 @@
 		<property name="finderResult" value="10"/>
 
 		
-		<property name="welcomeMessageEnglish" value="Welcome to Acme rookie !We´re IT rookie´s favourite job marketplace!" />
-		<property name="welcomeMessageSpanish" value="¡Bienvenidos a Acme Rookie ! ¡Somos el mercado de trabajo favorito de los profesionales de las TICs!" />
+		<property name="welcomeMessageEnglish" value="Welcome to Acme Alcatraz! Where your liberty ends" />
+		<property name="welcomeMessageSpanish" value="¡Bienvenidos a Acme Alcatraz! Donde vuestra libertad acaba" />
 		
 		<property name="systemName" value="Acme Alcatraz" />
 		<property name="imageURL" value="https://i.imgur.com/RktieYk.jpg" />
