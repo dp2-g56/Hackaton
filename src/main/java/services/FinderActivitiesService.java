@@ -88,11 +88,11 @@ public class FinderActivitiesService {
 			filter = this.finderActivitiesRepository.filterByKeyWord("%" + finder.getKeyWord() + "%");
 			res.retainAll(filter);
 		}
-		if (!finder.getMaxDate().equals(null)) {
+		if (finder.getMaxDate() != null) {
 			filter = this.finderActivitiesRepository.filterByDateMax(finder.getMaxDate());
 			res.retainAll(filter);
 		}
-		if (!finder.getMinDate().equals(null)) {
+		if (finder.getMinDate() != null) {
 			filter = this.finderActivitiesRepository.filterByDateMin(finder.getMinDate());
 			res.retainAll(filter);
 		}
