@@ -63,7 +63,7 @@
 		<property name="welcomeMessageSpanish" value="¡Bienvenidos a Acme Rookie ! ¡Somos el mercado de trabajo favorito de los profesionales de las TICs!" />
 		
 		<property name="systemName" value="Acme Alcatraz" />
-		<property name="imageURL" value="https://i.imgur.com/PX5WdRH.png" />
+		<property name="imageURL" value="https://i.imgur.com/RktieYk.jpg" />
 
 		
 	</bean>

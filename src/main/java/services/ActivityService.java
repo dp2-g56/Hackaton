@@ -17,6 +17,7 @@ import org.springframework.validation.Validator;
 import domain.Activity;
 import domain.FinderActivities;
 import domain.Prisoner;
+import domain.Request;
 import domain.SocialWorker;
 import repositories.ActivityRepository;
 
@@ -29,6 +30,9 @@ public class ActivityService {
 
 	@Autowired
 	private SocialWorkerService socialWorkerService;
+
+	@Autowired
+	private RequestService requestService;
 
 	@Autowired
 	private Validator validator;
@@ -117,6 +121,11 @@ public class ActivityService {
 
 	public void deleteActivity(Activity activity, SocialWorker sw) {
 		Assert.isTrue(sw.getActivities().contains(activity));
+		List<Request> lr = activity.getRequests();
+		for (int i = 0; i < lr.size(); i++) {
+			lr.get(i).setPrisoner(null);
+			this.requestService.delete(lr.get(i));
+		}
 		sw.getActivities().remove(activity);
 		this.socialWorkerService.save(sw);
 		this.delete(activity);

@@ -147,6 +147,8 @@ public class ActivityController extends AbstractController {
 			Activity activity = this.activityService.findOne(activityIdT);
 			SocialWorker sw = this.socialWorkerService.loggedSocialWorker();
 
+			Assert.isTrue(!activity.getIsFinalMode());
+
 			try {
 				this.activityService.deleteActivity(activity, sw);
 
