@@ -17,6 +17,10 @@
 		<%@taglib prefix="jstl"	uri="http://java.sun.com/jsp/jstl/core"%>
 
 <div>
+	<a href="#"><img src="${imageURL}" height= 150px width= 500px alt="Acme Prision Co., Inc." /></a>
+</div>
+
+<div>
 	<ul id="jMenu">
 		<!-- Do not forget the "fNiv" class for the first level links !! -->
 		<security:authorize access="hasRole('WARDEN')">
