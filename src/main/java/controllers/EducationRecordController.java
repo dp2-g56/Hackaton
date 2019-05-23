@@ -3,7 +3,6 @@ package controllers;
 
 import javax.validation.Valid;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
@@ -15,24 +14,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import domain.Curriculum;
-import domain.EducationRecord;
-import domain.SocialWorker;
 import security.LoginService;
 import services.CurriculumService;
 import services.EducationRecordService;
 import services.SocialWorkerService;
+import domain.Curriculum;
+import domain.EducationRecord;
+import domain.SocialWorker;
 
 @Controller
 @RequestMapping("/curriculum")
 public class EducationRecordController extends AbstractController {
 
 	@Autowired
-	private EducationRecordService educationRecordService;
+	private EducationRecordService	educationRecordService;
 	@Autowired
-	private SocialWorkerService socialWorkerService;
+	private SocialWorkerService		socialWorkerService;
 	@Autowired
-	private CurriculumService curriculumService;
+	private CurriculumService		curriculumService;
+
 
 	// Constructor
 	public EducationRecordController() {
@@ -45,8 +45,7 @@ public class EducationRecordController extends AbstractController {
 		ModelAndView result;
 
 		try {
-			SocialWorker socialWorker = this.socialWorkerService
-					.getSocialWorkerByUsername(LoginService.getPrincipal().getUsername());
+			SocialWorker socialWorker = this.socialWorkerService.getSocialWorkerByUsername(LoginService.getPrincipal().getUsername());
 			Curriculum curriculum = socialWorker.getCurriculum();
 			Assert.notNull(curriculum);
 
@@ -62,16 +61,13 @@ public class EducationRecordController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/socialWorker/editEducationRecord", method = RequestMethod.GET)
-	public ModelAndView editEducationRecord(@RequestParam String educationRecordId) {
+	public ModelAndView editEducationRecord(@RequestParam(required = false) String educationRecordId) {
 
 		ModelAndView result;
 
 		try {
-			Assert.isTrue(StringUtils.isNumeric(educationRecordId));
-			Integer educationRecordIdInt = Integer.parseInt(educationRecordId);
 
-			EducationRecord educationRecord = this.educationRecordService
-					.getEducationRecordOfLoggedSocialWorker(educationRecordIdInt);
+			EducationRecord educationRecord = this.educationRecordService.getEducationRecordOfLoggedSocialWorker(educationRecordId);
 			result = this.createEditModelAndView(educationRecord);
 		} catch (Throwable oops) {
 			result = new ModelAndView("redirect:show.do");
@@ -87,29 +83,30 @@ public class EducationRecordController extends AbstractController {
 
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
-		if (educationRecord.getEndDateStudy() != null && educationRecord.getStartDateStudy() != null
-				&& educationRecord.getStartDateStudy().after(educationRecord.getEndDateStudy()))
-			if (locale.contains("ES"))
-				binding.addError(new FieldError("educationRecord", "startDate", educationRecord.getStartDateStudy(),
-						false, null, null, "La fecha de fin no puede ser anterior a la de inicio"));
-			else
-				binding.addError(new FieldError("educationRecord", "startDate", educationRecord.getStartDateStudy(),
-						false, null, null, "The end date can not be before the start date"));
+		if (educationRecord.getEndDateStudy() != null && educationRecord.getStartDateStudy() != null && educationRecord.getStartDateStudy().after(educationRecord.getEndDateStudy())) {
+			if (locale.contains("ES")) {
+				binding.addError(new FieldError("educationRecord", "endDateStudy", educationRecord.getEndDateStudy(), false, null, null, "La fecha de fin no puede ser anterior a la de inicio"));
+			} else {
+				binding.addError(new FieldError("educationRecord", "endDateStudy", educationRecord.getEndDateStudy(), false, null, null, "The end date can not be before the start date"));
+			}
+		}
 
-		if (binding.hasErrors())
+		if (binding.hasErrors()) {
 			result = this.createEditModelAndView(educationRecord);
-		else
+		} else {
 			try {
-				if (educationRecord.getId() == 0)
+				if (educationRecord.getId() == 0) {
 					this.curriculumService.addEducationRecord(educationRecord);
-				else
+				} else {
 					this.curriculumService.updateEducationRecord(educationRecord);
+				}
 
 				result = new ModelAndView("redirect:show.do");
 
 			} catch (Throwable oops) {
 				result = this.createEditModelAndView(educationRecord, "commit.error");
 			}
+		}
 		return result;
 	}
 
