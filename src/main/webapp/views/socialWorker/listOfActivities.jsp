@@ -48,8 +48,28 @@
 						code="activity.assistants" /></a>
 		</display:column>
 		
-	
+		<display:column>
+			<jstl:if test="${row.isFinalMode == false}">
+				<spring:url var="edit"
+					value="/activity/socialworker/edit.do">
+					<spring:param name="activityId" value="${row.id}" />
+				</spring:url>
+				<a href="${edit}"> <spring:message
+						code="activity.edit" /></a>
+			</jstl:if>
+		</display:column>
+		
+		<display:column>
+				<spring:url var="delete"
+					value="/activity/socialworker/delete.do">
+					<spring:param name="activityId" value="${row.id}" />
+				</spring:url>
+				<a href="${delete}" onclick="return confirm('<spring:message code="delete.confirm" />')"> <spring:message
+						code="activity.delete" /></a>
+		</display:column>
 
 	</display:table>
+	
+	<acme:cancel url="/activity/socialworker/create.do" code="activity.create" /> 
 
 </security:authorize>
