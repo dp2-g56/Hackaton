@@ -1,3 +1,4 @@
+
 package repositories;
 
 import java.util.List;
@@ -12,4 +13,7 @@ public interface RequestRepository extends JpaRepository<Request, Integer> {
 
 	@Query("select distinct(r) from SocialWorker s join s.activities a join a.requests r where s=?1 and a.id=?2")
 	public List<Request> getRequestsFromSocialWorker(SocialWorker socialWorker, Integer activityId);
+
+	@Query("select r from Prisoner p join p.requests r join r.activity a where r.status = 'APPROVED' AND a.realizationDate <= NOW()")
+	public List<Request> requestToContabilicePoints();
 }
