@@ -42,45 +42,29 @@ public class FinderActivitiesController extends AbstractController {
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView list() {
-
-		Prisoner prisoner = this.prisonerService.loggedPrisoner();
-
-		ModelAndView result = new ModelAndView("finderActivities/prisoner/list");
+		ModelAndView result;
 
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
-
-		List<Activity> activities = this.finderActivitiesService.getResults(prisoner.getFinderActivities());
-
-		result.addObject("activities", activities);
-		result.addObject("locale", locale);
-		result.addObject("map", this.activityService.getNumberOfApprobedRequestPerActivity(activities));
-
-		return result;
-
-	}
-
-	// Edit -----------------------------------------------------------------
-
-	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public ModelAndView editFinder() {
-		ModelAndView res;
-
-		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
-
 		try {
-
 			Prisoner prisoner = this.prisonerService.loggedPrisoner();
+			result = new ModelAndView("finderActivities/prisoner/list");
+
+			List<Activity> activities = this.finderActivitiesService.getResults(prisoner.getFinderActivities());
 
 			FinderActivities finder = prisoner.getFinderActivities();
 
 			Assert.notNull(finder);
-			res = this.createEditModelAndView(finder);
-		} catch (Throwable oops) {
-			res = new ModelAndView("redirect:list.do");
+			result = this.createEditModelAndView(finder);
+
+			result.addObject("activities", activities);
+			result.addObject("locale", locale);
+			result.addObject("map", this.activityService.getNumberOfApprobedRequestPerActivity(activities));
+
+		} catch (Exception e) {
+			result = new ModelAndView("redirect:/");
 		}
 
-		res.addObject("locale", locale);
-		return res;
+		return result;
 
 	}
 
@@ -120,7 +104,7 @@ public class FinderActivitiesController extends AbstractController {
 	protected ModelAndView createEditModelAndView(FinderActivities finder, String messageCode) {
 		ModelAndView result;
 
-		result = new ModelAndView("finderActivities/prisoner/edit");
+		result = new ModelAndView("finderActivities/prisoner/list");
 
 		result.addObject("finderActivities", finder);
 		result.addObject("message", messageCode);
