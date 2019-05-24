@@ -8,6 +8,42 @@
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 <%@ taglib prefix="acme" tagdir="/WEB-INF/tags"%>
 
+<script type="text/javascript">
+
+function isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+
+
+  function phonenumberval() {
+	  
+  var phoneNumber;
+  phoneNumber = document.getElementById("phoneNumber").value;
+
+		
+  var res = false;
+ 
+  if (/(\+[0-9]{1,3})(\([0-9]{1,3}\))([0-9]{4,})$/.test(phoneNumber)) {
+    res = true;
+  }
+  if (/(\+[0-9]{3})([0-9]{4,})$/.test(phoneNumber)) {
+	    res = true;
+  }
+  if(isEmpty(phoneNumber)){
+	  alert("<spring:message code="socialWorker.alertSave" />");
+  }
+  if(res == false && isEmpty(phoneNumber) == false) {
+	  
+    alert("<spring:message code="socialWorker.confirmationPhone"/>");
+  }
+ 
+}
+</script>
+
 <security:authorize access="hasRole('SOCIALWORKER')">
 
 	<form:form modelAttribute="personalRecord" action="curriculum/socialWorker/editPersonalRecord.do">
@@ -40,7 +76,7 @@
 		
 		<!-- Buttons -->
 
-		<input type="submit" name="save" value="<spring:message code="button.save" />"/> 
+		<input type="submit" name="save" value="<spring:message code="button.save" />" onclick="phonenumberval();"/> 
 		<acme:cancel url="/curriculum/socialWorker/show.do" code="button.cancel" /> 
 
 	</form:form>

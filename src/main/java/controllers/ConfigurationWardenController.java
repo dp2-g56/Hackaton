@@ -162,7 +162,7 @@ public class ConfigurationWardenController extends AbstractController {
 				result = this.createEditModelAndView(configuration);
 			else
 				try {
-					this.configurationService.save(configurationR);
+					this.configurationService.saveConfiguration(configurationR);
 					result = new ModelAndView("redirect:list.do");
 				} catch (Throwable oops) {
 					result = this.createEditModelAndView(configuration, "warden.commit.error");
@@ -243,11 +243,6 @@ public class ConfigurationWardenController extends AbstractController {
 			int dataTypeInt = Integer.parseInt(dataTypeId);
 
 			ModelAndView result;
-
-			TypeProduct tp = this.typeProductService.findOne(dataTypeInt);
-			List<TypeProduct> lt = this.wardenService.getProductTypesAssigned();
-
-			Assert.isTrue(!lt.contains(tp));
 
 			this.configurationService.deleteTypeProducts(dataTypeInt);
 
