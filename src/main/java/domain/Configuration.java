@@ -9,6 +9,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
@@ -30,6 +31,7 @@ public class Configuration extends DomainEntity {
 	private String imageURL;
 	private Integer timeFinderActivities;
 
+	@NotNull
 	@Valid
 	public Integer getFinderResult() {
 		return this.finderResult;
@@ -57,6 +59,7 @@ public class Configuration extends DomainEntity {
 		this.typeProducts = typeProducts;
 	}
 
+	@NotNull
 	@NotBlank
 	public String getSpainTelephoneCode() {
 		return this.spainTelephoneCode;
@@ -103,6 +106,7 @@ public class Configuration extends DomainEntity {
 		this.imageURL = imageURL;
 	}
 
+	@NotNull
 	@Valid
 	public Integer getMinFinderResults() {
 		return this.minFinderResults;
@@ -112,6 +116,7 @@ public class Configuration extends DomainEntity {
 		this.minFinderResults = minFinderResults;
 	}
 
+	@NotNull
 	@Valid
 	public Integer getMaxFinderResults() {
 		return this.maxFinderResults;
@@ -121,6 +126,7 @@ public class Configuration extends DomainEntity {
 		this.maxFinderResults = maxFinderResults;
 	}
 
+	@NotNull
 	@Valid
 	public Integer getTimeFinderPrisoners() {
 		return this.timeFinderPrisoners;
@@ -130,6 +136,7 @@ public class Configuration extends DomainEntity {
 		this.timeFinderPrisoners = timeFinderPrisoners;
 	}
 
+	@NotNull
 	@Valid
 	public Integer getTimeFinderActivities() {
 		return this.timeFinderActivities;
