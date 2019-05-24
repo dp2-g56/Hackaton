@@ -40,7 +40,7 @@ public class CountPointsSchedulingTask {
 				this.prisonerService.save(prisoner);
 				this.requestService.save(r);
 
-				System.out.println("Log: To prisoner " + prisoner + ": Added the activity points sucessfully");
+				System.out.println("Log: To prisoner " + prisoner.getName() + ": Added the activity points sucessfully");
 
 			}
 			Date date = new Date();

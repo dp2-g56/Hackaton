@@ -129,6 +129,7 @@
 				<ul>
 					<li class="arrow"></li>
 						<li><a href="anonymous/visitor/create.do"><spring:message code="master.page.registerVisitor" /> </a></li>
+						<li><a href="anonymous/socialWorker/create.do"><spring:message code="master.page.socialWorkerCreate" /> </a></li>
 				</ul></li>
 						
 		</security:authorize>
@@ -136,7 +137,7 @@
 		<security:authorize access="isAnonymous()">
 	
 		<li><a href="anonymous/prisoner/list.do"><spring:message code="master.page.listOfPrisoners" /> </a></li>
-		<li><a href="anonymous/socialWorker/create.do"><spring:message code="master.page.socialWorkerCreate" /> </a></li>
+		
 		</security:authorize>
 		
 		<security:authorize access="permitAll">

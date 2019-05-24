@@ -224,4 +224,7 @@ public class RequestService {
 		return this.requestRepository.requestToContabilicePoints();
 	}
 
+	public List<Request> getAprovedRequestByPrisoner(Activity activity) {
+		return this.requestRepository.getAprovedRequestByPrisoner(activity);
+	}
 }
