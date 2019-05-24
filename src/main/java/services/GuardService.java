@@ -244,4 +244,8 @@ public class GuardService {
 
 		return result;
 	}
+
+	public void flush() {
+		this.guardRepository.flush();
+	}
 }

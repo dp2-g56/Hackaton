@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import services.ChargeService;
 import services.PrisonerService;
+import services.WardenService;
 import domain.Charge;
 import domain.Prisoner;
 
@@ -30,6 +31,9 @@ public class WardenController extends AbstractController {
 
 	@Autowired
 	private ChargeService	chargeService;
+
+	@Autowired
+	private WardenService	wardenService;
 
 
 	public WardenController() {
@@ -160,6 +164,10 @@ public class WardenController extends AbstractController {
 
 		ModelAndView result;
 		try {
+			if (charge.getId() == 0)
+				Assert.isTrue(this.wardenService.loggedAsWardenBoolean());
+			else
+				Assert.isTrue(charge.getIsDraftMode());
 
 			if (charge.getMonth() == 0 && charge.getYear() == 0) {
 				result = this.createEditModelAndView(charge, "commit.yearsAndMothns");
