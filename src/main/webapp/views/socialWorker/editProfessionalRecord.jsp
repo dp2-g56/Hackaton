@@ -30,11 +30,11 @@
 		<br />
 		
 		<!-- StartDateStudy -->
-		<acme:datebox code="educationRecord.startDateStudy" path="startDate"/>
+		<acme:datebox2 code="educationRecord.startDateStudy" path="startDate"/>
 		<br />
 		
 		<!-- EndDateStudy -->
-		<acme:datebox code="educationRecord.endDateStudy" path="endDate"/>
+		<acme:datebox2 code="educationRecord.endDateStudy" path="endDate"/>
 		<br />
 		
 		
