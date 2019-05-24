@@ -48,7 +48,7 @@
 				<ref bean="type2" />
 				<ref bean="type3" />
 				<ref bean="type4" />
-				
+				<ref bean="type5" />
 			</list>
 		</property>
 		
@@ -2354,6 +2354,11 @@
 				<bean id="type4" class="domain.TypeProduct">
 						<property name="typeProductEN" value="Sewing" />
 						<property name="typeProductES" value="Costura" />
+				</bean>
+				
+				<bean id="type5" class="domain.TypeProduct">
+						<property name="typeProductEN" value="Games" />
+						<property name="typeProductES" value="Juegos" />
 				</bean>
 				
 			
