@@ -356,7 +356,7 @@ public class ProductServiceTest extends AbstractTest {
 			 * negative stock
 			 **/
 			{
-				"salesMan1", super.getEntityId("product1"), -10, ConstraintViolationException.class
+				"salesMan1", super.getEntityId("product1"), -10, IllegalArgumentException.class
 			}
 		};
 
