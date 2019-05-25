@@ -27,12 +27,20 @@ public class ListProductPrisonerServiceTest extends AbstractTest {
 	@Test
 	public void driverListProductsPrisoner() {
 
+		/**
+		 * 
+		 * Number of test: 2
+		 * Number of restrictions + positive test: 3
+		 * Coverage: 100%
+		 * 
+		 * */
+
 		Object testingData[][] = {
 			{
-				//Positive test, create a box
+				//Positive test, Logged as prisoner
 				"prisoner1", null
 			}, {
-				//Negative test, no name
+				//Negative test, logged as warden
 				"warden1", IllegalArgumentException.class
 			}
 		};

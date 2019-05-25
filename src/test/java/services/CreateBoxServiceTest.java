@@ -27,6 +27,14 @@ public class CreateBoxServiceTest extends AbstractTest {
 	@Test
 	public void driverCreateBox() {
 
+		/**
+		 * 
+		 * Number of test: 4
+		 * Number of restrictions + positive test: 3
+		 * Coverage: 100%
+		 * 
+		 * */
+
 		Object testingData[][] = {
 			{
 				//Positive test, create a box

@@ -33,6 +33,14 @@ public class AddChargeWardenServiceTest extends AbstractTest {
 	@Test
 	public void driverAddCharge() {
 
+		/**
+		 * 
+		 * Number of test: 4
+		 * Number of restrictions: 3 + 1 positive test
+		 * Coverture: 100%
+		 * 
+		 * */
+
 		Object testingData[][] = {
 			{
 				//Positive test, add a final mode charge to prisoner

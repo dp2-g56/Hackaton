@@ -24,6 +24,14 @@ public class DeleteGuardServiceTest extends AbstractTest {
 	@Test
 	public void driverRegisterGuard() {
 
+		/**
+		 * 
+		 * Number of test: 3
+		 * Number of restrictions + positive test: 2
+		 * Coverage: 100%
+		 * 
+		 * */
+
 		Object testingData[][] = {
 			{
 				//Positive test, delete your usserAccount
