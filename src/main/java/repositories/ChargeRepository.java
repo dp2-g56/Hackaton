@@ -22,4 +22,7 @@ public interface ChargeRepository extends JpaRepository<Charge, Integer> {
 	@Query("select c from Charge c where c NOT IN (select c.id from Prisoner p join p.charges c where p = ?1)")
 	public List<Charge> getChargesNotAssignedToPrisoner(Prisoner prisoner);
 
+	@Query("select a from Charge a where a.titleEnglish = ?1")
+	public List<Charge> getCharge(String charge);
+
 }
