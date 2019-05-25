@@ -46,33 +46,41 @@ public class ProductController extends AbstractController {
 
 	// Listar Visitantes del prisionero logueado
 	@RequestMapping(value = "/prisoner/list", method = RequestMethod.GET)
-	public ModelAndView listPrisoner(@RequestParam int salesmanId) {
+	public ModelAndView listPrisoner(@RequestParam(required = false) String salesmanId) {
 
 		ModelAndView result;
 		List<Product> products;
 
-		SalesMan salesMan = this.salesManService.findOne(salesmanId);
+		try {
 
-		if (salesMan == null)
-			return this.listSalesManPrisoner();
+			Assert.isTrue(StringUtils.isNumeric(salesmanId));
+			int salesmanIdInt = Integer.parseInt(salesmanId);
 
-		products = this.productService.getProductsFinalModeWithStockBySalesMan(salesmanId);
+			SalesMan salesMan = this.salesManService.findOne(salesmanIdInt);
 
-		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+			if (salesMan == null) {
+				return this.listSalesManPrisoner();
+			}
 
-		Prisoner loggedPrisoner = this.prisonerService.loggedPrisoner();
-		int points = loggedPrisoner.getPoints();
+			products = this.productService.getProductsFinalModeWithStockBySalesMan(salesmanIdInt);
 
-		result = new ModelAndView("anonymous/product/list");
-		result.addObject("products", products);
-		result.addObject("points", points);
-		result.addObject("locale", locale);
-		result.addObject("prisoner", true);
-		result.addObject("requestURI", "product/prisoner/list.do");
+			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+
+			Prisoner loggedPrisoner = this.prisonerService.loggedPrisoner();
+			int points = loggedPrisoner.getPoints();
+
+			result = new ModelAndView("anonymous/product/list");
+			result.addObject("products", products);
+			result.addObject("points", points);
+			result.addObject("locale", locale);
+			result.addObject("prisoner", true);
+			result.addObject("requestURI", "product/prisoner/list.do");
+		} catch (Throwable oops) {
+			result = this.listSalesManPrisoner();
+		}
 
 		return result;
 	}
-
 	// Listar Visitantes del prisionero logueado
 	@RequestMapping(value = "/anonymous/list", method = RequestMethod.GET)
 	public ModelAndView listAnonymous() {
