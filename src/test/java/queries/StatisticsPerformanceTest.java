@@ -412,4 +412,19 @@ public class StatisticsPerformanceTest extends AbstractTest {
 
 	}
 
+	@Test
+	public void getVisitorsMostVisitsToAPrisonerTest2() {
+		this.log.info("... statistics ...");
+
+		EntityManager em = this.emf.createEntityManager();
+		em.getTransaction().begin();
+
+		for (Integer c = 1000; c > 0; c--) {
+			this.wardenRepository.getVisitorsMostVisitsToAPrisoner2();
+		}
+		em.getTransaction().commit();
+		em.close();
+
+	}
+
 }

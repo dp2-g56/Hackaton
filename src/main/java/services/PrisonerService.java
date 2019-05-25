@@ -373,4 +373,9 @@ public class PrisonerService {
 	public List<Prisoner> getPrisonersToBeFree() {
 		return this.prisonerRepository.getPrisonersToBeFree();
 	}
+
+	public void flush() {
+		this.prisonerRepository.flush();
+
+	}
 }

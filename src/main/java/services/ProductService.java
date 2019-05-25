@@ -140,8 +140,10 @@ public class ProductService {
 	public void restockProduct(Product pro) {
 		SalesMan salesman = this.salesManService.loggedSalesMan();
 		Configuration configuration = this.configurationService.getConfiguration();
-		Assert.notNull(this.productRepository.getProductInFinalModeOfLoggedSalesMan(salesman.getId(), pro.getId()));
+		Product product = this.productRepository.getProductInFinalModeOfLoggedSalesMan(salesman.getId(), pro.getId());
+		Assert.notNull(product);
 		Assert.isTrue(configuration.getTypeProducts().contains(pro.getType()) && salesman.getProducts().contains(pro));
+		Assert.isTrue(pro.getStock() >= product.getStock());
 		this.save(pro);
 	}
 
@@ -228,6 +230,14 @@ public class ProductService {
 		Product product = this.productRepository.getProductInFinalModeOfLoggedSalesMan(salesMan.getId(), productId);
 		Assert.notNull(product);
 		return product;
+	}
+
+	public List<Product> findAll() {
+		return this.productRepository.findAll();
+	}
+
+	public void flush() {
+		this.productRepository.flush();
 	}
 
 }
