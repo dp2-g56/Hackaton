@@ -1185,6 +1185,14 @@
 				<property name="month" value="1" />
 				<property name="isDraftMode" value="False" />
 		</bean>
+		
+			<bean id="warCrime" class="domain.Charge">
+				<property name="titleSpanish" value="Crimenes de guerra" />
+				<property name="titleEnglish" value="War crime" />
+				<property name="year" value="40" />
+				<property name="month" value="0" />
+				<property name="isDraftMode" value="True" />
+		</bean>
 	
 	<!-- FINDER OF ACTIVITIES -->
 		<!-- FINDER1 -->

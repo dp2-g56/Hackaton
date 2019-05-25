@@ -218,7 +218,7 @@ public class SocialProfileController extends AbstractController {
 			result.addObject("guard", guardActor);
 		} else
 			try {
-				this.guardService.saveGuard(guardActor);
+				this.guardService.saveEdit(guardActor);
 				result = new ModelAndView("redirect:/authenticated/showProfile.do");
 			} catch (Throwable oops) {
 				result = new ModelAndView("authenticated/editProfile");
