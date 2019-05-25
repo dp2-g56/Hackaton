@@ -109,19 +109,11 @@ public class ActivityController extends AbstractController {
 			SocialWorker sw = this.socialWorkerService.loggedSocialWorker();
 
 			a = this.activityService.reconstruct(activity, binding);
-
 			if (binding.hasErrors())
 				result = this.createEditModelAndView(activity);
 			else
 				try {
-					if (a.getId() == 0) {
-						Activity saved = this.activityService.save(a);
-						List<Activity> la = sw.getActivities();
-						la.add(saved);
-						sw.setActivities(la);
-						this.socialWorkerService.save(sw);
-					} else
-						this.activityService.save(activity);
+					this.activityService.saveActivity(activity);
 
 					result = new ModelAndView("redirect:list.do");
 
