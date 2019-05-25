@@ -20,7 +20,8 @@ public class Warden extends Actor {
 	}
 
 	@NotBlank
-	@Pattern(regexp = "[\\w.%-]+\\@[-.\\w]+\\.[A-Za-z]{2,4}|[\\w.%-]+\\<+[\\w.%-]+\\@[-.\\w]+\\.[A-Za-z]{2,4}\\>|[\\w.%-]+\\<[\\w.%-]+\\@+\\>|[\\w.%-]+\\@+|[\\w.%-]+\\<+[\\w.%-]+\\@+\\>")
+	@Pattern(regexp = "[\\w.%-]+\\@[-.\\w]+\\.[A-Za-z]{2,4}|[\\w.%-]+\\<+[\\w.%-]+\\@[-.\\w]+\\.[A-Za-z]{2,4}\\>|[\\w.%-]+\\<[\\w.%-]+\\@+\\>|[\\w.%-]+\\@+|[\\w.%-]+\\<+[\\w.%-]+\\@+\\>",
+		message = "Email doesn't follow the pattern, must be identifier@domain.asd or alias <identifier@domain.asd>")
 	public String getEmail() {
 		return this.email;
 	}
