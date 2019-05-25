@@ -180,6 +180,7 @@ public class PrisonerWardenController extends AbstractController {
 		ModelAndView result;
 
 		try {
+			this.wardenService.loggedAsWarden();
 
 			// Assert.isTrue(StringUtils.isNumeric(prisonerId));
 			// int prisonerIdInt = Integer.parseInt(prisonerId);
@@ -189,6 +190,8 @@ public class PrisonerWardenController extends AbstractController {
 
 			Prisoner realPrisoner = this.prisonerService.findOne(prisonerId);
 			Assert.notNull(charge.getId());
+			Assert.isTrue(!realPrisoner.getCharges().contains(charge));
+			Assert.isTrue(charge.getIsDraftMode() == false);
 
 			if (realPrisoner == null || !prisoners.contains(realPrisoner))
 				return this.listSuspects();

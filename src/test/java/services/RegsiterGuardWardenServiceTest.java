@@ -61,7 +61,7 @@ public class RegsiterGuardWardenServiceTest extends AbstractTest {
 				//Negative test, false terms
 				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "666555444", "email@gmail.com", "username", "password", "password", false, NullPointerException.class
 			}, {
-				//Negative test, false terms
+				//Negative test, register a guard as prisoner
 				"prisoner1", "name", "middleName", "surname", "https://www.youtube.com", "666555444", "email@gmail.com", "username", "password", "password", true, IllegalArgumentException.class
 			}
 		};
