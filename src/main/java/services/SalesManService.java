@@ -141,8 +141,10 @@ public class SalesManService {
 			boxes.add(saved4);
 
 			salesman.setBoxes(boxes);
-		} else
-			this.loggedAsSalesMan();
+		} else {
+			SalesMan s = this.loggedSalesMan();
+			Assert.isTrue(s.getId() == salesman.getId());
+		}
 
 		this.salesManRepository.save(salesman);
 	}
@@ -259,6 +261,15 @@ public class SalesManService {
 		SalesMan salesman = this.loggedSalesMan();
 		List<Product> products = salesman.getProducts();
 		return products;
+	}
+
+	public void flush() {
+		this.salesManRepository.flush();
+
+	}
+
+	public SalesMan findSalesManByUsername(String username) {
+		return this.salesManRepository.getSalesManByUsername(username);
 	}
 
 }

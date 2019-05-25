@@ -858,7 +858,7 @@
 				<property name="exitDate" value="12/12/2025 23:59" />
 				<property name="isIsolated" value="False" />
 				<property name="isSuspect" value="False" />
-				<property name="points" value="100" />
+				<property name="points" value="10" />
 				<property name="freedom" value="False" />
 				
 				<property name="charges">

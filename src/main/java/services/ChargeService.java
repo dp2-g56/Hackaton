@@ -60,4 +60,8 @@ public class ChargeService {
 	public void flush() {
 		this.chargeRepository.flush();
 	}
+
+	public List<Charge> getCharge(String charge) {
+		return this.chargeRepository.getCharge(charge);
+	}
 }

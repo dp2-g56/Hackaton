@@ -232,4 +232,12 @@ public class ProductService {
 		return product;
 	}
 
+	public List<Product> findAll() {
+		return this.productRepository.findAll();
+	}
+
+	public void flush() {
+		this.productRepository.flush();
+	}
+
 }

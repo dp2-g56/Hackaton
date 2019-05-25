@@ -411,6 +411,7 @@ public class WardenService {
 
 	public void deleteLoggedWarden() {
 		Warden warden = this.securityAndWarden();
+		Assert.isTrue(this.findAll().size() > 1);
 		this.wardenRepository.delete(warden.getId());
 	}
 
@@ -511,6 +512,14 @@ public class WardenService {
 
 	public Charge getSuspiciousCharge() {
 		return this.wardenRepository.getSuspiciousCharge();
+	}
+
+	public void flush() {
+		this.wardenRepository.flush();
+	}
+
+	public List<Warden> findAll() {
+		return this.wardenRepository.findAll();
 	}
 
 }
