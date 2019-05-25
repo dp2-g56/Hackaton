@@ -119,6 +119,21 @@ public class ActivityService {
 		return result;
 	}
 
+	public void saveActivity(Activity activity) {
+		SocialWorker sw = this.socialWorkerService.loggedSocialWorker();
+
+		if (activity.getId() == 0) {
+			Activity saved = this.save(activity);
+			List<Activity> la = sw.getActivities();
+			la.add(saved);
+			sw.setActivities(la);
+			this.socialWorkerService.save(sw);
+		} else {
+			Assert.isTrue(sw.getActivities().contains(activity));
+			this.save(activity);
+		}
+	}
+
 	public void deleteActivity(Activity activity, SocialWorker sw) {
 		Assert.isTrue(sw.getActivities().contains(activity));
 		List<Request> lr = activity.getRequests();
