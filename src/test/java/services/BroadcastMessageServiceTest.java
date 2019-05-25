@@ -37,6 +37,14 @@ public class BroadcastMessageServiceTest extends AbstractTest {
 	@Test
 	public void driverBroadcastMessage() {
 
+		/**
+		 * 
+		 * Number of test: 7
+		 * Number of restrictions + positive test: 6
+		 * Coverture: 100%
+		 * 
+		 * */
+
 		Object testingData[][] = {
 			{
 				//Positive test

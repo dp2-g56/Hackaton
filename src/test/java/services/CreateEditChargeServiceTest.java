@@ -28,6 +28,14 @@ public class CreateEditChargeServiceTest extends AbstractTest {
 	@Test
 	public void testCreateCharge() {
 
+		/**
+		 * 
+		 * Number of test: 8
+		 * Number of restrictions + positive test: 8
+		 * Coverage: 100%
+		 * 
+		 * */
+
 		Object testingData[][] = {
 
 			{
@@ -46,10 +54,13 @@ public class CreateEditChargeServiceTest extends AbstractTest {
 				//Negative test, negative years
 				"warden1", "titleSpanish", "titleEnglish", -10, 12, true, ConstraintViolationException.class
 			}, {
+				//Negative test, negative months
+				"warden1", "titleSpanish", "titleEnglish", 10, -12, true, ConstraintViolationException.class
+			}, {
 				//Negative test, null IsDraftMode
 				"warden1", "titleSpanish", "titleEnglish", 10, 12, null, ConstraintViolationException.class
 			}, {
-				//Negative test, null IsDraftMode
+				//Negative test, unlogged
 				"", "titleSpanish", "titleEnglish", 10, 12, true, IllegalArgumentException.class
 			}
 
@@ -93,6 +104,14 @@ public class CreateEditChargeServiceTest extends AbstractTest {
 	public void testEditCharge() {
 
 		Object testingData[][] = {
+
+			/**
+			 * 
+			 * Number of test: 2
+			 * Number of restrictions + positive test: 2
+			 * Coverage: 100%
+			 * 
+			 * */
 
 			{
 				// Positive test: edit a draft mode charge

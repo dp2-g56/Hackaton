@@ -29,6 +29,14 @@ public class RegsiterGuardWardenServiceTest extends AbstractTest {
 	@Test
 	public void driverRegisterGuard() {
 
+		/**
+		 * 
+		 * Number of test: 11
+		 * Number of restrictions + positive test: 11
+		 * Coverage: 100%
+		 * 
+		 * */
+
 		Object testingData[][] = {
 			{
 				//Positive test, create a guard

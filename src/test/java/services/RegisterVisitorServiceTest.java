@@ -29,6 +29,14 @@ public class RegisterVisitorServiceTest extends AbstractTest {
 	@Test
 	public void driverRegisterVisitor() {
 
+		/**
+		 * 
+		 * Number of test: 12
+		 * Number of restrictions + positive test: 12
+		 * Coverage: 100%
+		 * 
+		 * */
+
 		Object testingData[][] = {
 			{
 				//Positive test, create a guard

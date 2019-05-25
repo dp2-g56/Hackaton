@@ -37,6 +37,14 @@ public class SpamMessageServiceTest extends AbstractTest {
 	@Test
 	public void driverSpam() {
 
+		/**
+		 * 
+		 * Number of test: 4
+		 * Number of restrictions + positive test: 4
+		 * Coverage: 100%
+		 * 
+		 * */
+
 		Object testingData[][] = {
 			{
 				//Positive test, SPAM in subject

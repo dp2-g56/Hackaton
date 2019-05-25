@@ -25,6 +25,14 @@ public class DeleteChargeServiceTest extends AbstractTest {
 	@Test
 	public void testCreateCharge() {
 
+		/**
+		 * 
+		 * Number of test: 3
+		 * Number of restrictions + positive test: 3
+		 * Coverage: 100%
+		 * 
+		 * */
+
 		Object testingData[][] = {
 
 			{
