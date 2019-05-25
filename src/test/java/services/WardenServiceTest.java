@@ -378,20 +378,19 @@ public class WardenServiceTest extends AbstractTest {
 			}
 		};
 
-		for (int i = 0; i < testingData.length; i++) {
+		for (int i = 0; i < testingData.length; i++)
 			this.templateRegisterPrisoner((String) testingData[i][0], (String) testingData[i][1], (String) testingData[i][2], (String) testingData[i][3], (String) testingData[i][4], (String) testingData[i][5], (String) testingData[i][6],
 				(String) testingData[i][7], (String) testingData[i][8], (Boolean) testingData[i][9], (Class<?>) testingData[i][10]);
-		}
 	}
 	protected void templateRegisterPrisoner(String loggedUsername, String name, String middleName, String surname, String photo, String username, String password, String confirmPassword, String charge, Boolean terms, Class<?> expected) {
 
 		Class<?> caught = null;
 
 		try {
+			this.startTransaction();
 			List<Charge> c = this.chargeService.getCharge(charge);
 
 			//En cada iteraccion comenzamos una transaccion, de esya manera, no se toman valores residuales de otros test
-			this.startTransaction();
 
 			super.authenticate(loggedUsername);
 
