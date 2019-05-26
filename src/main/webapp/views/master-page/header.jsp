@@ -17,6 +17,10 @@
 		<%@taglib prefix="jstl"	uri="http://java.sun.com/jsp/jstl/core"%>
 
 <div>
+	<a href="#"><img src="${imageURL}" height= 150px width= 500px alt="Acme Prision Co., Inc." /></a>
+</div>
+
+<div>
 	<ul id="jMenu">
 		<!-- Do not forget the "fNiv" class for the first level links !! -->
 		<security:authorize access="hasRole('WARDEN')">
@@ -125,6 +129,7 @@
 				<ul>
 					<li class="arrow"></li>
 						<li><a href="anonymous/visitor/create.do"><spring:message code="master.page.registerVisitor" /> </a></li>
+						<li><a href="anonymous/socialWorker/create.do"><spring:message code="master.page.socialWorkerCreate" /> </a></li>
 				</ul></li>
 						
 		</security:authorize>
@@ -132,6 +137,7 @@
 		<security:authorize access="isAnonymous()">
 	
 		<li><a href="anonymous/prisoner/list.do"><spring:message code="master.page.listOfPrisoners" /> </a></li>
+		
 		</security:authorize>
 		
 		<security:authorize access="permitAll">

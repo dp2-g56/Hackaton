@@ -11,6 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import domain.Actor;
+import domain.Configuration;
+import domain.Guard;
+import domain.Prisoner;
+import domain.SalesMan;
+import domain.SocialWorker;
+import domain.Visitor;
+import domain.Warden;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
@@ -22,36 +30,27 @@ import services.SalesManService;
 import services.SocialWorkerService;
 import services.VisitorService;
 import services.WardenService;
-import domain.Actor;
-import domain.Configuration;
-import domain.Guard;
-import domain.Prisoner;
-import domain.SalesMan;
-import domain.SocialWorker;
-import domain.Visitor;
-import domain.Warden;
 
 @Controller
 @RequestMapping("/authenticated")
 public class SocialProfileController extends AbstractController {
 
 	@Autowired
-	private ActorService			actorService;
+	private ActorService actorService;
 	@Autowired
-	private SocialWorkerService		socialWorkerService;
+	private SocialWorkerService socialWorkerService;
 	@Autowired
-	private PrisonerService			prisonerService;
+	private PrisonerService prisonerService;
 	@Autowired
-	private SalesManService			salesManService;
+	private SalesManService salesManService;
 	@Autowired
-	private WardenService			wardenService;
+	private WardenService wardenService;
 	@Autowired
-	private GuardService			guardService;
+	private GuardService guardService;
 	@Autowired
-	private VisitorService			visitorService;
+	private VisitorService visitorService;
 	@Autowired
-	private ConfigurationService	configurationService;
-
+	private ConfigurationService configurationService;
 
 	// -------------------------------------------------------------------
 	// ---------------------------LIST
@@ -102,6 +101,11 @@ public class SocialProfileController extends AbstractController {
 
 				result.addObject("visitor", visitor);
 			}
+			if (authorities.get(0).toString().equals("WARDEN")) {
+				Warden warden = this.wardenService.findOne(logguedActor.getId());
+
+				result.addObject("warden", warden);
+			}
 
 			result.addObject("actor", logguedActor);
 			result.addObject("requestURI", "authenticated/showProfile.do");
@@ -140,6 +144,11 @@ public class SocialProfileController extends AbstractController {
 				SalesMan salesman = this.salesManService.findOne(logguedActor.getId());
 				result.addObject("salesman", salesman);
 			}
+			if (authorities.get(0).toString().equals("SOCIALWORKER")) {
+				SocialWorker socialWorker = this.socialWorkerService.findOne(logguedActor.getId());
+				result.addObject("socialWorker", socialWorker);
+			}
+
 			if (authorities.get(0).toString().equals("VISITOR")) {
 				Visitor visitor = this.visitorService.findOne(logguedActor.getId());
 				result.addObject("visitor", visitor);
@@ -147,6 +156,29 @@ public class SocialProfileController extends AbstractController {
 		} catch (Throwable oops) {
 			result = new ModelAndView("redirect:/");
 		}
+
+		return result;
+	}
+
+	@RequestMapping(value = "/editProfile", method = RequestMethod.POST, params = "saveSocialWorker")
+	public ModelAndView saveSocialWorker(SocialWorker socialWorker, BindingResult binding) {
+		ModelAndView result;
+
+		SocialWorker socialWorkerActor;
+		socialWorkerActor = this.socialWorkerService.reconstruct(socialWorker, binding);
+
+		if (binding.hasErrors()) {
+			result = new ModelAndView("authenticated/editProfile");
+			result.addObject("socialWorker", socialWorkerActor);
+		} else
+			try {
+				this.socialWorkerService.saveEdit(socialWorkerActor);
+				result = new ModelAndView("redirect:/authenticated/showProfile.do");
+			} catch (Throwable oops) {
+				result = new ModelAndView("authenticated/editProfile");
+				result.addObject("socialWorker", socialWorkerActor);
+				result.addObject("message", "socialWorker.save.commit.error");
+			}
 
 		return result;
 	}
@@ -186,7 +218,7 @@ public class SocialProfileController extends AbstractController {
 			result.addObject("guard", guardActor);
 		} else
 			try {
-				this.guardService.saveGuard(guardActor);
+				this.guardService.saveEdit(guardActor);
 				result = new ModelAndView("redirect:/authenticated/showProfile.do");
 			} catch (Throwable oops) {
 				result = new ModelAndView("authenticated/editProfile");
@@ -271,8 +303,12 @@ public class SocialProfileController extends AbstractController {
 			if (authorities.get(0).toString().equals("SALESMAN"))
 				this.salesManService.deleteLoggedSalesman();
 
+			if (authorities.get(0).toString().equals("SOCIALWORKER"))
+				this.socialWorkerService.deleteLogguedSocialWorker();
+
 			if (authorities.get(0).toString().equals("VISITOR"))
 				this.visitorService.deleteLoggedVisitor();
+
 		} catch (Throwable oops) {
 			result = new ModelAndView("redirect:/");
 		}

@@ -3,9 +3,11 @@ package controllers;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,33 +46,41 @@ public class ProductController extends AbstractController {
 
 	// Listar Visitantes del prisionero logueado
 	@RequestMapping(value = "/prisoner/list", method = RequestMethod.GET)
-	public ModelAndView listPrisoner(@RequestParam int salesmanId) {
+	public ModelAndView listPrisoner(@RequestParam(required = false) String salesmanId) {
 
 		ModelAndView result;
 		List<Product> products;
 
-		SalesMan salesMan = this.salesManService.findOne(salesmanId);
+		try {
 
-		if (salesMan == null)
-			return this.listSalesManPrisoner();
+			Assert.isTrue(StringUtils.isNumeric(salesmanId));
+			int salesmanIdInt = Integer.parseInt(salesmanId);
 
-		products = this.productService.getProductsFinalModeWithStockBySalesMan(salesmanId);
+			SalesMan salesMan = this.salesManService.findOne(salesmanIdInt);
 
-		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+			if (salesMan == null) {
+				return this.listSalesManPrisoner();
+			}
 
-		Prisoner loggedPrisoner = this.prisonerService.loggedPrisoner();
-		int points = loggedPrisoner.getPoints();
+			products = this.productService.getProductsFinalModeWithStockBySalesMan(salesmanIdInt);
 
-		result = new ModelAndView("anonymous/product/list");
-		result.addObject("products", products);
-		result.addObject("points", points);
-		result.addObject("locale", locale);
-		result.addObject("prisoner", true);
-		result.addObject("requestURI", "product/prisoner/list.do");
+			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+
+			Prisoner loggedPrisoner = this.prisonerService.loggedPrisoner();
+			int points = loggedPrisoner.getPoints();
+
+			result = new ModelAndView("anonymous/product/list");
+			result.addObject("products", products);
+			result.addObject("points", points);
+			result.addObject("locale", locale);
+			result.addObject("prisoner", true);
+			result.addObject("requestURI", "product/prisoner/list.do");
+		} catch (Throwable oops) {
+			result = this.listSalesManPrisoner();
+		}
 
 		return result;
 	}
-
 	// Listar Visitantes del prisionero logueado
 	@RequestMapping(value = "/anonymous/list", method = RequestMethod.GET)
 	public ModelAndView listAnonymous() {
@@ -78,7 +88,7 @@ public class ProductController extends AbstractController {
 		ModelAndView result;
 		List<Product> products;
 
-		products = this.productService.getProductsFinalMode();
+		products = this.productService.getProductsFinalModeOfSalesMen();
 
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
@@ -110,23 +120,24 @@ public class ProductController extends AbstractController {
 		return result;
 	}
 
+	// TODO: TESTING DAVID
 	@RequestMapping(value = "/salesman/list", method = RequestMethod.GET)
 	public ModelAndView listSalesman() {
-
 		ModelAndView result;
-		List<Product> products;
 
-		SalesMan salesman = this.salesManService.loggedSalesMan();
+		try {
+			List<Product> products = this.salesManService.getProductsOfLoggedSalesman();
 
-		products = salesman.getProducts();
+			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
-		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
-
-		result = new ModelAndView("product/salesman/list");
-		result.addObject("products", products);
-		result.addObject("locale", locale);
-		result.addObject("salesman", true);
-		result.addObject("requestURI", "product/salesman/list.do");
+			result = new ModelAndView("product/salesman/list");
+			result.addObject("products", products);
+			result.addObject("locale", locale);
+			result.addObject("salesman", true);
+			result.addObject("requestURI", "product/salesman/list.do");
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:/");
+		}
 
 		return result;
 	}
@@ -144,32 +155,38 @@ public class ProductController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/salesman/edit", method = RequestMethod.GET)
-	public ModelAndView edit(@RequestParam int productId) {
-
+	public ModelAndView edit(@RequestParam(required = false) String productId) {
 		ModelAndView result;
 
-		Product product = this.productService.findOne(productId);
-		SalesMan salesman = this.salesManService.loggedSalesMan();
+		try {
+			Assert.isTrue(StringUtils.isNumeric(productId));
+			Integer productIdInt = Integer.parseInt(productId);
 
-		if (product == null || salesman == null || !salesman.getProducts().contains(product))
-			result = new ModelAndView("redirect:list.do");
-		else
+			Product product = this.productService.getProductInDraftModeOfLoggedSalesMan(productIdInt);
+
 			result = this.createEditModelAndView(product);
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:list.do");
+		}
+
 		return result;
 	}
 
 	@RequestMapping(value = "/salesman/restock", method = RequestMethod.GET)
-	public ModelAndView restock(@RequestParam int productId) {
-
+	public ModelAndView restock(@RequestParam(required = false) String productId) {
 		ModelAndView result;
 
-		Product product = this.productService.findOne(productId);
-		SalesMan salesman = this.salesManService.loggedSalesMan();
+		try {
+			Assert.isTrue(StringUtils.isNumeric(productId));
+			Integer productIdInt = Integer.parseInt(productId);
 
-		if (product == null || salesman == null || !salesman.getProducts().contains(product))
-			result = new ModelAndView("redirect:list.do");
-		else
+			Product product = this.productService.getProductInFinalModeOfLoggedSalesMan(productIdInt);
+
 			result = this.restockModelAndView(product);
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:list.do");
+		}
+
 		return result;
 	}
 
@@ -223,8 +240,7 @@ public class ProductController extends AbstractController {
 			result = this.restockModelAndView(pro);
 		else
 			try {
-
-				this.productService.updateProduct(pro);
+				this.productService.restockProduct(pro);
 
 				result = new ModelAndView("redirect:list.do");
 

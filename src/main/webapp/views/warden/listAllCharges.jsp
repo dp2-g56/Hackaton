@@ -27,11 +27,18 @@
 		</display:column>
 		
 		<display:column titleKey="charge.year" > 
-			<jstl:out value="${row.year} years and ${row.month} months " />
-		</display:column>
-		
-		<display:column titleKey="charge.month" > 
-			<jstl:out value="${row.month}" />
+			<jstl:choose>
+	    
+		      	<jstl:when test="${locale=='EN'}">
+			    	<jstl:out value="${row.year} years and ${row.month} months " /> 
+			    </jstl:when>
+			      
+			    <jstl:otherwise>
+			    	<jstl:out value="${row.year} años y ${row.month} meses " />
+			    </jstl:otherwise>
+		    
+		    </jstl:choose>
+			
 		</display:column>
 		
 		<display:column titleKey="charge.isDraftMode" > 
@@ -84,11 +91,18 @@
 		</display:column>
 		
 		<display:column titleKey="charge.year" > 
-			<jstl:out value="${rowa.year} years and ${rowa.month} months " />
-		</display:column>
-		
-		<display:column titleKey="charge.month" > 
-			<jstl:out value="${rowa.month}" />
+			<jstl:choose>
+	    
+		      	<jstl:when test="${locale=='EN'}">
+			    	<jstl:out value="${rowa.year} years and ${rowa.month} months " /> 
+			    </jstl:when>
+			      
+			    <jstl:otherwise>
+			    	<jstl:out value="${rowa.year} años y ${rowa.month} meses " />
+			    </jstl:otherwise>
+		    
+		    </jstl:choose>
+			
 		</display:column>
 		
 		<display:column titleKey="charge.isDraftMode" > 

@@ -12,6 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,6 +27,7 @@ public class Activity extends DomainEntity {
 	private Date realizationDate;
 	private int maxAssistant;
 	private int rewardPoints;
+	private Boolean isFinalMode;
 
 	private List<Request> requests;
 
@@ -73,6 +75,15 @@ public class Activity extends DomainEntity {
 
 	public void setRewardPoints(int rewardPoints) {
 		this.rewardPoints = rewardPoints;
+	}
+
+	@NotNull
+	public Boolean getIsFinalMode() {
+		return this.isFinalMode;
+	}
+
+	public void setIsFinalMode(Boolean isFinalMode) {
+		this.isFinalMode = isFinalMode;
 	}
 
 	@OneToMany(mappedBy = "activity")

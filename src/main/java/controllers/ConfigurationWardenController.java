@@ -2,8 +2,10 @@ package controllers;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,6 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 import domain.Configuration;
 import domain.TypeProduct;
 import services.ConfigurationService;
+import services.TypeProductService;
+import services.WardenService;
 
 @Controller
 @RequestMapping("/configuration/warden")
@@ -20,6 +24,12 @@ public class ConfigurationWardenController extends AbstractController {
 
 	@Autowired
 	private ConfigurationService configurationService;
+
+	@Autowired
+	private TypeProductService typeProductService;
+
+	@Autowired
+	private WardenService wardenService;
 
 	// Constructors -----------------------------------------------------------
 
@@ -73,14 +83,18 @@ public class ConfigurationWardenController extends AbstractController {
 		try {
 			ModelAndView result;
 			Configuration configuration;
-			List<TypeProduct> types;
-
+			List<TypeProduct> t;
+			List<TypeProduct> typesAssigned = this.wardenService.getProductTypesAssigned();
 			configuration = this.configurationService.getConfiguration();
-			types = configuration.getTypeProducts();
+			List<TypeProduct> types = this.typeProductService.findAll();
+
+			t = configuration.getTypeProducts();
+			t.removeAll(typesAssigned);
 
 			result = new ModelAndView("listTypeProd/configuration");
 			result.addObject("configuration", configuration);
 			result.addObject("types", types);
+			result.addObject("t", t);
 			result.addObject("requestURI", "configuration/warden/listTypeProd.do");
 
 			return result;
@@ -148,7 +162,7 @@ public class ConfigurationWardenController extends AbstractController {
 				result = this.createEditModelAndView(configuration);
 			else
 				try {
-					this.configurationService.save(configurationR);
+					this.configurationService.saveConfiguration(configurationR);
 					result = new ModelAndView("redirect:list.do");
 				} catch (Throwable oops) {
 					result = this.createEditModelAndView(configuration, "warden.commit.error");
@@ -197,6 +211,42 @@ public class ConfigurationWardenController extends AbstractController {
 				} catch (Throwable oops) {
 					result = this.createEditModelAndView(configuration, "warden.commit.error");
 				}
+
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:/");
+		}
+	}
+
+	@RequestMapping(value = "/deleteSpam", method = RequestMethod.GET)
+	public ModelAndView deleteSpam(@RequestParam String spamWord) {
+		try {
+			ModelAndView result;
+			Configuration c = this.configurationService.getConfiguration();
+
+			Assert.isTrue(c.getSpamWords().contains(spamWord));
+			this.configurationService.deleteSpamWords(spamWord);
+
+			result = new ModelAndView("redirect:listSpam.do");
+
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:/");
+		}
+	}
+
+	@RequestMapping(value = "/deleteType", method = RequestMethod.GET)
+	public ModelAndView deleteType(@RequestParam(required = false) String dataTypeId) {
+		try {
+			Assert.isTrue(StringUtils.isNumeric(dataTypeId));
+
+			int dataTypeInt = Integer.parseInt(dataTypeId);
+
+			ModelAndView result;
+
+			this.configurationService.deleteTypeProducts(dataTypeInt);
+
+			result = new ModelAndView("redirect:listTypeProd.do");
 
 			return result;
 		} catch (Throwable oops) {

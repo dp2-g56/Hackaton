@@ -13,6 +13,23 @@
 
 <security:authorize access="hasRole('VISITOR')">
 
+	<form:form modelAttribute="finder"
+		action="finder/visitor/edit.do">
+		
+		
+		<form:hidden path="id" />
+		
+		<acme:textbox code="finder.keyWord" path="keyWord"/>
+
+	
+		<acme:selectStringWithNumber items="${values}" itemsName="${names}" number="${sizeOfList}" code="finder.charge" path="charge"/>
+
+		
+		<acme:submit name="save" code="finder.save"/>
+		
+		
+	</form:form>
+
 	<form:form modelAttribute="visit"
 		action="visit/visitor/create.do">
 		<!--Hidden Attributes -->
@@ -34,7 +51,23 @@
 
 	</form:form>
 	
+	<jstl:choose>
+	
+	<jstl:when test="${finder}">
+	
+		<acme:cancel url="/finder/visitor/list.do" code="visit.cancel" />
+	
+	</jstl:when>
+	
+	<jstl:otherwise>
+		
 	<acme:cancel url="/anonymous/prisoner/list.do" code="visit.cancel" />
+	
+	</jstl:otherwise>
+	
+	
+	</jstl:choose>
+
 
 
 </security:authorize>

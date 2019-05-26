@@ -1,6 +1,9 @@
+
 package forms;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -9,18 +12,20 @@ import org.hibernate.validator.constraints.URL;
 public class FormObjectWarden {
 
 	// USER ACCOUNT
-	private String username;
-	private String password;
-	private String confirmPassword;
+	private String	username;
+	private String	password;
+	private String	confirmPassword;
 
 	// ACTOR
-	private String name;
-	private String surname;
-	private String middleName;
-	private String photo;
+	private String	name;
+	private String	surname;
+	private String	middleName;
+	private String	photo;
+	private String	email;
 
 	// FORM
-	private Boolean termsAndConditions;
+	private Boolean	termsAndConditions;
+
 
 	public FormObjectWarden() {
 		this.termsAndConditions = false;
@@ -71,6 +76,7 @@ public class FormObjectWarden {
 		this.surname = surname;
 	}
 
+	@Valid
 	public String getMiddleName() {
 		return this.middleName;
 	}
@@ -95,6 +101,17 @@ public class FormObjectWarden {
 
 	public void setTermsAndConditions(Boolean termsAndConditions) {
 		this.termsAndConditions = termsAndConditions;
+	}
+
+	@NotBlank
+	@Pattern(regexp = "[\\w.%-]+\\@[-.\\w]+\\.[A-Za-z]{2,4}|[\\w.%-]+\\<+[\\w.%-]+\\@[-.\\w]+\\.[A-Za-z]{2,4}\\>|[\\w.%-]+\\<[\\w.%-]+\\@+\\>|[\\w.%-]+\\@+|[\\w.%-]+\\<+[\\w.%-]+\\@+\\>",
+		message = "Email doesn't follow the pattern, must be identifier@domain.asd or alias <identifier@domain.asd>")
+	public String getEmail() {
+		return this.email;
+	}
+
+	public void setEmail(final String email) {
+		this.email = email;
 	}
 
 }

@@ -46,6 +46,11 @@ public class ConfigurationService {
 		return this.configurationRepository.save(configuration);
 	}
 
+	public void saveConfiguration(Configuration configuration) {
+		this.wardenService.loggedAsWarden();
+		this.save(configuration);
+	}
+
 	public Boolean isStringSpam(String s, List<String> spamWords) {
 		Boolean result = false;
 
@@ -126,23 +131,13 @@ public class ConfigurationService {
 		}
 	}
 
-	public void deleteSpamWords(String word, BindingResult binding) {
+	public void deleteSpamWords(String word) {
 		this.wardenService.loggedAsWarden();
-		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 		Configuration configuration = this.configurationRepository.configuration();
 		List<String> spamWords = configuration.getSpamWords();
-		if (!spamWords.contains(word)) {
-			if (locale.contains("ES"))
-				binding.addError(new FieldError("spamWords", "word", word, false, null, null,
-						"La palabra no esta contenida en la lista de palabras spam."));
-			else
-				binding.addError(new FieldError("spamWords", "word", word, false, null, null,
-						"The word isn't already contained in the list of spam words."));
-		} else {
-			spamWords.remove(word);
-			configuration.setSpamWords(spamWords);
-			this.configurationRepository.save(configuration);
-		}
+		spamWords.remove(word);
+		configuration.setSpamWords(spamWords);
+		this.configurationRepository.save(configuration);
 	}
 
 	public void addTypeProducts(String typeEN, String typeES, BindingResult binding) {
@@ -168,6 +163,7 @@ public class ConfigurationService {
 						"The word is already contained in the list of type products."));
 			}
 		} else {
+
 			TypeProduct p = new TypeProduct();
 			p.setTypeProductEN(typeEN);
 			p.setTypeProductES(typeES);
@@ -179,12 +175,16 @@ public class ConfigurationService {
 		}
 	}
 
-	public void deleteTypeProducts(int id, BindingResult binding) {
+	public void deleteTypeProducts(int id) {
 		this.wardenService.loggedAsWarden();
-		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+
+		TypeProduct tp = this.typeProductService.findOne(id);
+		List<TypeProduct> lt = this.wardenService.getProductTypesAssigned();
+
+		Assert.isTrue(!lt.contains(tp));
+
 		Configuration configuration = this.configurationRepository.configuration();
-		TypeProduct tp = new TypeProduct();
-		tp = this.typeProductService.findOne(id);
+
 		List<TypeProduct> lp = this.typeProductService.findAll();
 		Assert.isTrue(lp.contains(tp));
 		lp.remove(tp);

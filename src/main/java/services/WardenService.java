@@ -2,6 +2,7 @@
 package services;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,10 +22,12 @@ import org.springframework.validation.Validator;
 import domain.ActivityStatus;
 import domain.Actor;
 import domain.Box;
+import domain.Charge;
 import domain.Guard;
 import domain.Message;
 import domain.Prisoner;
 import domain.Request;
+import domain.TypeProduct;
 import domain.Visit;
 import domain.VisitStatus;
 import domain.Visitor;
@@ -60,6 +63,12 @@ public class WardenService {
 	@Autowired
 	private PrisonerService prisonerService;
 
+	@Autowired
+	private VisitService visitService;
+
+	@Autowired
+	private RequestService requestService;
+
 	// ----------------------------------------CRUD
 	// METHODS--------------------------
 	// ------------------------------------------------------------------------------
@@ -87,6 +96,7 @@ public class WardenService {
 		s.setSurname("");
 		s.setPhoto("");
 		s.setBoxes(boxes);
+		s.setEmail("");
 
 		List<Authority> authorities = new ArrayList<Authority>();
 
@@ -173,6 +183,7 @@ public class WardenService {
 		result.setMiddleName(formWarden.getMiddleName());
 		result.setSurname(formWarden.getSurname());
 		result.setPhoto(formWarden.getPhoto());
+		result.setEmail(formWarden.getEmail());
 
 		// USER ACCOUNT
 		UserAccount userAccount = new UserAccount();
@@ -223,21 +234,35 @@ public class WardenService {
 	public void isolatePrisoner(Prisoner prisoner) {
 		this.loggedAsWarden();
 		List<Prisoner> suspects = this.prisonerService.getSuspectPrisoners();
-		Assert.isTrue(prisoner != null && suspects.contains(prisoner));
+		Assert.notNull(prisoner);
+		Assert.isTrue(suspects.contains(prisoner));
 
 		List<Visit> visits = this.wardenRepository.getFutureVisitsByPrisoner(prisoner.getId());
 		List<Request> requests = this.wardenRepository.getRequestToFutureActivitiesByPrisoner(prisoner.getId());
 
-		for (Visit v : visits)
+		for (Visit v : visits) {
 			v.setVisitStatus(VisitStatus.REJECTED);
+			this.visitService.save(v);
+		}
 		for (Request r : requests) {
 			r.setRejectReason("Isolated");
 			r.setStatus(ActivityStatus.REJECTED);
+			this.requestService.save(r);
 		}
 
 		prisoner.getUserAccount().setIsNotLocked(false);
-		prisoner.getCharges().add(this.wardenRepository.getSuspiciousCharge());
+		Charge charge = this.wardenRepository.getSuspiciousCharge();
+		prisoner.getCharges().add(charge);
 		prisoner.setIsIsolated(true);
+
+		Date exitDate = prisoner.getExitDate();
+		Calendar cExit = Calendar.getInstance();
+		cExit.setTime(exitDate);
+		cExit.add(Calendar.MONTH, charge.getMonth());
+		cExit.add(Calendar.YEAR, charge.getYear());
+		Date newExitDate = cExit.getTime();
+		prisoner.setExitDate(newExitDate);
+
 		this.prisonerService.save(prisoner);
 
 	}
@@ -386,6 +411,7 @@ public class WardenService {
 
 	public void deleteLoggedWarden() {
 		Warden warden = this.securityAndWarden();
+		Assert.isTrue(this.findAll().size() > 1);
 		this.wardenRepository.delete(warden.getId());
 	}
 
@@ -419,9 +445,9 @@ public class WardenService {
 		Map<String, List<String>> result = new HashMap<String, List<String>>();
 		List<Visitor> visitors = this.wardenRepository.getVisitorsMostVisitsToAPrisoner();
 
-		for (Visitor v : visitors) {
-			result.put(v.getUserAccount().getUsername(), this.wardenRepository.getPrisonersWithMostVisitToAVisitor(v.getId()));
-		}
+		for (Visitor v : visitors)
+			result.put(v.getUserAccount().getUsername(),
+					this.wardenRepository.getPrisonersWithMostVisitToAVisitor(v.getId()));
 		return result;
 	}
 
@@ -439,9 +465,8 @@ public class WardenService {
 
 	public List<String> getTop3PrisonersLowestCrimeRate() {
 		List<String> result = this.wardenRepository.getTop3PrisonersLowestCrimeRate();
-		if (result.size() > 3) {
+		if (result.size() > 3)
 			return result.subList(0, 2);
-		}
 		return result;
 	}
 
@@ -450,7 +475,8 @@ public class WardenService {
 	}
 
 	public List<String> getPrisonersMostRejectedRequestToDifferentActivitiesAndNoApprovedOnThoseActivities() {
-		return this.wardenRepository.getPrisonersMostRejectedRequestToDifferentActivitiesAndNoApprovedOnThoseActivities();
+		return this.wardenRepository
+				.getPrisonersMostRejectedRequestToDifferentActivitiesAndNoApprovedOnThoseActivities();
 	}
 
 	public List<String> getActivitiesLargestNumberPrisoners() {
@@ -475,9 +501,25 @@ public class WardenService {
 
 	public List<String> getTop5PrisonersParticipatedMostActivitiesLastMonth() {
 		List<String> result = this.wardenRepository.getTop5PrisonersParticipatedMostActivitiesLastMonth();
-		if (result.size() > 5) {
+		if (result.size() > 5)
 			return result.subList(0, 4);
-		}
 		return result;
 	}
+
+	public List<TypeProduct> getProductTypesAssigned() {
+		return this.wardenRepository.getProductTypesAssigned();
+	}
+
+	public Charge getSuspiciousCharge() {
+		return this.wardenRepository.getSuspiciousCharge();
+	}
+
+	public void flush() {
+		this.wardenRepository.flush();
+	}
+
+	public List<Warden> findAll() {
+		return this.wardenRepository.findAll();
+	}
+
 }

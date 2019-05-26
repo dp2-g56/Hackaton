@@ -12,32 +12,31 @@ import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
-import repositories.VisitRepository;
 import domain.Guard;
 import domain.Prisoner;
 import domain.Visit;
 import domain.VisitStatus;
 import domain.Visitor;
+import repositories.VisitRepository;
 
 @Service
 @Transactional
 public class VisitService {
 
 	@Autowired
-	private VisitRepository	visitRepository;
+	private VisitRepository visitRepository;
 
 	@Autowired
-	private PrisonerService	prisonerService;
+	private PrisonerService prisonerService;
 
 	@Autowired
-	private VisitorService	visitorService;
+	private VisitorService visitorService;
 
 	@Autowired
-	private GuardService	guardService;
+	private GuardService guardService;
 
 	@Autowired
-	private Validator		validator;
-
+	private Validator validator;
 
 	// -----------------------------------------SECURITY-----------------------------
 	// ------------------------------------------------------------------------------
@@ -58,7 +57,7 @@ public class VisitService {
 		return this.visitRepository.save(this.visitRepository.findOne(visitId));
 	}
 
-	//Change Status as Prisoner
+	// Change Status as Prisoner
 	public Visit editVisitPrisoner(Visit visit, boolean accept) {
 		// Security
 		this.prisonerService.loggedAsPrisoner();
@@ -75,7 +74,7 @@ public class VisitService {
 		return this.visitRepository.save(visit);
 	}
 
-	//Change Status As Visitor
+	// Change Status As Visitor
 	public Visit editVisitVisitor(Visit visit, boolean accept) {
 		// Security
 		this.visitorService.loggedAsVisitor();
@@ -92,7 +91,7 @@ public class VisitService {
 		return this.visitRepository.save(visit);
 	}
 
-	//Change Status As Guard
+	// Change Status As Guard
 	public Visit editVisitGuard(Visit visit, boolean permit) {
 		// Security
 		this.guardService.loggedAsGuard();
@@ -115,6 +114,7 @@ public class VisitService {
 		}
 		return saved;
 	}
+
 	// CREATE AS VISITOR
 	public Visit createAsVisitor(Prisoner prisoner) {
 		this.visitorService.loggedAsVisitor();
@@ -161,7 +161,7 @@ public class VisitService {
 		return visit;
 	}
 
-	//RECONSTRUCT AS VISITOR
+	// RECONSTRUCT AS VISITOR
 	public Visit reconstructAsVisitor(Visit visit, BindingResult binding) {
 		this.visitorService.loggedAsVisitor();
 		Visitor visitor = this.visitorService.loggedVisitor();
@@ -182,7 +182,7 @@ public class VisitService {
 		return result;
 	}
 
-	//RECONSTRUCT AS PRISONER
+	// RECONSTRUCT AS PRISONER
 	public Visit reconstructAsPrisoner(Visit visit, BindingResult binding) {
 
 		this.prisonerService.loggedAsPrisoner();
@@ -204,7 +204,7 @@ public class VisitService {
 		return result;
 	}
 
-	//SAVE VISIT AS VISITOR
+	// SAVE VISIT AS VISITOR
 	public void saveVisitAsVisitor(Visit visit) {
 		this.visitorService.loggedAsVisitor();
 
@@ -225,7 +225,7 @@ public class VisitService {
 		this.visitRepository.save(visit);
 	}
 
-	//SAVE VISIT AS PRISONER
+	// SAVE VISIT AS PRISONER
 	public void saveVisitAsPrisoner(Visit visit) {
 		this.prisonerService.loggedAsPrisoner();
 
@@ -247,6 +247,10 @@ public class VisitService {
 		Assert.isTrue(visit.getDate().before(visit.getPrisoner().getExitDate()));
 
 		this.visitRepository.save(visit);
+	}
+
+	public Visit save(Visit v) {
+		return this.visitRepository.save(v);
 	}
 
 }

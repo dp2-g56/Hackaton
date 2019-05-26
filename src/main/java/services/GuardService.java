@@ -244,4 +244,13 @@ public class GuardService {
 
 		return result;
 	}
+
+	public void flush() {
+		this.guardRepository.flush();
+	}
+
+	public Guard saveEdit(Guard guard) {
+		this.loggedAsGuard();
+		return this.guardRepository.save(guard);
+	}
 }

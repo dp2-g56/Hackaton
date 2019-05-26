@@ -21,6 +21,13 @@
 	<img src="${actor.photo}" alt="${actor.photo}"></td>
 		</tr>
 		
+	<security:authorize access="hasRole('WARDEN')">	
+		<tr>
+			<td><spring:message code="warden.email" />:</td>
+			<td><jstl:out value="${warden.email}" /></td>
+		</tr>
+	</security:authorize>	
+	
 	<security:authorize access="hasRole('VISITOR')">	
 		<tr>
 			<td><spring:message code="visitor.email" />:</td>
@@ -117,6 +124,23 @@
 		
 		</jstl:otherwise>
 	</jstl:choose>
+	
+	<spring:url var="editProfileUrl" value="authenticated/editProfile.do"/>
+		<a href="${editProfileUrl}">
+			<strong><spring:message code="actor.editProfile" /></strong>
+		</a> / 
+		<spring:url var="deleteUserUrl" value="authenticated/deleteUser.do"/>
+		<a href="${deleteUserUrl}" onClick="return confirm('<spring:message code="delete.user.confirmation" />')">
+			<strong><spring:message code="delete.user"/></strong>
+		</a> / 
+		<spring:url var="exportDataUrl" value="export/socialWorker.do">
+			<spring:param name="id" value="${actor.id}"/>
+		</spring:url>
+		<a href="${exportDataUrl}">
+			<strong><spring:message code="export.data.user"/></strong>
+		</a>
+	
+	
 	</security:authorize>
 	
 	
@@ -198,5 +222,7 @@
 			<strong><spring:message code="export.data.user"/></strong>
 		</a>
 	</security:authorize>
+	
+	
 	</table>
 
