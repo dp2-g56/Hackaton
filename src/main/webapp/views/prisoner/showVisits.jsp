@@ -118,9 +118,13 @@ java.sql.Timestamp now = new java.sql.Timestamp(utilDate.getTime());
 	
 	</display:column>
 	
-	<display:column property="description" titleKey="visit.description" style="color:${color}"/>
+	<display:column titleKey="visit.description" style="color:${color}">
+		<jstl:out value="${row.description}"/>
+	</display:column>
 	
-	<display:column property="date" titleKey="visit.date" style="color:${color}"/>
+	<display:column titleKey="visit.date" style="color:${color}">
+		<jstl:out value="${row.date}"/>
+	</display:column>
 	
 	<display:column titleKey="visit.reason" style="color:${color}">
 		<jstl:if test="${row.reason=='BUSSINESS'}">

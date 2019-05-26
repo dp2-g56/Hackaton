@@ -6,28 +6,27 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-
-import domain.Charge;
-import domain.Configuration;
-import domain.Prisoner;
-
-import domain.SocialWorker;
-import forms.FormObjectSocialWorker;
 import services.ConfigurationService;
 import services.PrisonerService;
 import services.SocialWorkerService;
 import services.VisitorService;
-
+import domain.Charge;
+import domain.Configuration;
+import domain.Prisoner;
+import domain.SocialWorker;
 import domain.Visitor;
+import forms.FormObjectSocialWorker;
 import forms.FormObjectVisitor;
 
 @Controller
@@ -35,17 +34,16 @@ import forms.FormObjectVisitor;
 public class AnonymousController extends AbstractController {
 
 	@Autowired
-	private PrisonerService prisonerService;
+	private PrisonerService			prisonerService;
 
 	@Autowired
-	private ConfigurationService configurationService;
+	private ConfigurationService	configurationService;
 
 	@Autowired
-	private SocialWorkerService socialWorkerService;
-	
+	private SocialWorkerService		socialWorkerService;
+
 	@Autowired
 	private VisitorService			visitorService;
-
 
 
 	public AnonymousController() {
@@ -146,25 +144,32 @@ public class AnonymousController extends AbstractController {
 
 	// Listar todos los cargos de un prisionero
 	@RequestMapping(value = "/charge/list", method = RequestMethod.GET)
-	public ModelAndView listCharge(@RequestParam int prisonerId) {
+	public ModelAndView listCharge(@RequestParam(required = false) String prisonerId) {
 
 		ModelAndView result;
+		try {
 
-		Prisoner prisoner = this.prisonerService.findOne(prisonerId);
+			Assert.isTrue(StringUtils.isNumeric(prisonerId));
+			int prisonerIdInt = Integer.parseInt(prisonerId);
 
-		if (prisoner == null)
+			Prisoner prisoner = this.prisonerService.findOne(prisonerIdInt);
+
+			if (prisoner == null)
+				return this.listPrisoner();
+
+			List<Charge> charges = prisoner.getCharges();
+
+			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+
+			result = new ModelAndView("anonymous/charge/list");
+			result.addObject("charges", charges);
+			result.addObject("locale", locale);
+			result.addObject("requestURI", "anonymous/charge/list.do");
+			result.addObject("warden", false);
+
+		} catch (Throwable oops) {
 			return this.listPrisoner();
-
-		List<Charge> charges = prisoner.getCharges();
-
-		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
-
-		result = new ModelAndView("anonymous/charge/list");
-		result.addObject("charges", charges);
-		result.addObject("locale", locale);
-		result.addObject("requestURI", "anonymous/charge/list.do");
-		result.addObject("warden", false);
-
+		}
 		return result;
 	}
 
