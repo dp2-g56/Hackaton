@@ -305,4 +305,8 @@ public class SocialWorkerService {
 
 	}
 
+	public void flush() {
+		this.socialWorkerRepository.flush();
+	}
+
 }
