@@ -12,31 +12,32 @@ import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
+import repositories.VisitRepository;
 import domain.Guard;
 import domain.Prisoner;
 import domain.Visit;
 import domain.VisitStatus;
 import domain.Visitor;
-import repositories.VisitRepository;
 
 @Service
 @Transactional
 public class VisitService {
 
 	@Autowired
-	private VisitRepository visitRepository;
+	private VisitRepository	visitRepository;
 
 	@Autowired
-	private PrisonerService prisonerService;
+	private PrisonerService	prisonerService;
 
 	@Autowired
-	private VisitorService visitorService;
+	private VisitorService	visitorService;
 
 	@Autowired
-	private GuardService guardService;
+	private GuardService	guardService;
 
 	@Autowired
-	private Validator validator;
+	private Validator		validator;
+
 
 	// -----------------------------------------SECURITY-----------------------------
 	// ------------------------------------------------------------------------------
@@ -210,6 +211,8 @@ public class VisitService {
 
 		Assert.notNull(visit.getReason());
 		Assert.notNull(visit.getPrisoner());
+		Assert.notNull(visit.getDate());
+		Assert.hasText(visit.getDescription());
 
 		Prisoner prisoner = visit.getPrisoner();
 
@@ -231,6 +234,8 @@ public class VisitService {
 
 		Assert.notNull(visit.getReason());
 		Assert.notNull(visit.getVisitor());
+		Assert.notNull(visit.getDate());
+		Assert.hasText(visit.getDescription());
 
 		Visitor visitor = visit.getVisitor();
 
@@ -251,6 +256,10 @@ public class VisitService {
 
 	public Visit save(Visit v) {
 		return this.visitRepository.save(v);
+	}
+
+	public void flush() {
+		this.visitRepository.flush();
 	}
 
 }
