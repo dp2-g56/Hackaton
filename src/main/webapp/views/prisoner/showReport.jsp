@@ -21,8 +21,14 @@ java.sql.Timestamp now = new java.sql.Timestamp(utilDate.getTime());
 
 	<display:table name="report" id="row" requestURI="${requestURI}" >
 		
-	<display:column titleKey="report.description"  property="description" />
-	<display:column titleKey="report.date"  property="date" />
+	<display:column titleKey="report.description"  property="description">
+		<jstl:out value="${row.description}"/>
+	</display:column>
+	
+	
+	<display:column titleKey="report.date" >
+			<jstl:out value="${row.date}"/>
+	</display:column> 
 		
 	</display:table>
 	
