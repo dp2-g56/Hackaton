@@ -11,9 +11,21 @@
 			
 	<display:table pagesize="5" name="visitors" id="row" requestURI="${requestURI}" >
 		
-		<display:column property="name" titleKey="visitor.name" /> 
-		<display:column property="middleName" titleKey="visitor.middleName" /> 
-		<display:column property="surname" titleKey="visitor.surname" /> 
+		<display:column titleKey="visitor.name" >
+			<jstl:out value="${row.name}"/>
+		</display:column> 
+		
+		
+		<display:column titleKey="visitor.middleName" > 
+			<jstl:out value="${row.middleName}"/>
+		</display:column>
+		
+		
+		<display:column titleKey="visitor.surname" >
+			<jstl:out value="${row.surname}"/>
+		</display:column> 
+		
+		
 		<display:column titleKey="visitor.photo">
 			<a href="${row.photo}">
 				<spring:message code="visitor.viewPhoto"/>

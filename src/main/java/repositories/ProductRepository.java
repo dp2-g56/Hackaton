@@ -21,4 +21,13 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 	@Query("select p from SalesMan s join s.products p where p.isDraftMode = False and p.stock > 0 and s.id = ?1")
 	public List<Product> getProductsFinalModeWithStockBySalesMan(int salesManId);
 
+	@Query("select p from SalesMan s join s.products p where p.isDraftMode = false")
+	public List<Product> getProductsFinalModeOfSalesMen();
+
+	@Query("select p from SalesMan s join s.products p where s.id = ?1 and p.id = ?2 and p.isDraftMode = true")
+	public Product getProductInDraftModeOfLoggedSalesMan(int salesManId, Integer productId);
+
+	@Query("select p from SalesMan s join s.products p where s.id = ?1 and p.id = ?2 and p.isDraftMode = false")
+	public Product getProductInFinalModeOfLoggedSalesMan(int salesManId, Integer productId);
+
 }

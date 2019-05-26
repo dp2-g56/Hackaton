@@ -54,10 +54,18 @@
 	requestURI="${requestURI}">
 	
 	
-	<display:column property="title" titleKey="educationRecord.title"/>
-	<display:column property="institution" titleKey="educationRecord.institution"/>
-	<display:column property="startDateStudy" titleKey="educationRecord.startDateStudy" format="{0,date,dd/MM/yyyy}"/>
-	<display:column property="endDateStudy" titleKey="educationRecord.endDateStudy" format="{0,date,dd/MM/yyyy}"/>
+	<display:column titleKey="educationRecord.title">
+		<jstl:out value="${row.title}"></jstl:out>
+	</display:column>
+	<display:column titleKey="educationRecord.institution">
+		<jstl:out value="${row.institution}"></jstl:out>
+	</display:column>
+	<display:column titleKey="educationRecord.startDateStudy">
+		<jstl:out value="${row.startDateStudy.getDate()}/${row.startDateStudy.getMonth()+1}/${row.startDateStudy.getYear()+1900}"></jstl:out>
+	</display:column>
+	<display:column titleKey="educationRecord.endDateStudy">
+		<jstl:out value="${row.endDateStudy.getDate()}/${row.endDateStudy.getMonth()+1}/${row.endDateStudy.getYear()+1900}"></jstl:out>
+	</display:column>
 	
 
 	<display:column titleKey="educationRecord.attachment">
@@ -88,10 +96,18 @@
 	requestURI="${requestURI}">
 	
 	
-	<display:column property="nameCompany" titleKey="professionalRecord.nameCompany"/>
-	<display:column property="role" titleKey="professionalRecord.role"/>
-	<display:column property="startDate" titleKey="educationRecord.startDateStudy" format="{0,date,dd/MM/yyyy}"/>
-	<display:column property="endDate" titleKey="educationRecord.endDateStudy" format="{0,date,dd/MM/yyyy}"/>
+	<display:column titleKey="professionalRecord.nameCompany">
+		<jstl:out value="${row.nameCompany}"></jstl:out>
+	</display:column>
+	<display:column titleKey="professionalRecord.role">
+		<jstl:out value="${row.role}"></jstl:out>
+	</display:column>
+	<display:column titleKey="educationRecord.startDateStudy">
+		<jstl:out value="${row.startDate.getDate()}/${row.startDate.getMonth()+1}/${row.startDate.getYear()+1900}"></jstl:out>
+	</display:column>
+	<display:column titleKey="educationRecord.endDateStudy">
+		<jstl:out value="${row.endDate.getDate()}/${row.endDate.getMonth()+1}/${row.endDate.getYear()+1900}"></jstl:out>
+	</display:column>
 	
 
 	<display:column titleKey="educationRecord.attachment">
@@ -122,7 +138,10 @@
 	requestURI="${requestURI}">
 	
 	
-	<display:column property="title" titleKey="educationRecord.title"/>
+	<display:column titleKey="educationRecord.title">
+		<jstl:out value="${row.title}"></jstl:out>
+	</display:column>
+
 
 	
 

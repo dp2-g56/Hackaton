@@ -1,3 +1,4 @@
+
 package services;
 
 import java.util.List;
@@ -12,31 +13,33 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 
+import repositories.RequestRepository;
 import domain.Activity;
 import domain.ActivityStatus;
 import domain.Prisoner;
 import domain.Request;
 import domain.SocialWorker;
-import repositories.RequestRepository;
 
 @Service
 @Transactional
 public class RequestService {
 
 	@Autowired
-	private RequestRepository requestRepository;
+	private RequestRepository	requestRepository;
 
 	@Autowired
-	private PrisonerService prisonerService;
+	private PrisonerService		prisonerService;
 
 	@Autowired
-	private ActivityService activityService;
+	private ActivityService		activityService;
 
 	@Autowired
-	private SocialWorkerService socialWorkerService;
+	private SocialWorkerService	socialWorkerService;
 
 	@Autowired
-	private Validator validator;
+	private Validator			validator;
+
+
 	// CRUS
 
 	public Request create() {
@@ -66,6 +69,27 @@ public class RequestService {
 		return this.requestRepository.save(request);
 	}
 
+	public void deleteRequest(Request request) {
+
+		Activity activity = this.activityService.findOne(request.getActivity().getId());
+
+		Prisoner prisoner = request.getPrisoner();
+
+		List<Request> activityRequests = activity.getRequests();
+		List<Request> prisonerRequests = prisoner.getRequests();
+
+		activityRequests.remove(request);
+		prisonerRequests.remove(request);
+
+		prisoner.setRequests(prisonerRequests);
+		activity.setRequests(activityRequests);
+
+		this.activityService.save(activity);
+		this.prisonerService.save(prisoner);
+
+		this.delete(request);
+
+	}
 	// Request Prisoner ------------------------------------------------------
 
 	public Request reconstructPrisoner(Request request, Integer activityId, BindingResult binding) {
@@ -113,25 +137,13 @@ public class RequestService {
 
 	public void deleteRequestFromPrisoner(Request request) {
 		Prisoner prisoner = this.prisonerService.loggedPrisoner();
-		Activity activity = this.activityService.findOne(request.getActivity().getId());
 
 		List<Request> prisonerRequests = prisoner.getRequests();
 
 		Assert.isTrue(request.getPrisoner().equals(prisoner) && prisonerRequests.contains(request));
 		Assert.isTrue(request.getStatus().equals(ActivityStatus.PENDING));
 
-		List<Request> activityRequests = activity.getRequests();
-
-		activityRequests.remove(request);
-		prisonerRequests.remove(request);
-
-		prisoner.setRequests(prisonerRequests);
-		activity.setRequests(activityRequests);
-
-		this.activityService.save(activity);
-		this.prisonerService.save(prisoner);
-
-		this.delete(request);
+		this.deleteRequest(request);
 	}
 
 	// Request Social Worker ---------------------------------------------------
@@ -149,22 +161,7 @@ public class RequestService {
 		Assert.isTrue(socialWorker.getActivities().contains(activity));
 		Assert.isTrue(request.getStatus().equals(ActivityStatus.PENDING));
 
-		Prisoner prisoner = request.getPrisoner();
-
-		List<Request> activityRequests = activity.getRequests();
-		List<Request> prisonerRequests = prisoner.getRequests();
-
-		activityRequests.remove(request);
-		prisonerRequests.remove(request);
-
-		prisoner.setRequests(prisonerRequests);
-		activity.setRequests(activityRequests);
-
-		this.activityService.save(activity);
-		this.prisonerService.save(prisoner);
-
-		this.delete(request);
-
+		this.deleteRequest(request);
 	}
 
 	public Request reconstructRejectRequest(Request request, BindingResult binding) {
@@ -223,4 +220,11 @@ public class RequestService {
 
 	}
 
+	public List<Request> requestToContabilicePoints() {
+		return this.requestRepository.requestToContabilicePoints();
+	}
+
+	public List<Request> getAprovedRequestByPrisoner(Activity activity) {
+		return this.requestRepository.getAprovedRequestByPrisoner(activity);
+	}
 }

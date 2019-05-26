@@ -216,4 +216,8 @@ public class VisitorService {
 
 		this.visitorRepository.delete(visitor);
 	}
+
+	public void flush() {
+		this.visitorRepository.flush();
+	}
 }

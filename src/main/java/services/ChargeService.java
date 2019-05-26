@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import repositories.ChargeRepository;
 import domain.Charge;
@@ -18,6 +19,9 @@ public class ChargeService {
 
 	@Autowired
 	private ChargeRepository	chargeRepository;
+
+	@Autowired
+	private WardenService		wardenService;
 
 
 	// CRUDS
@@ -35,6 +39,9 @@ public class ChargeService {
 	}
 
 	public void delete(Charge charge) {
+		this.wardenService.loggedAsWarden();
+		Assert.isTrue(charge.getIsDraftMode());
+
 		this.chargeRepository.delete(charge);
 	}
 
@@ -48,5 +55,13 @@ public class ChargeService {
 
 	public List<Charge> getDraftCharges() {
 		return this.chargeRepository.getDraftCharges();
+	}
+
+	public void flush() {
+		this.chargeRepository.flush();
+	}
+
+	public List<Charge> getCharge(String charge) {
+		return this.chargeRepository.getCharge(charge);
 	}
 }

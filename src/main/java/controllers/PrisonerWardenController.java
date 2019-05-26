@@ -73,7 +73,7 @@ public class PrisonerWardenController extends AbstractController {
 	@RequestMapping(value = "/register", method = RequestMethod.POST, params = "save")
 	public ModelAndView save(@ModelAttribute("formPrisoner") @Valid FormObjectPrisoner formPrisoner,
 			BindingResult binding) {
-		ModelAndView result = null;
+		ModelAndView result;
 
 		Prisoner prisoner = new Prisoner();
 		prisoner = this.prisonerService.reconstruct(formPrisoner, binding);
@@ -108,9 +108,15 @@ public class PrisonerWardenController extends AbstractController {
 		try {
 			List<Prisoner> prisoners = this.prisonerService.getIncarceratedPrisoners();
 
+			List<Charge> possibleCharges = this.chargeService.findAll();
+
+			Charge charge = this.wardenService.getSuspiciousCharge();
+
+			possibleCharges.remove(charge);
+
 			result = new ModelAndView("prisoner/warden/listSuspects");
 			result.addObject("prisoners", prisoners);
-			result.addObject("possibleCharges", this.chargeService.findAll());
+			result.addObject("possibleCharges", possibleCharges);
 
 		} catch (Throwable oops) {
 			result = new ModelAndView("redirect:/");
@@ -120,35 +126,35 @@ public class PrisonerWardenController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/isolate", method = RequestMethod.GET)
-	public ModelAndView isolate(@RequestParam int prisonerId) {
+	public ModelAndView isolate(@RequestParam(required = false) String prisonerId) {
 		ModelAndView result;
 
 		try {
+			Assert.isTrue(StringUtils.isNumeric(prisonerId));
+			Integer prisonerIdInt = Integer.parseInt(prisonerId);
 
-			Prisoner prisoner = this.prisonerService.findOne(prisonerId);
-			List<Prisoner> prisoners = this.prisonerService.getSuspectPrisoners();
+			Prisoner prisoner = this.prisonerService.findOne(prisonerIdInt);
 
-			if (prisoner == null || !prisoners.contains(prisoner))
-				return this.listSuspects();
-			else {
-				this.wardenService.isolatePrisoner(prisoner);
-				return this.listSuspects();
-			}
+			this.wardenService.isolatePrisoner(prisoner);
+			result = new ModelAndView("redirect:/prisoner/warden/listSuspects.do");
 		} catch (Throwable oops) {
-			result = new ModelAndView("redirect:/");
+			result = new ModelAndView("redirect:/prisoner/warden/listSuspects.do");
 		}
 
 		return result;
 	}
 
 	@RequestMapping(value = "/listSuspectCharges", method = RequestMethod.GET)
-	public ModelAndView listCharge(@RequestParam int prisonerId) {
+	public ModelAndView listCharge(@RequestParam(required = false) String prisonerId) {
 
 		ModelAndView result;
 
 		try {
 
-			Prisoner prisoner = this.prisonerService.findOne(prisonerId);
+			Assert.isTrue(StringUtils.isNumeric(prisonerId));
+			int prisonerIdInt = Integer.parseInt(prisonerId);
+
+			Prisoner prisoner = this.prisonerService.findOne(prisonerIdInt);
 			List<Prisoner> prisoners = this.prisonerService.getIncarceratedPrisoners();
 
 			if (prisoner == null || !prisoners.contains(prisoner))
@@ -178,15 +184,18 @@ public class PrisonerWardenController extends AbstractController {
 		ModelAndView result;
 
 		try {
+			this.wardenService.loggedAsWarden();
 
-			//Assert.isTrue(StringUtils.isNumeric(prisonerId));
-			//int prisonerIdInt = Integer.parseInt(prisonerId);
+			// Assert.isTrue(StringUtils.isNumeric(prisonerId));
+			// int prisonerIdInt = Integer.parseInt(prisonerId);
 
-			//risoner prisoner = this.prisonerService.findOne(prisonerId);
+			// risoner prisoner = this.prisonerService.findOne(prisonerId);
 			List<Prisoner> prisoners = this.prisonerService.getIncarceratedPrisoners();
 
 			Prisoner realPrisoner = this.prisonerService.findOne(prisonerId);
 			Assert.notNull(charge.getId());
+			Assert.isTrue(!realPrisoner.getCharges().contains(charge));
+			Assert.isTrue(charge.getIsDraftMode() == false);
 
 			if (realPrisoner == null || !prisoners.contains(realPrisoner))
 				return this.listSuspects();
@@ -206,44 +215,46 @@ public class PrisonerWardenController extends AbstractController {
 	}
 
 	/*
-	 * @RequestMapping(value = "/addCharge", method = RequestMethod.GET)
-	 * public ModelAndView addCharges(@RequestParam int prisonerId) {
+	 * @RequestMapping(value = "/addCharge", method = RequestMethod.GET) public
+	 * ModelAndView addCharges(@RequestParam int prisonerId) {
 	 * 
 	 * ModelAndView result;
 	 * 
 	 * try {
 	 * 
 	 * Prisoner prisoner = this.prisonerService.findOne(prisonerId);
-	 * List<Prisoner> prisoners = this.prisonerService.getIncarceratedPrisoners();
+	 * List<Prisoner> prisoners =
+	 * this.prisonerService.getIncarceratedPrisoners();
 	 * 
-	 * if (prisoner == null || !prisoners.contains(prisoner))
-	 * return this.listSuspects();
+	 * if (prisoner == null || !prisoners.contains(prisoner)) return
+	 * this.listSuspects();
 	 * 
-	 * List<Charge> allCharges = this.chargeService.getChargesNotAssignedToPrisoner(prisoner);
+	 * List<Charge> allCharges =
+	 * this.chargeService.getChargesNotAssignedToPrisoner(prisoner);
 	 * 
-	 * String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+	 * String locale =
+	 * LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 	 * 
 	 * result = new ModelAndView("prisoner/warden/addCharge");
-	 * result.addObject("charges", allCharges);
-	 * result.addObject("prisoner", prisoner);
-	 * result.addObject("locale", locale);
-	 * result.addObject("warden", true);
-	 * result.addObject("suspect", true);
+	 * result.addObject("charges", allCharges); result.addObject("prisoner",
+	 * prisoner); result.addObject("locale", locale); result.addObject("warden",
+	 * true); result.addObject("suspect", true);
 	 * 
-	 * } catch (Throwable oops) {
-	 * result = new ModelAndView("redirect:/prisoner/warden/listSuspectCharges.do");
-	 * }
+	 * } catch (Throwable oops) { result = new
+	 * ModelAndView("redirect:/prisoner/warden/listSuspectCharges.do"); }
 	 * 
-	 * return result;
-	 * }
+	 * return result; }
 	 */
 
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public ModelAndView editPrisoner(@RequestParam int prisonerId) {
+	public ModelAndView editPrisoner(@RequestParam(required = false) String prisonerId) {
 		ModelAndView result;
 
 		try {
-			Prisoner prisoner = this.wardenService.getPrisonerAsWarden(prisonerId);
+			Assert.isTrue(StringUtils.isNumeric(prisonerId));
+			int prisonerIdInt = Integer.parseInt(prisonerId);
+
+			Prisoner prisoner = this.wardenService.getPrisonerAsWarden(prisonerIdInt);
 
 			result = new ModelAndView("warden/editPrisoner");
 			result.addObject("prisoner", prisoner);
@@ -255,26 +266,31 @@ public class PrisonerWardenController extends AbstractController {
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
 	public ModelAndView editPrisoner(Prisoner prisoner, BindingResult binding) {
-		ModelAndView result;
 
-		Prisoner prisonerReconstructed = new Prisoner();
-		prisonerReconstructed = this.prisonerService.reconstruct(prisoner, binding);
+		try {
+			ModelAndView result;
 
-		if (binding.hasErrors()) {
-			result = new ModelAndView("warden/editPrisoner");
-			result.addObject("prisoner", prisonerReconstructed);
-		} else
-			try {
-				this.prisonerService.savePrisoner(prisonerReconstructed);
+			Prisoner prisonerReconstructed = new Prisoner();
+			prisonerReconstructed = this.prisonerService.reconstruct(prisoner, binding);
 
-				result = new ModelAndView("redirect:/anonymous/prisoner/list.do");
-			} catch (Throwable oops) {
+			if (binding.hasErrors()) {
 				result = new ModelAndView("warden/editPrisoner");
 				result.addObject("prisoner", prisonerReconstructed);
-				result.addObject("message", "warden.save.commit.error");
-			}
+			} else
+				try {
+					this.prisonerService.savePrisoner(prisonerReconstructed);
 
-		return result;
+					result = new ModelAndView("redirect:/anonymous/prisoner/list.do");
+				} catch (Throwable oops) {
+					result = new ModelAndView("warden/editPrisoner");
+					result.addObject("prisoner", prisonerReconstructed);
+					result.addObject("message", "warden.save.commit.error");
+				}
+
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:/");
+		}
 	}
 
 	@RequestMapping(value = "/show", method = RequestMethod.GET)

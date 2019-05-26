@@ -10,14 +10,12 @@
 
 package queries;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.transaction.Transactional;
 
-import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +27,6 @@ import repositories.WardenRepository;
 import security.LoginService;
 import security.UserAccount;
 import utilities.AbstractTest;
-import domain.Visitor;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -52,9 +49,6 @@ public class StatisticsPerformanceTest extends AbstractTest {
 	private VisitorRepository		visitorRepository;
 
 	@Autowired
-	private SessionFactory			sessionFactory;
-
-	@Autowired
 	private EntityManagerFactory	emf;
 
 	private Logger					log	= Logger.getLogger(this.getClass().getName());
@@ -70,7 +64,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			List<Visitor> a = this.wardenRepository.getVisitorsMostVisitsToAPrisoner();
+			this.wardenRepository.getVisitorsMostVisitsToAPrisoner();
 		}
 
 		em.getTransaction().commit();
@@ -83,7 +77,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 
 		super.authenticate("visitor1");
 		UserAccount u = LoginService.getPrincipal();
-		int id = this.visitorRepository.getVisitorByUsername(u.getUsername()).getId();
+		this.visitorRepository.getVisitorByUsername(u.getUsername()).getId();
 		super.unauthenticate();
 		this.log.info("... statistics ...");
 
@@ -91,7 +85,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			List<String> a = this.wardenRepository.getPrisonersWithMostVisitToAVisitor(862);
+			this.wardenRepository.getPrisonersWithMostVisitToAVisitor(862);
 		}
 
 		em.getTransaction().commit();
@@ -107,7 +101,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			List<String> a = this.wardenRepository.getPrisonersWithVisitsToMostDifferentVisitors();
+			this.wardenRepository.getPrisonersWithVisitsToMostDifferentVisitors();
 		}
 
 		em.getTransaction().commit();
@@ -123,7 +117,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			List<String> a = this.wardenRepository.getVisitorsWithVisitsToMostDifferentPrisoners();
+			this.wardenRepository.getVisitorsWithVisitsToMostDifferentPrisoners();
 		}
 
 		em.getTransaction().commit();
@@ -139,7 +133,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			Float a = this.wardenRepository.getRatioOfVisitsWithReport();
+			this.wardenRepository.getRatioOfVisitsWithReport();
 		}
 
 		em.getTransaction().commit();
@@ -155,7 +149,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			List<String> a = this.wardenRepository.getGuardsWithTheLargestNumberOfReportsWritten();
+			this.wardenRepository.getGuardsWithTheLargestNumberOfReportsWritten();
 		}
 
 		em.getTransaction().commit();
@@ -171,7 +165,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			Float a = this.wardenRepository.getRatioOfGuardsWithMoreThan50PercentOfVisitsWithReport();
+			this.wardenRepository.getRatioOfGuardsWithMoreThan50PercentOfVisitsWithReport();
 		}
 
 		em.getTransaction().commit();
@@ -187,7 +181,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			Float a = this.wardenRepository.getRatioOfPrisonersWithoutVisitsLastMonth();
+			this.wardenRepository.getRatioOfPrisonersWithoutVisitsLastMonth();
 		}
 
 		em.getTransaction().commit();
@@ -203,7 +197,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			Float a = this.wardenRepository.getRegularVisitorToAtLeastOnePrisoner();
+			this.wardenRepository.getRegularVisitorToAtLeastOnePrisoner();
 		}
 
 		em.getTransaction().commit();
@@ -219,7 +213,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			Float a = this.wardenRepository.getRatioOfAvailableGuardsVsFutureVisitsWithoutGuard();
+			this.wardenRepository.getRatioOfAvailableGuardsVsFutureVisitsWithoutGuard();
 		}
 
 		em.getTransaction().commit();
@@ -235,7 +229,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			List<String> a = this.wardenRepository.getTop3PrisonersLowestCrimeRate();
+			this.wardenRepository.getTop3PrisonersLowestCrimeRate();
 		}
 
 		em.getTransaction().commit();
@@ -251,7 +245,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			Float a = this.wardenRepository.getRatioOfNonIsolatedVsIsolatedPrisoners();
+			this.wardenRepository.getRatioOfNonIsolatedVsIsolatedPrisoners();
 		}
 
 		em.getTransaction().commit();
@@ -267,7 +261,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			Float[] a = this.wardenRepository.getStatisticsCrimeRate();
+			this.wardenRepository.getStatisticsCrimeRate();
 		}
 
 		em.getTransaction().commit();
@@ -283,7 +277,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			List<String> a = this.wardenRepository.getSocialWorkerMostActivitiesFull();
+			this.wardenRepository.getSocialWorkerMostActivitiesFull();
 		}
 
 		em.getTransaction().commit();
@@ -299,7 +293,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			List<String> a = this.wardenRepository.getPrisonersMostRejectedRequestToDifferentActivitiesAndNoApprovedOnThoseActivities();
+			this.wardenRepository.getPrisonersMostRejectedRequestToDifferentActivitiesAndNoApprovedOnThoseActivities();
 		}
 
 		em.getTransaction().commit();
@@ -315,7 +309,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			Float a = this.wardenRepository.getRatioSocialWorkersWithCurriculum();
+			this.wardenRepository.getRatioSocialWorkersWithCurriculum();
 		}
 
 		em.getTransaction().commit();
@@ -331,7 +325,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			List<String> a = this.wardenRepository.getActivitiesLargestNumberPrisoners();
+			this.wardenRepository.getActivitiesLargestNumberPrisoners();
 		}
 
 		em.getTransaction().commit();
@@ -347,7 +341,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			List<String> a = this.wardenRepository.getActivitiesLargestAvgCrimeRate();
+			this.wardenRepository.getActivitiesLargestAvgCrimeRate();
 		}
 
 		em.getTransaction().commit();
@@ -363,7 +357,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			List<String> a = this.wardenRepository.getActivitiesSmallestAvgCrimeRate();
+			this.wardenRepository.getActivitiesSmallestAvgCrimeRate();
 		}
 
 		em.getTransaction().commit();
@@ -379,7 +373,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			List<String> a = this.wardenRepository.getSocialWorkersLowestRatioPrisonersPerActivity();
+			this.wardenRepository.getSocialWorkersLowestRatioPrisonersPerActivity();
 		}
 
 		em.getTransaction().commit();
@@ -395,7 +389,7 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			List<String> a = this.wardenRepository.getActivitiesMostSearched();
+			this.wardenRepository.getActivitiesMostSearched();
 		}
 
 		em.getTransaction().commit();
@@ -410,9 +404,24 @@ public class StatisticsPerformanceTest extends AbstractTest {
 		em.getTransaction().begin();
 
 		for (Integer c = 1000; c > 0; c--) {
-			List<String> a = this.wardenRepository.getTop5PrisonersParticipatedMostActivitiesLastMonth();
+			this.wardenRepository.getTop5PrisonersParticipatedMostActivitiesLastMonth();
 		}
 
+		em.getTransaction().commit();
+		em.close();
+
+	}
+
+	@Test
+	public void getVisitorsMostVisitsToAPrisonerTest2() {
+		this.log.info("... statistics ...");
+
+		EntityManager em = this.emf.createEntityManager();
+		em.getTransaction().begin();
+
+		for (Integer c = 1000; c > 0; c--) {
+			this.wardenRepository.getVisitorsMostVisitsToAPrisoner2();
+		}
 		em.getTransaction().commit();
 		em.close();
 

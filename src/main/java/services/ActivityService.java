@@ -11,9 +11,14 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import domain.Activity;
+import domain.FinderActivities;
 import domain.Prisoner;
+import domain.Request;
+import domain.SocialWorker;
 import repositories.ActivityRepository;
 
 @Service
@@ -26,6 +31,12 @@ public class ActivityService {
 	@Autowired
 	private SocialWorkerService socialWorkerService;
 
+	@Autowired
+	private RequestService requestService;
+
+	@Autowired
+	private Validator validator;
+
 	// CRUDS
 	public List<Activity> findAll() {
 		return this.activityRepository.findAll();
@@ -35,11 +46,19 @@ public class ActivityService {
 		return this.activityRepository.findOne(id);
 	}
 
+	public void delete(Activity activity) {
+		this.activityRepository.delete(activity);
+	}
+
 	public List<Prisoner> getPrisonersPerActivity(Activity a) {
 		this.socialWorkerService.loggedAsSocialWorker();
 		List<Prisoner> res = new ArrayList<Prisoner>();
 		res = this.activityRepository.getPrisonersPerActivity(a);
 		return res;
+	}
+
+	public List<FinderActivities> getFinderActivitiesByActivity(Activity a) {
+		return this.activityRepository.getFindersByActivity(a);
 	}
 
 	public Activity save(Activity activity) {
@@ -64,5 +83,66 @@ public class ActivityService {
 
 		return this.activityRepository.getPostActivities(date);
 
+	}
+
+	public List<Activity> getFinalActivitiesSocialWorker(SocialWorker sw) {
+		return this.activityRepository.getFinalActivitiesSocialWorker(sw);
+	}
+
+	public Activity createActivity() {
+		Activity res = new Activity();
+		res.setIsFinalMode(false);
+		return res;
+	}
+
+	public Activity reconstruct(Activity activity, BindingResult binding) {
+		this.socialWorkerService.loggedAsSocialWorker();
+		SocialWorker sw = this.socialWorkerService.loggedSocialWorker();
+		Activity result = new Activity();
+
+		if (activity.getId() == 0)
+			result = activity;
+		else {
+			Activity copy = this.findOne(activity.getId());
+
+			result.setId(copy.getId());
+			result.setVersion(copy.getVersion());
+			result.setDescription(copy.getDescription());
+			result.setIsFinalMode(copy.getIsFinalMode());
+			result.setMaxAssistant(copy.getMaxAssistant());
+			result.setRewardPoints(copy.getRewardPoints());
+			result.setRealizationDate(copy.getRealizationDate());
+			result.setTitle(copy.getTitle());
+			result.setRequests(copy.getRequests());
+		}
+		this.validator.validate(result, binding);
+		return result;
+	}
+
+	public void saveActivity(Activity activity) {
+		SocialWorker sw = this.socialWorkerService.loggedSocialWorker();
+
+		if (activity.getId() == 0) {
+			Activity saved = this.save(activity);
+			List<Activity> la = sw.getActivities();
+			la.add(saved);
+			sw.setActivities(la);
+			this.socialWorkerService.save(sw);
+		} else {
+			Assert.isTrue(sw.getActivities().contains(activity));
+			this.save(activity);
+		}
+	}
+
+	public void deleteActivity(Activity activity, SocialWorker sw) {
+		Assert.isTrue(sw.getActivities().contains(activity));
+		List<Request> lr = activity.getRequests();
+		for (int i = 0; i < lr.size(); i++) {
+			lr.get(i).setPrisoner(null);
+			this.requestService.delete(lr.get(i));
+		}
+		sw.getActivities().remove(activity);
+		this.socialWorkerService.save(sw);
+		this.delete(activity);
 	}
 }

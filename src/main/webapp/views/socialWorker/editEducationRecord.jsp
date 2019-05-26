@@ -30,18 +30,20 @@
 		<br />
 		
 		<!-- StartDateStudy -->
-		<acme:datebox code="educationRecord.startDateStudy" path="startDateStudy"/>
+		<acme:datebox2 code="educationRecord.startDateStudy" path="startDateStudy"/>
 		<br />
 		
 		<!-- EndDateStudy -->
-		<acme:datebox code="educationRecord.endDateStudy" path="endDateStudy"/>
+		<acme:datebox2 code="educationRecord.endDateStudy" path="endDateStudy"/>
 		<br />
 		
 		
 		<!-- Buttons -->
 
 		<input type="submit" name="save" value="<spring:message code="button.save" />"/>
+		<jstl:if test="${educationRecord.id > 0}">
 		<input type="submit" name="delete" value="<spring:message code="button.delete" />" onclick="return confirm('<spring:message code="delete.confirm" />')"/>
+		</jstl:if>
 		<acme:cancel url="/curriculum/socialWorker/show.do" code="button.cancel" /> 
 
 	</form:form>

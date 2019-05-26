@@ -3,37 +3,36 @@ package controllers;
 
 import javax.validation.Valid;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import domain.Actor;
-import domain.Curriculum;
-import domain.PersonalRecord;
-import domain.SocialWorker;
 import services.ActorService;
 import services.CurriculumService;
 import services.PersonalRecordService;
 import services.SocialWorkerService;
+import domain.Actor;
+import domain.Curriculum;
+import domain.PersonalRecord;
+import domain.SocialWorker;
 
 @Controller
 @RequestMapping("/curriculum")
 public class CurriculumController extends AbstractController {
 
 	@Autowired
-	private SocialWorkerService socialWorkerService;
+	private SocialWorkerService		socialWorkerService;
 	@Autowired
-	private PersonalRecordService personalRecordService;
+	private PersonalRecordService	personalRecordService;
 	@Autowired
-	private ActorService actorService;
+	private ActorService			actorService;
 	@Autowired
-	private CurriculumService curriculumService;
+	private CurriculumService		curriculumService;
+
 
 	public CurriculumController() {
 		super();
@@ -85,11 +84,8 @@ public class CurriculumController extends AbstractController {
 		ModelAndView result;
 
 		try {
-			Assert.isTrue(StringUtils.isNumeric(personalRecordId));
-			int personalRecordIdInt = Integer.parseInt(personalRecordId);
 
-			PersonalRecord personalRecord = this.personalRecordService
-					.getPersonalRecordAsSocialWorker(personalRecordIdInt);
+			PersonalRecord personalRecord = this.personalRecordService.getPersonalRecordAsSocialWorker(personalRecordId);
 
 			result = this.createEditModelAndView(personalRecord);
 		} catch (Throwable oops) {
@@ -104,19 +100,21 @@ public class CurriculumController extends AbstractController {
 	public ModelAndView addCurriculum(@Valid PersonalRecord personalRecord, BindingResult binding) {
 		ModelAndView result;
 
-		if (binding.hasErrors())
+		if (binding.hasErrors()) {
 			result = this.createEditModelAndView(personalRecord);
-		else
+		} else {
 			try {
-				if (personalRecord.getId() == 0)
+				if (personalRecord.getId() == 0) {
 					this.socialWorkerService.addCurriculum(personalRecord);
-				else
+				} else {
 					this.socialWorkerService.updateCurriculum(personalRecord);
+				}
 				result = new ModelAndView("redirect:show.do");
 
 			} catch (Throwable oops) {
 				result = this.createEditModelAndView(personalRecord, "commit.error");
 			}
+		}
 		return result;
 	}
 

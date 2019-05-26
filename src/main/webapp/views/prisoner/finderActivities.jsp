@@ -11,8 +11,30 @@
 
 <security:authorize access="hasRole('PRISONER')">
 
-	<a href= "finderActivities/prisoner/edit.do"><button><spring:message code="visitor.editFinder"/></button> </a>
+<form:form modelAttribute="finderActivities"
+		action="finderActivities/prisoner/edit.do">
+		
+		
+		<form:hidden path="id" />
+		
+		<acme:textbox code="finder.keyWord" path="keyWord"/>
 
+	
+		<acme:datebox code="finder.maxDate" path="maxDate"/>
+		
+		<br/>
+		
+		<acme:datebox code="finder.minDate" path="minDate"/>
+
+		<br/>
+		
+		<acme:submit name="save" code="finder.save"/>
+		
+		
+	</form:form>
+	
+	<br/>
+	
 			
 	<display:table pagesize="5" name="activities" id="row" requestURI="${requestURI}" >
 	

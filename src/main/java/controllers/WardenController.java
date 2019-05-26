@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import services.ChargeService;
 import services.PrisonerService;
+import services.WardenService;
 import domain.Charge;
 import domain.Prisoner;
 
@@ -30,6 +31,9 @@ public class WardenController extends AbstractController {
 
 	@Autowired
 	private ChargeService	chargeService;
+
+	@Autowired
+	private WardenService	wardenService;
 
 
 	public WardenController() {
@@ -160,25 +164,35 @@ public class WardenController extends AbstractController {
 
 		ModelAndView result;
 		try {
-
-			if (binding.hasErrors())
-				result = this.createEditModelAndView(charge);
+			if (charge.getId() == 0)
+				Assert.isTrue(this.wardenService.loggedAsWardenBoolean());
 			else
-				try {
+				Assert.isTrue(charge.getIsDraftMode());
 
-					this.chargeService.save(charge);
-					result = new ModelAndView("redirect:listAll.do");
+			if (charge.getMonth() == 0 && charge.getYear() == 0) {
+				result = this.createEditModelAndView(charge, "commit.yearsAndMothns");
+				return result;
+			} else {
 
-				} catch (Throwable oops) {
-					result = this.createEditModelAndView(charge, "commit.error");
-				}
+				if (binding.hasErrors())
+					result = this.createEditModelAndView(charge);
+				else
+					try {
 
-			return result;
+						this.chargeService.save(charge);
+						result = new ModelAndView("redirect:listAll.do");
+
+					} catch (Throwable oops) {
+						result = this.createEditModelAndView(charge, "commit.error");
+					}
+
+				return result;
+			}
 		} catch (Throwable oops) {
 			return new ModelAndView("redirect:/warden/charge/listAll");
 		}
-	}
 
+	}
 	@RequestMapping(value = "/charge/deleteCharge", method = RequestMethod.GET)
 	public ModelAndView deleteCharge(@RequestParam(required = false) String chargeId) {
 

@@ -3,7 +3,6 @@ package controllers;
 
 import javax.validation.Valid;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
@@ -13,24 +12,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import domain.Curriculum;
-import domain.MiscellaneousRecord;
-import domain.SocialWorker;
 import security.LoginService;
 import services.CurriculumService;
 import services.MiscellaneousRecordService;
 import services.SocialWorkerService;
+import domain.Curriculum;
+import domain.MiscellaneousRecord;
+import domain.SocialWorker;
 
 @Controller
 @RequestMapping("/curriculum")
 public class MiscellaneousRecordController extends AbstractController {
 
 	@Autowired
-	private MiscellaneousRecordService miscellaneousRecordService;
+	private MiscellaneousRecordService	miscellaneousRecordService;
 	@Autowired
-	private SocialWorkerService socialWorkerService;
+	private SocialWorkerService			socialWorkerService;
 	@Autowired
-	private CurriculumService curriculumService;
+	private CurriculumService			curriculumService;
+
 
 	// Constructor
 	public MiscellaneousRecordController() {
@@ -43,8 +43,7 @@ public class MiscellaneousRecordController extends AbstractController {
 		ModelAndView result;
 
 		try {
-			SocialWorker socialWorker = this.socialWorkerService
-					.getSocialWorkerByUsername(LoginService.getPrincipal().getUsername());
+			SocialWorker socialWorker = this.socialWorkerService.getSocialWorkerByUsername(LoginService.getPrincipal().getUsername());
 			Curriculum curriculum = socialWorker.getCurriculum();
 			Assert.notNull(curriculum);
 
@@ -64,11 +63,8 @@ public class MiscellaneousRecordController extends AbstractController {
 		ModelAndView result;
 
 		try {
-			Assert.isTrue(StringUtils.isNumeric(miscellaneousRecordId));
-			Integer miscellaneousRecordIdInt = Integer.parseInt(miscellaneousRecordId);
 
-			MiscellaneousRecord miscellaneousRecord = this.miscellaneousRecordService
-					.getMiscellaneousRecordOfLoggedSocialWorker(miscellaneousRecordIdInt);
+			MiscellaneousRecord miscellaneousRecord = this.miscellaneousRecordService.getMiscellaneousRecordOfLoggedSocialWorker(miscellaneousRecordId);
 			result = this.createEditModelAndView(miscellaneousRecord);
 		} catch (Throwable oops) {
 			result = new ModelAndView("redirect:show.do");
@@ -82,20 +78,22 @@ public class MiscellaneousRecordController extends AbstractController {
 	public ModelAndView save(@Valid MiscellaneousRecord miscellaneousRecord, BindingResult binding) {
 		ModelAndView result;
 
-		if (binding.hasErrors())
+		if (binding.hasErrors()) {
 			result = this.createEditModelAndView(miscellaneousRecord);
-		else
+		} else {
 			try {
-				if (miscellaneousRecord.getId() == 0)
+				if (miscellaneousRecord.getId() == 0) {
 					this.curriculumService.addMiscellaneousRecord(miscellaneousRecord);
-				else
+				} else {
 					this.curriculumService.updateMiscellaneousRecord(miscellaneousRecord);
+				}
 
 				result = new ModelAndView("redirect:show.do");
 
 			} catch (Throwable oops) {
 				result = this.createEditModelAndView(miscellaneousRecord, "commit.error");
 			}
+		}
 		return result;
 	}
 

@@ -21,9 +21,13 @@
 			</a>
 		</display:column> 
 		
-		<display:column property="VATNumber" titleKey="salesman.VATNumber" /> 
+		<display:column titleKey="salesman.VATNumber">
+			<jstl:out value="${row.VATNumber}"/>
+		</display:column> 
 		
-		<display:column property="storeName" titleKey="salesman.storeName" /> 
+		<display:column property="storeName" titleKey="salesman.storeName">
+			<jstl:out value="${row.storeName}"/>
+		</display:column> 
 		
 		<display:column titleKey="salesman.products" >
 				<spring:url var="productsUrl"

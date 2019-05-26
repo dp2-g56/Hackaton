@@ -4,6 +4,7 @@ package controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
@@ -36,82 +37,114 @@ public class BoxController extends AbstractController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView list() {
 
-		ModelAndView result;
-		List<Box> boxes = new ArrayList<>();
+		try {
+			this.actorService.loggedAsActor();
 
-		boxes = this.boxService.getActorBoxes();
-		result = new ModelAndView("box/actor/list");
+			ModelAndView result;
+			List<Box> boxes = new ArrayList<>();
 
-		result.addObject("boxes", boxes);
-		result.addObject("requestURI", "box/actor/list.do");
+			boxes = this.boxService.getActorBoxes();
+			result = new ModelAndView("box/actor/list");
 
-		return result;
+			result.addObject("boxes", boxes);
+			result.addObject("requestURI", "box/actor/list.do");
 
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:/");
+		}
 	}
 	//Create
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView create() {
-		ModelAndView result;
-		Box box;
+		try {
+			this.actorService.loggedAsActor();
+			ModelAndView result;
+			Box box;
 
-		box = this.boxService.create();
-		result = this.createEditModelAndView(box);
+			box = this.boxService.create();
+			result = this.createEditModelAndView(box);
 
-		return result;
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:list.do");
+		}
 	}
 
 	//Save
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
 	public ModelAndView save(Box box, BindingResult binding) {
-		ModelAndView result;
+		try {
+			this.actorService.loggedAsActor();
+			ModelAndView result;
 
-		box = this.boxService.reconstruct(box, binding);
+			box = this.boxService.reconstruct(box, binding);
 
-		if (binding.hasErrors())
-			result = this.createEditModelAndView(box);
-		else
-			try {
-				this.boxService.updateBox(box);
-				result = new ModelAndView("redirect:list.do");
-			} catch (Throwable oops) {
-				result = this.createEditModelAndView(box, "message.commit.error");
-			}
-		return result;
+			if (binding.hasErrors())
+				result = this.createEditModelAndView(box);
+			else
+				try {
+					this.boxService.updateBox(box);
+					result = new ModelAndView("redirect:list.do");
+				} catch (Throwable oops) {
+					result = this.createEditModelAndView(box, "message.commit.error");
+				}
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:list.do");
+		}
 	}
 
 	//Create
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public ModelAndView edit(@RequestParam int boxId) {
-		ModelAndView result;
-		Box box;
+	public ModelAndView edit(@RequestParam(required = false) String boxId) {
+		try {
+			Assert.isTrue(StringUtils.isNumeric(boxId));
+			int boxIdInt = Integer.parseInt(boxId);
 
-		box = this.boxService.findOne(boxId);
+			this.actorService.loggedAsActor();
+			ModelAndView result;
+			Box box;
 
-		Assert.notNull(box);
-		result = this.createEditModelAndView(box);
+			box = this.boxService.findOne(boxIdInt);
 
-		return result;
+			Assert.notNull(box);
+			result = this.createEditModelAndView(box);
+
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:list.do");
+		}
 	}
 
 	//Save
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
-	public ModelAndView delete(@RequestParam int rowId) {
-		ModelAndView result;
-		Actor actor = this.actorService.loggedActor();
-
-		Box box = this.boxService.findOne(rowId);
-
-		if (!actor.getBoxes().contains(box))
-			return this.list();
+	public ModelAndView delete(@RequestParam(required = false) String rowId) {
 
 		try {
-			this.boxService.deleteBox(box);
-			result = new ModelAndView("redirect:list.do");
-		} catch (Throwable oops) {
-			result = this.createEditModelAndView(box, "box.commit.error");
+			Assert.isTrue(StringUtils.isNumeric(rowId));
+			int boxIdInt = Integer.parseInt(rowId);
 
+			this.actorService.loggedAsActor();
+			ModelAndView result;
+			Actor actor = this.actorService.loggedActor();
+
+			Box box = this.boxService.findOne(boxIdInt);
+
+			if (!actor.getBoxes().contains(box))
+				return this.list();
+
+			try {
+				this.boxService.deleteBox(box);
+				result = new ModelAndView("redirect:list.do");
+			} catch (Throwable oops) {
+				result = this.createEditModelAndView(box, "box.commit.error");
+
+			}
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:list.do");
 		}
-		return result;
 	}
 	protected ModelAndView createEditModelAndView(Box box) {
 		ModelAndView result;
