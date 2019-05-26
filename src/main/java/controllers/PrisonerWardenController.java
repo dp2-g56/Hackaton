@@ -71,8 +71,9 @@ public class PrisonerWardenController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST, params = "save")
-	public ModelAndView save(@ModelAttribute("formPrisoner") @Valid FormObjectPrisoner formPrisoner, BindingResult binding) {
-		ModelAndView result = null;
+	public ModelAndView save(@ModelAttribute("formPrisoner") @Valid FormObjectPrisoner formPrisoner,
+			BindingResult binding) {
+		ModelAndView result;
 
 		Prisoner prisoner = new Prisoner();
 		prisoner = this.prisonerService.reconstruct(formPrisoner, binding);

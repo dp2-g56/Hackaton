@@ -175,30 +175,6 @@ public class PrisonerService {
 		if (prisoner.getId() == 0) {
 			prisoner.setTicker(this.generateTicker());
 
-			List<Box> boxes = new ArrayList<>();
-
-			// Boxes
-			Box box1 = this.boxService.createSystem();
-			box1.setName("SUSPICIOUSBOX");
-			Box saved1 = this.boxService.saveSystem(box1);
-			boxes.add(saved1);
-
-			Box box2 = this.boxService.createSystem();
-			box2.setName("TRASHBOX");
-			Box saved2 = this.boxService.saveSystem(box2);
-			boxes.add(saved2);
-
-			Box box3 = this.boxService.createSystem();
-			box3.setName("OUTBOX");
-			Box saved3 = this.boxService.saveSystem(box3);
-			boxes.add(saved3);
-
-			Box box4 = this.boxService.createSystem();
-			box4.setName("INBOX");
-			Box saved4 = this.boxService.saveSystem(box4);
-			boxes.add(saved4);
-
-			prisoner.setBoxes(boxes);
 			prisoner.setIncomeDate(new Date());
 
 			Calendar exitCalendar = Calendar.getInstance();
@@ -213,9 +189,35 @@ public class PrisonerService {
 
 			FinderActivities finder = this.finderActivitiesService.create();
 			prisoner.setFinderActivities(finder);
+
+			List<Box> boxes = new ArrayList<>();
+
+			// Boxes
+			Box box1 = this.boxService.createSystem();
+			box1.setName("SUSPICIOUSBOX");
+//			Box saved1 = this.boxService.saveSystem(box1);
+			boxes.add(box1);
+
+			Box box2 = this.boxService.createSystem();
+			box2.setName("TRASHBOX");
+//			Box saved2 = this.boxService.saveSystem(box2);
+			boxes.add(box2);
+
+			Box box3 = this.boxService.createSystem();
+			box3.setName("OUTBOX");
+//			Box saved3 = this.boxService.saveSystem(box3);
+			boxes.add(box3);
+
+			Box box4 = this.boxService.createSystem();
+			box4.setName("INBOX");
+//			Box saved4 = this.boxService.saveSystem(box4);
+			boxes.add(box4);
+
+			prisoner.setBoxes(boxes);
 		}
 
 		this.prisonerRepository.save(prisoner);
+		this.prisonerRepository.flush();
 	}
 
 	public Prisoner reconstruct(FormObjectPrisoner formPrisoner, BindingResult binding) {
