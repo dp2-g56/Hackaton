@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
@@ -212,27 +213,37 @@ public class MessageController extends AbstractController {
 	//Create
 	@RequestMapping(value = "/createmove", method = RequestMethod.GET)
 	public ModelAndView createMove() {
-		this.actorService.loggedAsActor();
-		ModelAndView result;
-		Message message;
+		try {
+			this.actorService.loggedAsActor();
+			ModelAndView result;
+			Message message;
 
-		message = this.messageService.create();
-		result = this.createEditModelAndViewMove(message);
+			message = this.messageService.create();
+			result = this.createEditModelAndViewMove(message);
 
-		return result;
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:list.do");
+		}
 	}
 
 	@RequestMapping(value = "/move", method = RequestMethod.GET)
-	public ModelAndView update(@RequestParam int messageId, @RequestParam int boxId) {
+	public ModelAndView update(@RequestParam(required = false) String messageId, @RequestParam(required = false) String boxId) {
 		try {
+			Assert.isTrue(StringUtils.isNumeric(messageId));
+			int messageIdInt = Integer.parseInt(messageId);
+
+			Assert.isTrue(StringUtils.isNumeric(boxId));
+			int boxIdInt = Integer.parseInt(boxId);
+
 			this.actorService.loggedAsActor();
 			ModelAndView result;
 			Message message;
 			Box box;
 
-			message = this.messageService.findOne(messageId);
+			message = this.messageService.findOne(messageIdInt);
 
-			box = this.boxService.findOne(boxId);
+			box = this.boxService.findOne(boxIdInt);
 
 			try {
 				this.messageService.updateMessage(message, box);
@@ -247,14 +258,21 @@ public class MessageController extends AbstractController {
 		}
 	}
 	@RequestMapping(value = "/copy", method = RequestMethod.GET)
-	public ModelAndView copy(@RequestParam int messageId, @RequestParam int boxId) {
+	public ModelAndView copy(@RequestParam(required = false) String messageId, @RequestParam(required = false) String boxId) {
 		try {
+
+			Assert.isTrue(StringUtils.isNumeric(messageId));
+			int messageIdInt = Integer.parseInt(messageId);
+
+			Assert.isTrue(StringUtils.isNumeric(boxId));
+			int boxIdInt = Integer.parseInt(boxId);
+
 			ModelAndView result;
 			Message message;
 			Box box;
 
-			message = this.messageService.findOne(messageId);
-			box = this.boxService.findOne(boxId);
+			message = this.messageService.findOne(messageIdInt);
+			box = this.boxService.findOne(boxIdInt);
 
 			try {
 				this.messageService.copyMessage(message, box);
