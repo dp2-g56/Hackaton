@@ -49,6 +49,7 @@ public class Activity extends DomainEntity {
 		this.description = description;
 	}
 
+	@NotNull
 	@Future
 	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
 	public Date getRealizationDate() {
