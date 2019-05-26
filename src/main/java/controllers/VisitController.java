@@ -5,9 +5,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -144,46 +146,61 @@ public class VisitController extends AbstractController {
 
 	//Ver el Report
 	@RequestMapping(value = "/report/list", method = RequestMethod.GET)
-	public ModelAndView listReport(@RequestParam int visitId) {
+	public ModelAndView listReport(@RequestParam(required = false) String visitId) {	//Modificar
 
-		ModelAndView result;
+		ModelAndView result = null;
 		Report report;
 
-		Visit visit = this.visitService.findOne(visitId);
+		try {
+			Assert.isTrue(StringUtils.isNumeric(visitId));
+			int visitIdInt = Integer.parseInt(visitId);
 
-		UserAccount userAccount = LoginService.getPrincipal();
-		List<Authority> authorities = (List<Authority>) userAccount.getAuthorities();
-		Authority authority = authorities.get(0);
+			Visit visit = this.visitService.findOne(visitIdInt);
 
-		//Comprueba que si eres un prisionero o un visitante, el Report que estas mostrando es tuyo (confidencialidad)
-		if (authority.toString().equals("VISITOR")) {
-			Visitor loggedVisitor = this.visitorService.loggedVisitor();
-			if (!visit.getVisitor().equals(loggedVisitor))
-				return this.listVisitor();
+			UserAccount userAccount = LoginService.getPrincipal();
+			List<Authority> authorities = (List<Authority>) userAccount.getAuthorities();
+			Authority authority = authorities.get(0);
 
-		} else if (authority.toString().equals("PRISONER")) {
-			Prisoner loggedPrisoner = this.prisonerService.loggedPrisoner();
-			if (!visit.getPrisoner().equals(loggedPrisoner))
-				return this.listPrisoner();
+			//Comprueba que si eres un prisionero o un visitante, el Report que estas mostrando es tuyo (confidencialidad)
+			if (authority.toString().equals("VISITOR")) {
+				Visitor loggedVisitor = this.visitorService.loggedVisitor();
+				if (!visit.getVisitor().equals(loggedVisitor))
+					return this.listVisitor();
+
+			} else if (authority.toString().equals("PRISONER")) {
+				Prisoner loggedPrisoner = this.prisonerService.loggedPrisoner();
+				if (!visit.getPrisoner().equals(loggedPrisoner))
+					return this.listPrisoner();
+
+			}
+			if (authority.toString().equals("GUARD")) {
+				Guard loggedGuard = this.guardService.loggedGuard();
+				if (!loggedGuard.getVisits().contains(visit))
+					return this.listGuard();
+			}
+
+			report = visit.getReport();
+			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+
+			result = new ModelAndView("report/list");
+			result.addObject("report", report);
+			result.addObject("locale", locale);
+			result.addObject("requestURI", "visit/report/list.do");
+
+		} catch (Throwable oops) {
+			UserAccount userAccount = LoginService.getPrincipal();
+			List<Authority> authorities = (List<Authority>) userAccount.getAuthorities();
+			Authority authority = authorities.get(0);
+			if (authority.toString().equals("VISITOR"))
+				result = this.listVisitor();
+			else if (authority.toString().equals("PRISONER"))
+				result = this.listPrisoner();
+			if (authority.toString().equals("GUARD"))
+				result = this.listGuard();
 
 		}
-		if (authority.toString().equals("GUARD")) {
-			Guard loggedGuard = this.guardService.loggedGuard();
-			if (!loggedGuard.getVisits().contains(visit))
-				return this.listGuard();
-		}
-
-		report = visit.getReport();
-		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
-
-		result = new ModelAndView("report/list");
-		result.addObject("report", report);
-		result.addObject("locale", locale);
-		result.addObject("requestURI", "visit/report/list.do");
-
 		return result;
 	}
-
 	//--------------------------------------------------REFRESH-----------------------------------------
 	//--------------------------------------------------------------------------------------------------
 	//Refresh Prisoner
@@ -256,170 +273,235 @@ public class VisitController extends AbstractController {
 	//----------------------------------------------------------------------------------------------
 	//Accept as Prisoner
 	@RequestMapping(value = "/prisoner/accept", method = RequestMethod.GET)
-	public ModelAndView acceptApplication(@RequestParam int visitId) {
-		Visit visit;
-		visit = this.visitService.findOne(visitId);
+	public ModelAndView acceptApplication(@RequestParam(required = false) String visitId) {
 
-		Prisoner prisoner = this.prisonerService.loggedPrisoner();
+		try {
 
-		Date thisMoment = new Date();
-		thisMoment.setTime(thisMoment.getTime() - 1);
+			Assert.isTrue(StringUtils.isNumeric(visitId));
+			int visitIdInt = Integer.parseInt(visitId);
 
-		if (visit == null || visit.getVisitStatus() != VisitStatus.PENDING || visit.getDate().before(thisMoment) || visit.isCreatedByPrisoner() || !visit.getPrisoner().equals(prisoner))
+			Visit visit;
+			visit = this.visitService.findOne(visitIdInt);
+
+			Prisoner prisoner = this.prisonerService.loggedPrisoner();
+
+			Date thisMoment = new Date();
+			thisMoment.setTime(thisMoment.getTime() - 1);
+
+			if (visit == null || visit.getVisitStatus() != VisitStatus.PENDING || visit.getDate().before(thisMoment) || visit.isCreatedByPrisoner() || !visit.getPrisoner().equals(prisoner))
+				return this.listPrisoner();
+
+			Visit savedVisit = this.visitService.editVisitPrisoner(visit, true);
+			this.messageService.sendNotificationChangeStatusOfVisit(prisoner, savedVisit.getVisitor(), savedVisit);
+		} catch (Throwable oops) {
 			return this.listPrisoner();
-
-		Visit savedVisit = this.visitService.editVisitPrisoner(visit, true);
-		this.messageService.sendNotificationChangeStatusOfVisit(prisoner, savedVisit.getVisitor(), savedVisit);
+		}
 
 		return this.listPrisoner();
 	}
-
 	//Reject as Prisoner
 	@RequestMapping(value = "/prisoner/reject", method = RequestMethod.GET)
-	public ModelAndView rejectApplication(@RequestParam int visitId) {
-		Visit visit;
-		visit = this.visitService.findOne(visitId);
+	public ModelAndView rejectApplication(@RequestParam(required = false) String visitId) {
 
-		Prisoner prisoner = this.prisonerService.loggedPrisoner();
+		try {
 
-		Date thisMoment = new Date();
-		thisMoment.setTime(thisMoment.getTime() - 1);
+			Assert.isTrue(StringUtils.isNumeric(visitId));
+			int visitIdInt = Integer.parseInt(visitId);
 
-		if (visit == null || visit.getVisitStatus() != VisitStatus.PENDING || visit.getDate().before(thisMoment) || visit.isCreatedByPrisoner() || !visit.getPrisoner().equals(prisoner))
+			Visit visit;
+			visit = this.visitService.findOne(visitIdInt);
+
+			Prisoner prisoner = this.prisonerService.loggedPrisoner();
+
+			Date thisMoment = new Date();
+			thisMoment.setTime(thisMoment.getTime() - 1);
+
+			if (visit == null || visit.getVisitStatus() != VisitStatus.PENDING || visit.getDate().before(thisMoment) || visit.isCreatedByPrisoner() || !visit.getPrisoner().equals(prisoner))
+				return this.listPrisoner();
+
+			Visit savedVisit = this.visitService.editVisitPrisoner(visit, false);
+			this.messageService.sendNotificationChangeStatusOfVisit(prisoner, savedVisit.getVisitor(), savedVisit);
+
+		} catch (Throwable oops) {
 			return this.listPrisoner();
-
-		Visit savedVisit = this.visitService.editVisitPrisoner(visit, false);
-		this.messageService.sendNotificationChangeStatusOfVisit(prisoner, savedVisit.getVisitor(), savedVisit);
+		}
 
 		return this.listPrisoner();
 	}
 
 	//Accept as Visitor
 	@RequestMapping(value = "/visitor/accept", method = RequestMethod.GET)
-	public ModelAndView acceptApplicationVisitor(@RequestParam int visitId) {
-		Visit visit;
-		visit = this.visitService.findOne(visitId);
+	public ModelAndView acceptApplicationVisitor(@RequestParam(required = false) String visitId) {
 
-		Visitor visitor = this.visitorService.loggedVisitor();
+		try {
 
-		Date thisMoment = new Date();
-		thisMoment.setTime(thisMoment.getTime() - 1);
+			Assert.isTrue(StringUtils.isNumeric(visitId));
+			int visitIdInt = Integer.parseInt(visitId);
 
-		if (visit == null || visit.getVisitStatus() != VisitStatus.PENDING || visit.getDate().before(thisMoment) || !visit.isCreatedByPrisoner() || !visit.getVisitor().equals(visitor))
+			Visit visit;
+			visit = this.visitService.findOne(visitIdInt);
+
+			Visitor visitor = this.visitorService.loggedVisitor();
+
+			Date thisMoment = new Date();
+			thisMoment.setTime(thisMoment.getTime() - 1);
+
+			if (visit == null || visit.getVisitStatus() != VisitStatus.PENDING || visit.getDate().before(thisMoment) || !visit.isCreatedByPrisoner() || !visit.getVisitor().equals(visitor))
+				return this.listVisitor();
+
+			Visit savedVisit = this.visitService.editVisitVisitor(visit, true);
+			this.messageService.sendNotificationChangeStatusOfVisit(savedVisit.getPrisoner(), visitor, savedVisit);
+
+		} catch (Throwable oops) {
 			return this.listVisitor();
-
-		Visit savedVisit = this.visitService.editVisitVisitor(visit, true);
-		this.messageService.sendNotificationChangeStatusOfVisit(savedVisit.getPrisoner(), visitor, savedVisit);
+		}
 
 		return this.listVisitor();
 	}
 
 	//Reject as Visitor
 	@RequestMapping(value = "/visitor/reject", method = RequestMethod.GET)
-	public ModelAndView rejectApplicationVisitor(@RequestParam int visitId) {
-		Visit visit;
-		visit = this.visitService.findOne(visitId);
+	public ModelAndView rejectApplicationVisitor(@RequestParam(required = false) String visitId) {
 
-		Visitor visitor = this.visitorService.loggedVisitor();
+		try {
 
-		Date thisMoment = new Date();
-		thisMoment.setTime(thisMoment.getTime() - 1);
+			Assert.isTrue(StringUtils.isNumeric(visitId));
+			int visitIdInt = Integer.parseInt(visitId);
+			Visit visit;
+			visit = this.visitService.findOne(visitIdInt);
 
-		if (visit == null || visit.getVisitStatus() != VisitStatus.PENDING || visit.getDate().before(thisMoment) || !visit.isCreatedByPrisoner() || !visit.getVisitor().equals(visitor))
+			Visitor visitor = this.visitorService.loggedVisitor();
+
+			Date thisMoment = new Date();
+			thisMoment.setTime(thisMoment.getTime() - 1);
+
+			if (visit == null || visit.getVisitStatus() != VisitStatus.PENDING || visit.getDate().before(thisMoment) || !visit.isCreatedByPrisoner() || !visit.getVisitor().equals(visitor))
+				return this.listVisitor();
+
+			Visit savedVisit = this.visitService.editVisitVisitor(visit, false);
+			this.messageService.sendNotificationChangeStatusOfVisit(savedVisit.getPrisoner(), visitor, savedVisit);
+		} catch (Throwable oops) {
 			return this.listVisitor();
-
-		Visit savedVisit = this.visitService.editVisitVisitor(visit, false);
-		this.messageService.sendNotificationChangeStatusOfVisit(savedVisit.getPrisoner(), visitor, savedVisit);
-
+		}
 		return this.listVisitor();
 
 	}
-
 	//Permit as Guard
 	@RequestMapping(value = "/guard/permit", method = RequestMethod.GET)
-	public ModelAndView permitApplicationGuard(@RequestParam int visitId) {
-		Visit visit;
-		visit = this.visitService.findOne(visitId);
+	public ModelAndView permitApplicationGuard(@RequestParam(required = false) String visitId) {
 
-		Date thisMoment = new Date();
-		thisMoment.setTime(thisMoment.getTime() - 1);
+		try {
 
-		if (visit == null || visit.getVisitStatus() != VisitStatus.ACCEPTED || visit.getDate().before(thisMoment))
+			Assert.isTrue(StringUtils.isNumeric(visitId));
+			int visitIdInt = Integer.parseInt(visitId);
+
+			Visit visit;
+			visit = this.visitService.findOne(visitIdInt);
+
+			Date thisMoment = new Date();
+			thisMoment.setTime(thisMoment.getTime() - 1);
+
+			if (visit == null || visit.getVisitStatus() != VisitStatus.ACCEPTED || visit.getDate().before(thisMoment))
+				return this.listGuardFuture();
+
+			Visit savedVisit = this.visitService.editVisitGuard(visit, true);
+			this.messageService.sendNotificationChangeStatusOfVisit(savedVisit.getPrisoner(), savedVisit.getVisitor(), savedVisit);
+		} catch (Throwable oops) {
 			return this.listGuardFuture();
-
-		Visit savedVisit = this.visitService.editVisitGuard(visit, true);
-		this.messageService.sendNotificationChangeStatusOfVisit(savedVisit.getPrisoner(), savedVisit.getVisitor(), savedVisit);
+		}
 		return this.listGuardFuture();
 	}
-
 	//Reject as Guard
 	@RequestMapping(value = "/guard/reject", method = RequestMethod.GET)
-	public ModelAndView rejectApplicationGuard(@RequestParam int visitId) {
-		Visit visit;
-		visit = this.visitService.findOne(visitId);
+	public ModelAndView rejectApplicationGuard(@RequestParam(required = false) String visitId) {
 
-		Date thisMoment = new Date();
-		thisMoment.setTime(thisMoment.getTime() - 1);
+		try {
 
-		if (visit == null || visit.getVisitStatus() != VisitStatus.ACCEPTED || visit.getDate().before(thisMoment))
+			Assert.isTrue(StringUtils.isNumeric(visitId));
+			int visitIdInt = Integer.parseInt(visitId);
+
+			Visit visit;
+			visit = this.visitService.findOne(visitIdInt);
+
+			Date thisMoment = new Date();
+			thisMoment.setTime(thisMoment.getTime() - 1);
+
+			if (visit == null || visit.getVisitStatus() != VisitStatus.ACCEPTED || visit.getDate().before(thisMoment))
+				return this.listGuardFuture();
+
+			Visit savedVisit = this.visitService.editVisitGuard(visit, false);
+			this.messageService.sendNotificationChangeStatusOfVisit(savedVisit.getPrisoner(), savedVisit.getVisitor(), savedVisit);
+
+		} catch (Throwable oops) {
 			return this.listGuardFuture();
-
-		Visit savedVisit = this.visitService.editVisitGuard(visit, false);
-		this.messageService.sendNotificationChangeStatusOfVisit(savedVisit.getPrisoner(), savedVisit.getVisitor(), savedVisit);
+		}
 		return this.listGuardFuture();
 	}
-
 	//--------------------------------------------CREATE---------------------------------------------
 	//-----------------------------------------------------------------------------------------------
 
 	//Create as Visitor
 	@RequestMapping(value = "/visitor/create", method = RequestMethod.GET)
-	public ModelAndView createVisitVisitor(@RequestParam int prisonerId) {
+	public ModelAndView createVisitVisitor(@RequestParam(required = false) String prisonerId) {
 		ModelAndView result;
 
-		Prisoner prisoner = this.prisonerService.findOne(prisonerId);
+		try {
+			Assert.isTrue(StringUtils.isNumeric(prisonerId));
+			int prisonerIdInt = Integer.parseInt(prisonerId);
+			Prisoner prisoner = this.prisonerService.findOne(prisonerIdInt);
 
-		if (prisoner == null)
-			return this.listVisitor();
+			if (prisoner == null)
+				return this.listVisitor();
 
-		if (prisoner.getFreedom() || prisoner.getIsIsolated())
-			return this.listVisitor();
+			if (prisoner.getFreedom() || prisoner.getIsIsolated())
+				return this.listVisitor();
 
-		Visit visit = this.visitService.createAsVisitor(prisoner);
+			Visit visit = this.visitService.createAsVisitor(prisoner);
 
-		List<Reason> reasons = Arrays.asList(Reason.values());
+			List<Reason> reasons = Arrays.asList(Reason.values());
 
-		result = this.createEditModelAndView(visit);
-		result.addObject("visit", visit);
-		result.addObject("prisoner", visit.getPrisoner());
-		result.addObject("reasons", reasons);
+			result = this.createEditModelAndView(visit);
+			result.addObject("visit", visit);
+			result.addObject("prisoner", visit.getPrisoner());
+			result.addObject("reasons", reasons);
+			result.addObject("finder", false);
+		} catch (Throwable oops) {
+			result = this.listVisitor();
+		}
 
 		return result;
 	}
 
 	//Create as Prisoner
 	@RequestMapping(value = "/prisoner/create", method = RequestMethod.GET)
-	public ModelAndView createVisitPrisoner(@RequestParam int visitorId) {
+	public ModelAndView createVisitPrisoner(@RequestParam(required = false) String visitorId) {
 		ModelAndView result;
 
-		Visitor visitor = this.visitorService.findOne(visitorId);
-		Prisoner loggedPrisoner = this.prisonerService.loggedPrisoner();
+		try {
+			Assert.isTrue(StringUtils.isNumeric(visitorId));
+			int visitorIdInt = Integer.parseInt(visitorId);
 
-		if (visitor == null)
+			Visitor visitor = this.visitorService.findOne(visitorIdInt);
+			Prisoner loggedPrisoner = this.prisonerService.loggedPrisoner();
+
+			if (visitor == null)
+				return this.listPrisoner();
+
+			if (!this.prisonerService.getVisitorsToCreateVisit(loggedPrisoner).contains(visitor))
+				return this.listPrisoner();
+
+			Visit visit = this.visitService.createAsPrisoner(visitor);
+
+			List<Reason> reasons = Arrays.asList(Reason.values());
+
+			result = this.createEditModelAndViewAsPrisoner(visit);
+			result.addObject("visit", visit);
+			result.addObject("visitor", visit.getVisitor());
+			result.addObject("reasons", reasons);
+
+		} catch (Throwable oops) {
 			return this.listPrisoner();
-
-		if (!this.prisonerService.getVisitorsToCreateVisit(loggedPrisoner).contains(visitor))
-			return this.listPrisoner();
-
-		Visit visit = this.visitService.createAsPrisoner(visitor);
-
-		List<Reason> reasons = Arrays.asList(Reason.values());
-
-		result = this.createEditModelAndViewAsPrisoner(visit);
-		result.addObject("visit", visit);
-		result.addObject("visitor", visit.getVisitor());
-		result.addObject("reasons", reasons);
-
+		}
 		return result;
 	}
 
@@ -577,28 +659,36 @@ public class VisitController extends AbstractController {
 	//----------------------------------------------------------------------------------------------------------------
 	//Create as Visitor
 	@RequestMapping(value = "/report/create", method = RequestMethod.GET)
-	public ModelAndView createReport(@RequestParam int visitId) {
+	public ModelAndView createReport(@RequestParam(required = false) String visitId) {
 		ModelAndView result;
 
-		Guard loggedGuard = this.guardService.loggedGuard();
-		List<Visit> visits = loggedGuard.getVisits();
+		try {
 
-		Visit visit = this.visitService.findOne(visitId);
+			Assert.isTrue(StringUtils.isNumeric(visitId));
+			int visitIdInt = Integer.parseInt(visitId);
 
-		Date thisMoment = new Date();
-		thisMoment.setTime(thisMoment.getTime() - 1);
+			Guard loggedGuard = this.guardService.loggedGuard();
+			List<Visit> visits = loggedGuard.getVisits();
 
-		if (visit == null)
+			Visit visit = this.visitService.findOne(visitIdInt);
+
+			Date thisMoment = new Date();
+			thisMoment.setTime(thisMoment.getTime() - 1);
+
+			if (visit == null)
+				return this.listGuard();
+
+			if (visit.getReport() != null || thisMoment.before(visit.getDate()) || visit.getVisitStatus() != VisitStatus.PERMITTED || !visits.contains(visit))
+				return this.listGuard();
+
+			Report report = new Report();
+
+			result = this.createEditModelAndView(report);
+			result.addObject("visitId", visitId);
+
+		} catch (Throwable oops) {
 			return this.listGuard();
-
-		if (visit.getReport() != null || thisMoment.before(visit.getDate()) || visit.getVisitStatus() != VisitStatus.PERMITTED || !visits.contains(visit))
-			return this.listGuard();
-
-		Report report = new Report();
-
-		result = this.createEditModelAndView(report);
-		result.addObject("visitId", visitId);
-
+		}
 		return result;
 	}
 
