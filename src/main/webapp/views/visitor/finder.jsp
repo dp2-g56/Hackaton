@@ -52,19 +52,33 @@
 			
 	<display:table pagesize="5" name="prisoners" id="row" requestURI="${requestURI}" >
 		
-		<display:column property="name" titleKey="prisoner.name" /> 
-		<display:column property="middleName" titleKey="prisoner.middleName" /> 
-		<display:column property="surname" titleKey="prisoner.surname" /> 
+		<display:column titleKey="prisoner.name" > 
+			<jstl:out value="${row.name}"/>
+		</display:column>
+		<display:column titleKey="prisoner.middleName" >
+			<jstl:out value="${row.middleName}"/>
+		</display:column> 
+		<display:column titleKey="prisoner.surname" > 
+				<jstl:out value="${row.surname}"/>
+		</display:column>
 		<display:column titleKey="prisoner.photo">
 			<a href="${row.photo}">
 				<spring:message code="prisoner.viewPhoto"/>
 			</a>
 		</display:column> 
 			
-		<display:column property="crimeRate" titleKey="prisoner.crimeRate" /> 
-		<display:column property="ticker" titleKey="prisoner.ticker" /> 		
-		<display:column property="incomeDate" titleKey="prisoner.incomeDate" /> 
-		<display:column property="exitDate" titleKey="prisoner.exitDate" /> 
+		<display:column titleKey="prisoner.crimeRate" > 
+				<jstl:out value="${row.crimeRate}"/>
+		</display:column>
+		<display:column titleKey="prisoner.ticker" > 
+				<jstl:out value="${row.ticker}"/>
+		</display:column>		
+		<display:column titleKey="prisoner.incomeDate" > 
+				<jstl:out value="${row.incomeDate}"/>
+		</display:column>
+		<display:column titleKey="prisoner.exitDate" > 
+					<jstl:out value="${row.exitDate}"/>
+		</display:column>
 
 		<display:column titleKey="prisoner.isIsolated">
 	
