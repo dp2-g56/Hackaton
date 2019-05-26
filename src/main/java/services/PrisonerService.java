@@ -217,6 +217,7 @@ public class PrisonerService {
 		}
 
 		this.prisonerRepository.save(prisoner);
+		this.prisonerRepository.flush();
 	}
 
 	public Prisoner reconstruct(FormObjectPrisoner formPrisoner, BindingResult binding) {
