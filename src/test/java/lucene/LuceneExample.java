@@ -21,10 +21,28 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.Version;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
+import repositories.FinderRepository;
+import services.FinderService;
+import services.PrisonerService;
+
+@ContextConfiguration(locations = { "classpath:spring/junit.xml" })
+@Transactional
 public class LuceneExample {
 
 	public static final File INDEX_DIRECTORY = new File("IndexDirectory");
+
+	@Autowired
+	private FinderService finderService;
+
+	@Autowired
+	private PrisonerService prisonerService;
+
+	@Autowired
+	private FinderRepository finderRepository;
 
 	public void createIndex() {
 
@@ -56,12 +74,14 @@ public class LuceneExample {
 				doc.add(new Field("ticker", rs.getString("ticker"), Field.Store.YES, Field.Index.ANALYZED));
 				doc.add(new Field("middle_name", rs.getString("middle_name"), Field.Store.YES, Field.Index.ANALYZED));
 
+				doc.add(new Field("id", rs.getString("id"), Field.Store.YES, Field.Index.NOT_ANALYZED));
+				doc.add(new Field("id", rs.getString("id"), Field.Store.YES, Field.Index.NOT_ANALYZED));
 				// Adding doc to iWriter
 				iWriter.addDocument(doc);
 				count++;
 			}
 
-			System.out.println(count + " record indexed");
+			System.out.println(count + " prisoner indexed");
 
 			// Closing iWriter
 			iWriter.optimize();
@@ -79,7 +99,7 @@ public class LuceneExample {
 
 	}
 
-	public void search(String keyword, String charge) {
+	public void search(String keyword) {
 
 		System.out.println("-- Seaching --");
 
@@ -98,8 +118,6 @@ public class LuceneExample {
 
 			Query query = mqp.parse(keyword);// search the given keyword
 
-			System.out.println("query >> " + query);
-
 			TopDocs hits = searcher.search(query, 100); // run the query
 
 			System.out.println("Results found >> " + hits.totalHits);
@@ -108,7 +126,8 @@ public class LuceneExample {
 				Document doc = searcher.doc(hits.scoreDocs[i].doc);// get the
 																	// next
 																	// document
-				System.out.println(doc.get("name") + " " + doc.get("middle_name") + " " + " " + doc.get("surname"));
+				System.out.println(
+						"Prisoner: " + doc.get("name") + " " + doc.get("middle_name") + " " + " " + doc.get("surname"));
 			}
 
 		} catch (Exception e) {
@@ -124,10 +143,23 @@ public class LuceneExample {
 		// creating index
 		obj.createIndex();
 
+		String keyWord = "s";
+
 		// searching keyword
-		obj.search("s", "");
+		obj.search(keyWord);
+
+		long startTime = System.currentTimeMillis();
 
 		// using wild card serach
-		obj.search("*s*", "");
+		obj.search("*" + keyWord + "*");
+
+		long endTime = System.currentTimeMillis();
+
+		long duration = (endTime - startTime);
+
+		System.out.println(duration + " miliseconds");
+
+		System.out.println("------------------");
+
 	}
 }
