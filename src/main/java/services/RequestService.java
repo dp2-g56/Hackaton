@@ -13,32 +13,31 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 
-import repositories.RequestRepository;
 import domain.Activity;
 import domain.ActivityStatus;
 import domain.Prisoner;
 import domain.Request;
 import domain.SocialWorker;
+import repositories.RequestRepository;
 
 @Service
 @Transactional
 public class RequestService {
 
 	@Autowired
-	private RequestRepository	requestRepository;
+	private RequestRepository requestRepository;
 
 	@Autowired
-	private PrisonerService		prisonerService;
+	private PrisonerService prisonerService;
 
 	@Autowired
-	private ActivityService		activityService;
+	private ActivityService activityService;
 
 	@Autowired
-	private SocialWorkerService	socialWorkerService;
+	private SocialWorkerService socialWorkerService;
 
 	@Autowired
-	private Validator			validator;
-
+	private Validator validator;
 
 	// CRUS
 
@@ -110,6 +109,7 @@ public class RequestService {
 	}
 
 	public List<Request> getLogguedPrisonerRequests() {
+		this.prisonerService.loggedAsPrisoner();
 		Prisoner prisoner = this.prisonerService.loggedPrisoner();
 
 		return prisoner.getRequests();
