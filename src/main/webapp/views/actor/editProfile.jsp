@@ -112,7 +112,7 @@
 		<br />
 		
 		<!-- BOTONES -->	
-		<input type="submit" name="saveSalesman" value="<spring:message code="warden.edit" />"/> 
+		<input type="submit" name="saveSalesMan" value="<spring:message code="warden.edit" />"/> 
 		<acme:cancel url="/authenticated/showProfile.do" code="warden.cancel" /> 
 		
 		</form:form>

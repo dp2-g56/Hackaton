@@ -55,18 +55,62 @@ public class FinderVisitorController extends AbstractController {
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView list() {
-
-		Visitor visitor = this.visitorService.loggedVisitor();
-
-		ModelAndView result = new ModelAndView("finder/visitor/list");
+		ModelAndView result;
 
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+		try {
+			Visitor visitor = this.visitorService.loggedVisitor();
+			List<Charge> charges = this.chargeService.getFinalCharges();
+			List<String> values = new ArrayList<>();
+			List<String> names = new ArrayList<>();
 
-		result.addObject("prisoners", this.finderService.getResults(visitor.getFinder()));
+			names.add("");
+			values.add("");
+
+			Finder finder = visitor.getFinder();
+			for (int i = 0; i < charges.size(); i++) {
+				values.add(charges.get(i).getTitleEnglish());
+				names.add(charges.get(i).getTitleSpanish());
+			}
+
+			Assert.notNull(finder);
+
+			result = this.createEditModelAndView(finder);
+			result.addObject("values", values);
+			result.addObject("namesSpanish", names);
+			result.addObject("sizeOfList", values.size());
+			result.addObject("prisoners", this.finderService.getResults(visitor.getFinder()));
+		} catch (Throwable oops) {
+			result = new ModelAndView("redirect:/");
+		}
 		result.addObject("locale", locale);
 
 		return result;
 
+	}
+
+	// SaveFinder----------------------------------------------------------------------------
+
+	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
+	public ModelAndView save(Finder finderForm, BindingResult binding) {
+		ModelAndView result;
+
+		Finder finder = this.finderService.reconstruct(finderForm, binding);
+
+		if (binding.hasErrors())
+			result = this.createEditModelAndView(finderForm);
+		else
+			try {
+				this.finderService.filter(finder);
+				result = new ModelAndView("redirect:list.do");
+			} catch (Throwable oops) {
+				try {
+					result = this.createEditModelAndView(finder, "finder.commit.error");
+				} catch (Throwable oops2) {
+					result = new ModelAndView("redirect:/");
+				}
+			}
+		return result;
 	}
 
 	@RequestMapping(value = "/charges", method = RequestMethod.GET)
@@ -145,76 +189,6 @@ public class FinderVisitorController extends AbstractController {
 		return result;
 	}
 
-	// Edit -----------------------------------------------------------------
-
-	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public ModelAndView editFinder() {
-		ModelAndView res;
-
-		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
-
-		try {
-
-			List<Charge> charges = this.chargeService.findAll();
-
-			Visitor visitor = this.visitorService.loggedVisitor();
-
-			List<String> values = new ArrayList<>();
-			List<String> names = new ArrayList<>();
-
-			names.add("");
-			values.add("");
-
-			Finder finder = visitor.getFinder();
-			if (locale == "EN")
-				for (int i = 0; i < charges.size(); i++) {
-					values.add(charges.get(i).getTitleEnglish());
-					names.add(charges.get(i).getTitleEnglish());
-				}
-			else
-				for (int i = 0; i < charges.size(); i++) {
-					values.add(charges.get(i).getTitleEnglish());
-					names.add(charges.get(i).getTitleSpanish());
-				}
-
-			Assert.notNull(finder);
-			res = this.createEditModelAndView(finder);
-			res.addObject("values", values);
-			res.addObject("names", names);
-			res.addObject("sizeOfList", values.size());
-		} catch (Throwable oops) {
-			res = new ModelAndView("redirect:list.do");
-		}
-
-		res.addObject("locale", locale);
-		return res;
-
-	}
-
-	// Save------------------------------------------------------------------------------
-
-	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
-	public ModelAndView save(Finder finderForm, BindingResult binding) {
-		ModelAndView result;
-
-		Finder finder = this.finderService.reconstruct(finderForm, binding);
-
-		if (binding.hasErrors())
-			result = this.createEditModelAndView(finderForm);
-		else
-			try {
-				this.finderService.filter(finder);
-				result = new ModelAndView("redirect:list.do");
-			} catch (Throwable oops) {
-				try {
-					result = this.createEditModelAndView(finder, "finder.commit.error");
-				} catch (Throwable oops2) {
-					result = new ModelAndView("redirect:/");
-				}
-			}
-		return result;
-	}
-
 	// CreateEditModelAndView
 	protected ModelAndView createEditModelAndView(Finder finder) {
 		ModelAndView result;
@@ -227,7 +201,7 @@ public class FinderVisitorController extends AbstractController {
 	protected ModelAndView createEditModelAndView(Finder finder, String messageCode) {
 		ModelAndView result;
 
-		result = new ModelAndView("finder/visitor/edit");
+		result = new ModelAndView("finder/visitor/list");
 
 		result.addObject("finder", finder);
 		result.addObject("message", messageCode);

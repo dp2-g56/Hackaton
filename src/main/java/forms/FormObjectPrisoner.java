@@ -1,6 +1,5 @@
 package forms;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -33,7 +32,7 @@ public class FormObjectPrisoner {
 
 	public FormObjectPrisoner() {
 		this.termsAndConditions = false;
-		this.charges = new ArrayList<Charge>();
+//		this.charges = new ArrayList<Charge>();
 	}
 
 	@Size(min = 5, max = 32)

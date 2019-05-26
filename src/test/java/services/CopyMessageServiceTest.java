@@ -30,6 +30,14 @@ public class CopyMessageServiceTest extends AbstractTest {
 	@Test
 	public void driverCopyMessage() {
 
+		/**
+		 * 
+		 * Number of test: 3
+		 * Number of restrictions + positive test: 3
+		 * Coverage: 100%
+		 * 
+		 * */
+
 		Object testingData[][] = {
 			{
 				//Positive test, message in Inbox and you copy to Outbox

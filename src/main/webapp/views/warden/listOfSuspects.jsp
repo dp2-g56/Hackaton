@@ -86,7 +86,7 @@ function show(id){
 		
 		<display:column titleKey="prisoner.addChargesColum" > 
 		
-		<jstl:if test="${row.charges.size() < possibleCharges.size()}">	
+		<jstl:if test="${row.charges.size() < possibleCharges.size()-1}">	
 		
 		<div>
 		<security:authorize access="hasAnyRole('WARDEN')" >

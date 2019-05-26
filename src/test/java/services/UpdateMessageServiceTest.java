@@ -29,6 +29,14 @@ public class UpdateMessageServiceTest extends AbstractTest {
 	@Test
 	public void driverUpdateMessage() {
 
+		/**
+		 * 
+		 * Number of test: 3
+		 * Number of restrictions + positive test: 3
+		 * Coverage: 100%
+		 * 
+		 * */
+
 		Object testingData[][] = {
 			{
 				//Positive test, message in OUTBOX moving to INBOX

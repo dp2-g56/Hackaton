@@ -33,6 +33,14 @@ public class DeleteMessageServiceTest extends AbstractTest {
 	@Test
 	public void driverDeleteMessage() {
 
+		/**
+		 * 
+		 * Number of test: 4
+		 * Number of restrictions + positive test: 4
+		 * Coverage: 100%
+		 * 
+		 * */
+
 		Object testingData[][] = {
 			{
 				//Positive test, message in the INBOX and it goes to the trashBox
