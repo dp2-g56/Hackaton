@@ -101,8 +101,20 @@
 			<jstl:out value="${title}"/>
 		</display:column>
 		
-		<display:column property="year" titleKey="charge.year" /> 
-		<display:column property="month" titleKey="charge.month" /> 
+		<display:column titleKey="charge.year" > 
+			<jstl:choose>
+	    
+		      	<jstl:when test="${locale=='EN'}">
+			    	<jstl:out value="${row.year} years and ${row.month} months " /> 
+			    </jstl:when>
+			      
+			    <jstl:otherwise>
+			    	<jstl:out value="${row.year} años y ${row.month} meses " />
+			    </jstl:otherwise>
+		    
+		    </jstl:choose>
+			
+		</display:column> 
 
 	</display:table>
 	

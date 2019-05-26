@@ -60,7 +60,7 @@ public class FinderVisitorController extends AbstractController {
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 		try {
 			Visitor visitor = this.visitorService.loggedVisitor();
-			List<Charge> charges = this.chargeService.findAll();
+			List<Charge> charges = this.chargeService.getFinalCharges();
 			List<String> values = new ArrayList<>();
 			List<String> names = new ArrayList<>();
 

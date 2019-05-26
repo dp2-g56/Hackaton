@@ -122,7 +122,7 @@ public class PrisonerService {
 		s.setPhoto("");
 		s.setBoxes(boxes);
 
-		s.setCrimeRate(0.);
+		s.setCrimeRate(-1.);
 		s.setIsIsolated(false);
 		s.setIsSuspect(false);
 		s.setPoints(0);
