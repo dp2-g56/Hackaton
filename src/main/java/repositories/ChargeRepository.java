@@ -13,7 +13,7 @@ import domain.Prisoner;
 @Repository
 public interface ChargeRepository extends JpaRepository<Charge, Integer> {
 
-	@Query("select c from Charge c where c.isDraftMode = false")
+	@Query("select c from Charge c where c.isDraftMode = false and c.titleEnglish != 'Suspicious'")
 	public List<Charge> getFinalCharges();
 
 	@Query("select c from Charge c where c.isDraftMode = true")
