@@ -144,6 +144,9 @@ public class ProductService {
 		Assert.notNull(product);
 		Assert.isTrue(configuration.getTypeProducts().contains(pro.getType()) && salesman.getProducts().contains(pro));
 		Assert.isTrue(pro.getStock() >= product.getStock());
+
+		pro.setPrice(1);
+
 		this.save(pro);
 	}
 

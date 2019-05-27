@@ -4,33 +4,34 @@ package controllers;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import domain.Curriculum;
+import domain.MiscellaneousRecord;
+import domain.SocialWorker;
 import security.LoginService;
 import services.CurriculumService;
 import services.MiscellaneousRecordService;
 import services.SocialWorkerService;
-import domain.Curriculum;
-import domain.MiscellaneousRecord;
-import domain.SocialWorker;
 
 @Controller
 @RequestMapping("/curriculum")
 public class MiscellaneousRecordController extends AbstractController {
 
 	@Autowired
-	private MiscellaneousRecordService	miscellaneousRecordService;
+	private MiscellaneousRecordService miscellaneousRecordService;
 	@Autowired
-	private SocialWorkerService			socialWorkerService;
+	private SocialWorkerService socialWorkerService;
 	@Autowired
-	private CurriculumService			curriculumService;
-
+	private CurriculumService curriculumService;
 
 	// Constructor
 	public MiscellaneousRecordController() {
@@ -43,7 +44,8 @@ public class MiscellaneousRecordController extends AbstractController {
 		ModelAndView result;
 
 		try {
-			SocialWorker socialWorker = this.socialWorkerService.getSocialWorkerByUsername(LoginService.getPrincipal().getUsername());
+			SocialWorker socialWorker = this.socialWorkerService
+					.getSocialWorkerByUsername(LoginService.getPrincipal().getUsername());
 			Curriculum curriculum = socialWorker.getCurriculum();
 			Assert.notNull(curriculum);
 
@@ -64,7 +66,8 @@ public class MiscellaneousRecordController extends AbstractController {
 
 		try {
 
-			MiscellaneousRecord miscellaneousRecord = this.miscellaneousRecordService.getMiscellaneousRecordOfLoggedSocialWorker(miscellaneousRecordId);
+			MiscellaneousRecord miscellaneousRecord = this.miscellaneousRecordService
+					.getMiscellaneousRecordOfLoggedSocialWorker(miscellaneousRecordId);
 			result = this.createEditModelAndView(miscellaneousRecord);
 		} catch (Throwable oops) {
 			result = new ModelAndView("redirect:show.do");
@@ -78,22 +81,32 @@ public class MiscellaneousRecordController extends AbstractController {
 	public ModelAndView save(@Valid MiscellaneousRecord miscellaneousRecord, BindingResult binding) {
 		ModelAndView result;
 
-		if (binding.hasErrors()) {
+		if (miscellaneousRecord.getId() == 0) {
+			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+
+			if (!this.miscellaneousRecordService.isUrl(miscellaneousRecord.getLinkAttachment()))
+				if (locale.contains("ES"))
+					binding.addError(new FieldError("miscellaneousRecord", "linkAttachment",
+							miscellaneousRecord.getLinkAttachment(), false, null, null, "URL invalida"));
+				else
+					binding.addError(new FieldError("miscellaneousRecord", "linkAttachment",
+							miscellaneousRecord.getLinkAttachment(), false, null, null, "Invalid URL"));
+		}
+
+		if (binding.hasErrors())
 			result = this.createEditModelAndView(miscellaneousRecord);
-		} else {
+		else
 			try {
-				if (miscellaneousRecord.getId() == 0) {
+				if (miscellaneousRecord.getId() == 0)
 					this.curriculumService.addMiscellaneousRecord(miscellaneousRecord);
-				} else {
+				else
 					this.curriculumService.updateMiscellaneousRecord(miscellaneousRecord);
-				}
 
 				result = new ModelAndView("redirect:show.do");
 
 			} catch (Throwable oops) {
 				result = this.createEditModelAndView(miscellaneousRecord, "commit.error");
 			}
-		}
 		return result;
 	}
 
