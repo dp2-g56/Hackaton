@@ -100,6 +100,6 @@ p{
 <p>Puedes revisar la versi&oacute;n m&aacute;s actualizada de los T&eacute;rminos de Servicio en cualquier momento en esta p&aacute;gina.</p>
 <p>Nos reservamos el derecho, a nuestra sola discreci&oacute;n, de actualizar, modificar o reemplazar cualquier parte de estas Condiciones del servicio mediante la publicaci&oacute;n de las actualizaciones y los cambios en nuestro sitio web. Es tu responsabilidad revisar nuestro sitio web peri&oacute;dicamente para verificar los cambios. El uso cont&iacute;nuo de o el acceso a nuestro sitio Web o el Servicio despu&eacute;s de la publicaci&oacute;n de cualquier cambio en estas Condiciones de servicio implica la aceptaci&oacute;n de dichos cambios.</p>
 <p><br />SECCI&Oacute;N 20 - INFORMACI&Oacute;N DE CONTACTO</p>
-<p>Preguntas acerca de los T&eacute;rminos de Servicio deben ser enviadas a alegomcab1@gmail.com.</p>
+<p>Preguntas acerca de los T&eacute;rminos de Servicio deben ser enviadas a juaaloval@gmail.com.</p>
 
 </security:authorize>
