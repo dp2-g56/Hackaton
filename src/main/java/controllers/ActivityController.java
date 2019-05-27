@@ -82,6 +82,7 @@ public class ActivityController extends AbstractController {
 			ModelAndView result = null;
 
 			SocialWorker socialWorker = this.socialWorkerService.loggedSocialWorker();
+			List<Activity> activities = socialWorker.getActivities();
 
 			Activity activity = this.activityService.findOne(idR);
 
@@ -89,6 +90,7 @@ public class ActivityController extends AbstractController {
 
 			result = this.createEditModelAndView(activity);
 			result.addObject("activity", activity);
+			result.addObject("last", activities.get(activities.size() - 1).getId());
 
 			return result;
 

@@ -35,7 +35,7 @@
 		<br />
 		
 		<input type="submit" name="save" value="<spring:message code="button.save" />"/>
-		<acme:cancel url="/activity/socialworker/list.do" code="button.cancel" /> 
+		<acme:cancel url="/activity/socialworker/delete.do?activityId=${last}" code="button.cancel" /> 
 
 	</form:form>
 
