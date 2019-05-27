@@ -50,7 +50,7 @@
 
 		<input type="submit" name="save" value="<spring:message code="button.save" />"/>
 		<jstl:if test="${product.id != 0}">
-			<input type="submit" name="delete" value="<spring:message code="button.delete" />" onclick="return confirm('<spring:message code="delete.confirm" />')"/>
+			<a href="/product/salesman/list.do"><button value="<spring:message code="button.delete" />" onclick="return confirm('<spring:message code="delete.confirm" />')"></button></a>
 		</jstl:if>
 		<acme:cancel url="/product/salesman/list.do" code="button.cancel" /> 
 

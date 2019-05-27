@@ -1,6 +1,7 @@
 
 package services;
 
+import java.net.URL;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -10,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import repositories.MiscellaneousRecordRepository;
 import domain.MiscellaneousRecord;
 import domain.SocialWorker;
+import repositories.MiscellaneousRecordRepository;
 
 @Service
 @Transactional
@@ -21,11 +22,10 @@ public class MiscellaneousRecordService {
 	// Manged Repository
 
 	@Autowired
-	private MiscellaneousRecordRepository	miscellaneousRecordRepository;
+	private MiscellaneousRecordRepository miscellaneousRecordRepository;
 
 	@Autowired
-	private SocialWorkerService				socialWorkerService;			;
-
+	private SocialWorkerService socialWorkerService;;
 
 	// Simple CRUD methods
 
@@ -64,6 +64,15 @@ public class MiscellaneousRecordService {
 		MiscellaneousRecord miscellaneousRecord = this.findOne(miscellaneousRecordIdInt);
 		Assert.isTrue(socialWorker.getCurriculum().getMiscellaneousRecords().contains(miscellaneousRecord));
 		return miscellaneousRecord;
+	}
+
+	public Boolean isUrl(String url) {
+		try {
+			new URL(url).toURI();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 }

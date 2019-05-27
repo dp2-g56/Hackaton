@@ -2,7 +2,6 @@
 package services;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -255,13 +254,13 @@ public class WardenService {
 		prisoner.getCharges().add(charge);
 		prisoner.setIsIsolated(true);
 
-		Date exitDate = prisoner.getExitDate();
-		Calendar cExit = Calendar.getInstance();
-		cExit.setTime(exitDate);
-		cExit.add(Calendar.MONTH, charge.getMonth());
-		cExit.add(Calendar.YEAR, charge.getYear());
-		Date newExitDate = cExit.getTime();
-		prisoner.setExitDate(newExitDate);
+//		Date exitDate = prisoner.getExitDate();
+//		Calendar cExit = Calendar.getInstance();
+//		cExit.setTime(exitDate);
+//		cExit.add(Calendar.MONTH, charge.getMonth());
+//		cExit.add(Calendar.YEAR, charge.getYear());
+//		Date newExitDate = cExit.getTime();
+//		prisoner.setExitDate(newExitDate);
 
 		this.prisonerService.save(prisoner);
 

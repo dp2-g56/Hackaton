@@ -545,31 +545,6 @@
 
 <table style="width: 100%">
 		<tr>
-			<td><b><spring:message code="statistics.activitiesMostSearched" />:</b></td>
-		</tr>
-
-		<jstl:choose>
-			<jstl:when test="${activitiesMostSearched.isEmpty()}">
-			
-				<tr>
-					<td><spring:message code="statistics.NA" /></td>
-				</tr>
-				
-			</jstl:when><jstl:otherwise>
-			
-				<jstl:forEach items="${activitiesMostSearched}" var="cosa">
-					<tr>
-						<td><jstl:out value="${cosa}" /></td>
-					</tr>
-				</jstl:forEach>
-				
-			</jstl:otherwise>
-		</jstl:choose>
-</table>
-<br />
-
-<table style="width: 100%">
-		<tr>
 			<td><b><spring:message code="statistics.top5PrisonersParticipatedMostActivitiesLastMonth" />:</b></td>
 		</tr>
 
