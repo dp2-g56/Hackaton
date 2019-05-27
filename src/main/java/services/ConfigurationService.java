@@ -48,6 +48,7 @@ public class ConfigurationService {
 
 	public void saveConfiguration(Configuration configuration) {
 		this.wardenService.loggedAsWarden();
+		configuration.setWelcomeMessageSpanish("Bienvindo a Acme-Parade... o no");
 		this.save(configuration);
 	}
 
