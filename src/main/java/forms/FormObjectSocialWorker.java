@@ -96,7 +96,6 @@ public class FormObjectSocialWorker {
 		this.termsAndConditions = termsAndConditions;
 	}
 
-	@NotBlank
 	public String getTitle() {
 		return this.title;
 	}
