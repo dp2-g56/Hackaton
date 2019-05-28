@@ -147,17 +147,26 @@ public class LuceneExample {
 
 		// searching keyword
 		obj.search(keyWord);
+		long acum = 0;
 
-		long startTime = System.currentTimeMillis();
+		Integer iterations = 100;
 
-		// using wild card serach
-		obj.search("*" + keyWord + "*");
+		for (int i = 0; i < iterations - 1; i++) {
 
-		long endTime = System.currentTimeMillis();
+			long startTime = System.currentTimeMillis();
 
-		long duration = (endTime - startTime);
+			// using wild card serach
+			obj.search("*" + keyWord + "*");
 
-		System.out.println(duration + " miliseconds");
+			long endTime = System.currentTimeMillis();
+
+			long duration = (endTime - startTime);
+
+			acum += duration;
+
+		}
+
+		System.out.println(acum / iterations + " miliseconds");
 
 		System.out.println("------------------");
 
