@@ -50,9 +50,11 @@ public class ReportService {
 		thisMoment.setTime(thisMoment.getTime() - 1);
 
 		Assert.notNull(visit);
+		Assert.isNull(visit.getReport());
 		Assert.isTrue(loggedGuard.getVisits().contains(visit));
 		Assert.isTrue(visit.getDate().before(thisMoment));
 		Assert.isTrue(visit.getVisitStatus() == VisitStatus.PERMITTED);
+		Assert.hasText(report.getDescription());
 
 		Report saved = this.reportRepository.save(report);
 

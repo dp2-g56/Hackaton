@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 
-import utilities.AbstractTest;
 import domain.Charge;
 import domain.Prisoner;
 import domain.SalesMan;
@@ -22,26 +21,24 @@ import domain.Warden;
 import forms.FormObjectPrisoner;
 import forms.FormObjectSalesman;
 import forms.FormObjectWarden;
+import utilities.AbstractTest;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {
-	"classpath:spring/junit.xml"
-})
+@ContextConfiguration(locations = { "classpath:spring/junit.xml" })
 @Transactional
 public class WardenServiceTest extends AbstractTest {
 
 	@Autowired
-	private WardenService	wardenService;
+	private WardenService wardenService;
 
 	@Autowired
-	private PrisonerService	prisonerService;
+	private PrisonerService prisonerService;
 
 	@Autowired
-	private SalesManService	salesManService;
+	private SalesManService salesManService;
 
 	@Autowired
-	private ChargeService	chargeService;
-
+	private ChargeService chargeService;
 
 	/**
 	 * SENTENCE COVERAGE:
@@ -49,44 +46,37 @@ public class WardenServiceTest extends AbstractTest {
 
 	/**
 	 * 15. An actor who is authenticated as a warden must be able to:
-	 * 
+	 *
 	 * 9. Isolate a Prisoner with suspicious messages, when a Prisoner is
 	 * isolated, Suspicious is added to his list of charges, this action cannot
 	 * be undone.
-	 * 
+	 *
 	 * Ratio of data coverage: 100% - Access as a Warden or not. - Prisoner is
 	 * suspicious or not
-	 * 
+	 *
 	 **/
 	@Test
 	public void driverIsolatePrisoner() {
 
 		Object testingData[][] = {
 
-			/**
-			 * POSITIVE TEST: Warden isolates a suspicious prisoner
-			 **/
-			{
-				"warden1", super.getEntityId("prisoner1"), null
-			},
-			/**
-			 * NEGATIVE TEST: Another user is trying to isolate a prisoner
-			 **/
-			{
-				"prisoner2", super.getEntityId("prisoner1"), IllegalArgumentException.class
-			},
-			/**
-			 * NEGATIVE TEST: Warden is trying to isolate a non-suspicious
-			 * prisoner
-			 **/
-			{
-				"warden1", super.getEntityId("prisoner2"), IllegalArgumentException.class
-			}
-		};
+				/**
+				 * POSITIVE TEST: Warden isolates a suspicious prisoner
+				 **/
+				{ "warden1", super.getEntityId("prisoner1"), null },
+				/**
+				 * NEGATIVE TEST: Another user is trying to isolate a prisoner
+				 **/
+				{ "prisoner2", super.getEntityId("prisoner1"), IllegalArgumentException.class },
+				/**
+				 * NEGATIVE TEST: Warden is trying to isolate a non-suspicious
+				 * prisoner
+				 **/
+				{ "warden1", super.getEntityId("prisoner2"), IllegalArgumentException.class } };
 
-		for (int i = 0; i < testingData.length; i++) {
-			this.isolatePrisonerTemplate((String) testingData[i][0], (Integer) testingData[i][1], (Class<?>) testingData[i][2]);
-		}
+		for (int i = 0; i < testingData.length; i++)
+			this.isolatePrisonerTemplate((String) testingData[i][0], (Integer) testingData[i][1],
+					(Class<?>) testingData[i][2]);
 
 	}
 
@@ -134,7 +124,8 @@ public class WardenServiceTest extends AbstractTest {
 
 		// 3
 		System.out.println("ENTRA 3: " + this.wardenService.statistics().get(2));
-		Assert.isTrue(this.wardenService.statistics().get(2) <= 66.68 && this.wardenService.statistics().get(2) >= 66.66);
+		Assert.isTrue(
+				this.wardenService.statistics().get(2) <= 66.68 && this.wardenService.statistics().get(2) >= 66.66);
 		System.out.println("SALE 3\n");
 
 		// 4
@@ -164,12 +155,14 @@ public class WardenServiceTest extends AbstractTest {
 
 		// 9
 		System.out.println("ENTRA 9: " + this.wardenService.statistics().get(8));
-		Assert.isTrue(this.wardenService.statistics().get(8) <= 0.612 && this.wardenService.statistics().get(8) >= 0.61);
+		Assert.isTrue(
+				this.wardenService.statistics().get(8) <= 0.612 && this.wardenService.statistics().get(8) >= 0.61);
 		System.out.println("SALE 9\n");
 
 		// 10
 		System.out.println("ENTRA 10: " + this.wardenService.statistics().get(9));
-		Assert.isTrue(this.wardenService.statistics().get(9) <= -0.311 && this.wardenService.statistics().get(9) >= -0.313);
+		Assert.isTrue(
+				this.wardenService.statistics().get(9) <= -0.311 && this.wardenService.statistics().get(9) >= -0.313);
 		System.out.println("SALE 10\n");
 
 		// 11
@@ -208,8 +201,10 @@ public class WardenServiceTest extends AbstractTest {
 		System.out.println("SALE 17\n");
 
 		// 18
-		System.out.println("ENTRA 18: " + this.wardenService.getPrisonersMostRejectedRequestToDifferentActivitiesAndNoApprovedOnThoseActivities().size());
-		Assert.isTrue(this.wardenService.getPrisonersMostRejectedRequestToDifferentActivitiesAndNoApprovedOnThoseActivities().size() == 2);
+		System.out.println("ENTRA 18: " + this.wardenService
+				.getPrisonersMostRejectedRequestToDifferentActivitiesAndNoApprovedOnThoseActivities().size());
+		Assert.isTrue(this.wardenService
+				.getPrisonersMostRejectedRequestToDifferentActivitiesAndNoApprovedOnThoseActivities().size() == 2);
 		System.out.println("SALE 18\n");
 
 		// 19
@@ -224,7 +219,7 @@ public class WardenServiceTest extends AbstractTest {
 
 		// 21
 		System.out.println("ENTRA 21: " + this.wardenService.getSocialWorkersLowestRatioPrisonersPerActivity().size());
-		Assert.isTrue(this.wardenService.getSocialWorkersLowestRatioPrisonersPerActivity().size() == 1);
+		Assert.isTrue(this.wardenService.getSocialWorkersLowestRatioPrisonersPerActivity().size() == 2);
 		System.out.println("SALE 21\n");
 
 		// 22
@@ -233,7 +228,8 @@ public class WardenServiceTest extends AbstractTest {
 		System.out.println("SALE 22\n");
 
 		// 23
-		System.out.println("ENTRA 23: " + this.wardenService.getTop5PrisonersParticipatedMostActivitiesLastMonth().size());
+		System.out.println(
+				"ENTRA 23: " + this.wardenService.getTop5PrisonersParticipatedMostActivitiesLastMonth().size());
 		Assert.isTrue(this.wardenService.getTop5PrisonersParticipatedMostActivitiesLastMonth().size() == 4);
 		System.out.println("SALE 23\n");
 
@@ -247,59 +243,73 @@ public class WardenServiceTest extends AbstractTest {
 	@Test
 	public void driverRegisterSalesman() {
 
-		Object testingData[][] = {
-			{
-				//Positive test, create a salesMan
-				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "ESA0011012B", "storeName", "username", "password", "password", true, null
-			}, {
-				//Positive test, blank middleName
-				"warden1", "name", "", "surname", "https://www.youtube.com", "ESA0011012B", "storeName", "username", "password", "password", true, null
-			}, {
-				//Negative test, Blank name
-				"warden1", "", "middleName", "surname", "https://www.youtube.com", "ESA0011012B", "storeName", "username", "password", "password", true, ConstraintViolationException.class
-			}, {
-				//Negative test, Blank surname
-				"warden1", "name", "middleName", "", "https://www.youtube.com", "ESA0011012B", "storeName", "username", "password", "password", true, ConstraintViolationException.class
-			}, {
-				//Negative test, no URL photo
-				"warden1", "name", "middleName", "surname", "notURL", "ESA0011012B", "storeName", "username", "password", "password", true, ConstraintViolationException.class
-			}, {
-				//Negative test, Blank store name
-				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "ESA0011012B", "", "username", "password", "password", true, ConstraintViolationException.class
-			}, {
-				//Negative test, Blank username
-				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "ESA0011012B", "storeName", "", "password", "password", true, ConstraintViolationException.class
-			}, {
-				//Negative test, Blank password
-				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "ESA0011012B", "storeName", "username", "", "sasa", true, NullPointerException.class
-			}, {
-				//Negative test, not equal password
-				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "ESA0011012B", "storeName", "username", "sav", "sasa", true, NullPointerException.class
-			}, {
-				//Negative test, false terms
-				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "ESA0011012B", "storeName", "username", "password", "password", false, NullPointerException.class
-			}, {
-				//Negative test, Vat number invalid
-				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "invalid", "storeName", "username", "password", "password", false, NullPointerException.class
-			}, {
-				//Negative test, not a warden creating salesMan
-				"prisoner1", "name", "middleName", "surname", "https://www.youtube.com", "ESA0011012B", "storeName", "username", "password", "password", true, IllegalArgumentException.class
-			}
-		};
+		Object testingData[][] = { {
+				// Positive test, create a salesMan
+				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "ESA0011012B", "storeName",
+				"username", "password", "password", true, null },
+				{
+						// Positive test, blank middleName
+						"warden1", "name", "", "surname", "https://www.youtube.com", "ESA0011012B", "storeName",
+						"username", "password", "password", true, null },
+				{
+						// Negative test, Blank name
+						"warden1", "", "middleName", "surname", "https://www.youtube.com", "ESA0011012B", "storeName",
+						"username", "password", "password", true, ConstraintViolationException.class },
+				{
+						// Negative test, Blank surname
+						"warden1", "name", "middleName", "", "https://www.youtube.com", "ESA0011012B", "storeName",
+						"username", "password", "password", true, ConstraintViolationException.class },
+				{
+						// Negative test, no URL photo
+						"warden1", "name", "middleName", "surname", "notURL", "ESA0011012B", "storeName", "username",
+						"password", "password", true, ConstraintViolationException.class },
+				{
+						// Negative test, Blank store name
+						"warden1", "name", "middleName", "surname", "https://www.youtube.com", "ESA0011012B", "",
+						"username", "password", "password", true, ConstraintViolationException.class },
+				{
+						// Negative test, Blank username
+						"warden1", "name", "middleName", "surname", "https://www.youtube.com", "ESA0011012B",
+						"storeName", "", "password", "password", true, ConstraintViolationException.class },
+				{
+						// Negative test, Blank password
+						"warden1", "name", "middleName", "surname", "https://www.youtube.com", "ESA0011012B",
+						"storeName", "username", "", "sasa", true, NullPointerException.class },
+				{
+						// Negative test, not equal password
+						"warden1", "name", "middleName", "surname", "https://www.youtube.com", "ESA0011012B",
+						"storeName", "username", "sav", "sasa", true, NullPointerException.class },
+				{
+						// Negative test, false terms
+						"warden1", "name", "middleName", "surname", "https://www.youtube.com", "ESA0011012B",
+						"storeName", "username", "password", "password", false, NullPointerException.class },
+				{
+						// Negative test, Vat number invalid
+						"warden1", "name", "middleName", "surname", "https://www.youtube.com", "invalid", "storeName",
+						"username", "password", "password", false, NullPointerException.class },
+				{
+						// Negative test, not a warden creating salesMan
+						"prisoner1", "name", "middleName", "surname", "https://www.youtube.com", "ESA0011012B",
+						"storeName", "username", "password", "password", true, IllegalArgumentException.class } };
 
-		for (int i = 0; i < testingData.length; i++) {
-			this.templateRegisterSalesman((String) testingData[i][0], (String) testingData[i][1], (String) testingData[i][2], (String) testingData[i][3], (String) testingData[i][4], (String) testingData[i][5], (String) testingData[i][6],
-				(String) testingData[i][7], (String) testingData[i][8], (String) testingData[i][9], (Boolean) testingData[i][10], (Class<?>) testingData[i][11]);
-		}
+		for (int i = 0; i < testingData.length; i++)
+			this.templateRegisterSalesman((String) testingData[i][0], (String) testingData[i][1],
+					(String) testingData[i][2], (String) testingData[i][3], (String) testingData[i][4],
+					(String) testingData[i][5], (String) testingData[i][6], (String) testingData[i][7],
+					(String) testingData[i][8], (String) testingData[i][9], (Boolean) testingData[i][10],
+					(Class<?>) testingData[i][11]);
 	}
 
-	protected void templateRegisterSalesman(String loggedUsername, String name, String middleName, String surname, String photo, String VATnumber, String storeName, String username, String password, String confirmPassword, Boolean terms, Class<?> expected) {
+	protected void templateRegisterSalesman(String loggedUsername, String name, String middleName, String surname,
+			String photo, String VATnumber, String storeName, String username, String password, String confirmPassword,
+			Boolean terms, Class<?> expected) {
 
 		Class<?> caught = null;
 
 		try {
 
-			//En cada iteraccion comenzamos una transaccion, de esya manera, no se toman valores residuales de otros test
+			// En cada iteraccion comenzamos una transaccion, de esya manera, no
+			// se toman valores residuales de otros test
 			this.startTransaction();
 
 			super.authenticate(loggedUsername);
@@ -328,7 +338,8 @@ public class WardenServiceTest extends AbstractTest {
 		} catch (Throwable oops) {
 			caught = oops.getClass();
 		} finally {
-			//Se fuerza el rollback para que no de ningun problema la siguiente iteracion
+			// Se fuerza el rollback para que no de ningun problema la siguiente
+			// iteracion
 			this.rollbackTransaction();
 		}
 
@@ -336,53 +347,68 @@ public class WardenServiceTest extends AbstractTest {
 
 	}
 
-	/** --------------------------------------------------------------------------------------------------------------------- **/
+	/**
+	 * ---------------------------------------------------------------------------------------------------------------------
+	 **/
 
 	@Test
 	public void driverRegisterEditPrisoner() {
 
-		Object testingData[][] = {
-			{
-				//Positive test, create a prisoner
-				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password", "password", "Murder", true, null
-			}, {
-				//Positive test, blank middleName
-				"warden1", "name", "", "surname", "https://www.youtube.com", "username", "password", "password", "Murder", true, null
-			}, {
-				//Negative test, Blank name
-				"warden1", "", "middleName", "surname", "https://www.youtube.com", "username", "password", "password", "Murder", true, ConstraintViolationException.class
-			}, {
-				//Negative test, Blank surname
-				"warden1", "name", "middleName", "", "https://www.youtube.com", "username", "password", "password", "Murder", true, ConstraintViolationException.class
-			}, {
-				//Negative test, no URL photo
-				"warden1", "name", "middleName", "surname", "notURL", "username", "password", "password", "Murder", true, ConstraintViolationException.class
-			}, {
-				//Negative test, Blank username
-				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "", "password", "password", "Murder", true, ConstraintViolationException.class
-			}, {
-				//Negative test, Blank password
-				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "", "sasa", "Murder", true, NullPointerException.class
-			}, {
-				//Negative test, not equal password
-				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "sav", "sasa", "Murder", true, NullPointerException.class
-			}, {
-				//Negative test, false terms
-				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password", "password", "Murder", false, NullPointerException.class
-			}, {
-				//Negative test, no charges selected
-				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password", "password", "", true, NullPointerException.class
-			}, {
-				//Negative test, not a warden creating prisoner
-				"prisoner1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password", "password", "Murder", true, IllegalArgumentException.class
-			}
-		};
+		Object testingData[][] = { {
+				// Positive test, create a prisoner
+				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password",
+				"password", "Murder", true, null },
+				{
+						// Positive test, blank middleName
+						"warden1", "name", "", "surname", "https://www.youtube.com", "username", "password", "password",
+						"Murder", true, null },
+				{
+						// Negative test, Blank name
+						"warden1", "", "middleName", "surname", "https://www.youtube.com", "username", "password",
+						"password", "Murder", true, ConstraintViolationException.class },
+				{
+						// Negative test, Blank surname
+						"warden1", "name", "middleName", "", "https://www.youtube.com", "username", "password",
+						"password", "Murder", true, ConstraintViolationException.class },
+				{
+						// Negative test, no URL photo
+						"warden1", "name", "middleName", "surname", "notURL", "username", "password", "password",
+						"Murder", true, ConstraintViolationException.class },
+				{
+						// Negative test, Blank username
+						"warden1", "name", "middleName", "surname", "https://www.youtube.com", "", "password",
+						"password", "Murder", true, ConstraintViolationException.class },
+				{
+						// Negative test, Blank password
+						"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "", "sasa",
+						"Murder", true, NullPointerException.class },
+				{
+						// Negative test, not equal password
+						"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "sav",
+						"sasa", "Murder", true, NullPointerException.class },
+				{
+						// Negative test, false terms
+						"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password",
+						"password", "Murder", false, NullPointerException.class },
+				{
+						// Negative test, no charges selected
+						"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password",
+						"password", "", true, NullPointerException.class },
+				{
+						// Negative test, not a warden creating prisoner
+						"prisoner1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password",
+						"password", "Murder", true, IllegalArgumentException.class } };
 
 		for (int i = 0; i < testingData.length; i++)
-			this.templateRegisterPrisoner((String) testingData[i][0], (String) testingData[i][1], (String) testingData[i][2], (String) testingData[i][3], (String) testingData[i][4], (String) testingData[i][5], (String) testingData[i][6],
-				(String) testingData[i][7], (String) testingData[i][8], (Boolean) testingData[i][9], (Class<?>) testingData[i][10]);
+			this.templateRegisterPrisoner((String) testingData[i][0], (String) testingData[i][1],
+					(String) testingData[i][2], (String) testingData[i][3], (String) testingData[i][4],
+					(String) testingData[i][5], (String) testingData[i][6], (String) testingData[i][7],
+					(String) testingData[i][8], (Boolean) testingData[i][9], (Class<?>) testingData[i][10]);
 	}
-	protected void templateRegisterPrisoner(String loggedUsername, String name, String middleName, String surname, String photo, String username, String password, String confirmPassword, String charge, Boolean terms, Class<?> expected) {
+
+	protected void templateRegisterPrisoner(String loggedUsername, String name, String middleName, String surname,
+			String photo, String username, String password, String confirmPassword, String charge, Boolean terms,
+			Class<?> expected) {
 
 		Class<?> caught = null;
 
@@ -390,7 +416,8 @@ public class WardenServiceTest extends AbstractTest {
 			this.startTransaction();
 			List<Charge> c = this.chargeService.getCharge(charge);
 
-			//En cada iteraccion comenzamos una transaccion, de esya manera, no se toman valores residuales de otros test
+			// En cada iteraccion comenzamos una transaccion, de esya manera, no
+			// se toman valores residuales de otros test
 
 			super.authenticate(loggedUsername);
 
@@ -417,7 +444,8 @@ public class WardenServiceTest extends AbstractTest {
 		} catch (Throwable oops) {
 			caught = oops.getClass();
 		} finally {
-			//Se fuerza el rollback para que no de ningun problema la siguiente iteracion
+			// Se fuerza el rollback para que no de ningun problema la siguiente
+			// iteracion
 			this.rollbackTransaction();
 		}
 
@@ -428,55 +456,68 @@ public class WardenServiceTest extends AbstractTest {
 	@Test
 	public void driverRegisterEditWarden() {
 
-		Object testingData[][] = {
-			{
-				//Positive test, create a warden
-				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password", "password", true, "warden@gmail.com", null
-			}, {
-				//Positive test, blank middleName
-				"warden1", "name", "", "surname", "https://www.youtube.com", "username", "password", "password", true, "warden@gmail.com", null
-			}, {
-				//Negative test, Blank name
-				"warden1", "", "middleName", "surname", "https://www.youtube.com", "username", "password", "password", true, "warden@gmail.com", ConstraintViolationException.class
-			}, {
-				//Negative test, Blank surname
-				"warden1", "name", "middleName", "", "https://www.youtube.com", "username", "password", "password", true, "warden@gmail.com", ConstraintViolationException.class
-			}, {
-				//Negative test, no URL photo
-				"warden1", "name", "middleName", "surname", "notURL", "username", "password", "password", true, "warden@gmail.com", ConstraintViolationException.class
-			}, {
-				//Negative test, Blank username
-				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "", "password", "password", true, "warden@gmail.com", ConstraintViolationException.class
-			}, {
-				//Negative test, Blank password
-				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "", "sasa", true, "warden@gmail.com", NullPointerException.class
-			}, {
-				//Negative test, not equal password
-				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "sav", "sasa", true, "warden@gmail.com", NullPointerException.class
-			}, {
-				//Negative test, false terms
-				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password", "password", false, "warden@gmail.com", NullPointerException.class
-			}, {
-				//Negative test, invalid email
-				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password", "password", true, "invalid", ConstraintViolationException.class
-			}, {
-				//Negative test, not a warden creating warden
-				"prisoner1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password", "password", true, "warden@gmail.com", IllegalArgumentException.class
-			}
-		};
+		Object testingData[][] = { {
+				// Positive test, create a warden
+				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password",
+				"password", true, "warden@gmail.com", null },
+				{
+						// Positive test, blank middleName
+						"warden1", "name", "", "surname", "https://www.youtube.com", "username", "password", "password",
+						true, "warden@gmail.com", null },
+				{
+						// Negative test, Blank name
+						"warden1", "", "middleName", "surname", "https://www.youtube.com", "username", "password",
+						"password", true, "warden@gmail.com", ConstraintViolationException.class },
+				{
+						// Negative test, Blank surname
+						"warden1", "name", "middleName", "", "https://www.youtube.com", "username", "password",
+						"password", true, "warden@gmail.com", ConstraintViolationException.class },
+				{
+						// Negative test, no URL photo
+						"warden1", "name", "middleName", "surname", "notURL", "username", "password", "password", true,
+						"warden@gmail.com", ConstraintViolationException.class },
+				{
+						// Negative test, Blank username
+						"warden1", "name", "middleName", "surname", "https://www.youtube.com", "", "password",
+						"password", true, "warden@gmail.com", ConstraintViolationException.class },
+				{
+						// Negative test, Blank password
+						"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "", "sasa",
+						true, "warden@gmail.com", NullPointerException.class },
+				{
+						// Negative test, not equal password
+						"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "sav",
+						"sasa", true, "warden@gmail.com", NullPointerException.class },
+				{
+						// Negative test, false terms
+						"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password",
+						"password", false, "warden@gmail.com", NullPointerException.class },
+				{
+						// Negative test, invalid email
+						"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password",
+						"password", true, "invalid", ConstraintViolationException.class },
+				{
+						// Negative test, not a warden creating warden
+						"prisoner1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password",
+						"password", true, "warden@gmail.com", IllegalArgumentException.class } };
 
-		for (int i = 0; i < testingData.length; i++) {
-			this.templateRegisterWarden((String) testingData[i][0], (String) testingData[i][1], (String) testingData[i][2], (String) testingData[i][3], (String) testingData[i][4], (String) testingData[i][5], (String) testingData[i][6],
-				(String) testingData[i][7], (Boolean) testingData[i][8], (String) testingData[i][9], (Class<?>) testingData[i][10]);
-		}
+		for (int i = 0; i < testingData.length; i++)
+			this.templateRegisterWarden((String) testingData[i][0], (String) testingData[i][1],
+					(String) testingData[i][2], (String) testingData[i][3], (String) testingData[i][4],
+					(String) testingData[i][5], (String) testingData[i][6], (String) testingData[i][7],
+					(Boolean) testingData[i][8], (String) testingData[i][9], (Class<?>) testingData[i][10]);
 	}
-	protected void templateRegisterWarden(String loggedUsername, String name, String middleName, String surname, String photo, String username, String password, String confirmPassword, Boolean terms, String email, Class<?> expected) {
+
+	protected void templateRegisterWarden(String loggedUsername, String name, String middleName, String surname,
+			String photo, String username, String password, String confirmPassword, Boolean terms, String email,
+			Class<?> expected) {
 
 		Class<?> caught = null;
 
 		try {
 
-			//En cada iteraccion comenzamos una transaccion, de esya manera, no se toman valores residuales de otros test
+			// En cada iteraccion comenzamos una transaccion, de esya manera, no
+			// se toman valores residuales de otros test
 			this.startTransaction();
 
 			super.authenticate(loggedUsername);
@@ -504,7 +545,8 @@ public class WardenServiceTest extends AbstractTest {
 		} catch (Throwable oops) {
 			caught = oops.getClass();
 		} finally {
-			//Se fuerza el rollback para que no de ningun problema la siguiente iteracion
+			// Se fuerza el rollback para que no de ningun problema la siguiente
+			// iteracion
 			this.rollbackTransaction();
 		}
 
@@ -517,29 +559,22 @@ public class WardenServiceTest extends AbstractTest {
 
 		Object testingData[][] = {
 
-			/**
-			 * POSITIVE TEST: delete own accountr
-			 **/
-			{
-				"warden1", "one", null
-			},
-			/**
-			 * NEGATIVE TEST: Another user is trying to delete the account
-			 **/
-			{
-				"prisoner1", "one", IllegalArgumentException.class
-			},
-			/**
-			 * NEGATIVE TEST: All wardens are deleted
-			 **/
-			{
-				"warden1", "All", IllegalArgumentException.class
-			}
-		};
+				/**
+				 * POSITIVE TEST: delete own accountr
+				 **/
+				{ "warden1", "one", null },
+				/**
+				 * NEGATIVE TEST: Another user is trying to delete the account
+				 **/
+				{ "prisoner1", "one", IllegalArgumentException.class },
+				/**
+				 * NEGATIVE TEST: All wardens are deleted
+				 **/
+				{ "warden1", "All", IllegalArgumentException.class } };
 
-		for (int i = 0; i < testingData.length; i++) {
-			this.deleteWardenTemplate((String) testingData[i][0], (String) testingData[i][1], (Class<?>) testingData[i][2]);
-		}
+		for (int i = 0; i < testingData.length; i++)
+			this.deleteWardenTemplate((String) testingData[i][0], (String) testingData[i][1],
+					(Class<?>) testingData[i][2]);
 	}
 
 	private void deleteWardenTemplate(String usernameLoggued, String all, Class<?> expected) {
