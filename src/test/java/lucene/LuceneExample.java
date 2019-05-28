@@ -77,9 +77,9 @@ public class LuceneExample {
 				iWriter.addDocument(doc);
 				count++;
 			}
-
-			System.out.println(count + " prisoner indexed");
-
+			/**
+			 * System.out.println(count + " prisoner indexed");
+			 **/
 			// Closing iWriter
 			iWriter.optimize();
 			iWriter.commit();
@@ -98,8 +98,9 @@ public class LuceneExample {
 
 	public void search(String keyword) {
 
-		System.out.println("-- Seaching --");
-
+		/**
+		 * System.out.println("-- Seaching --");
+		 **/
 		try {
 
 			// Searching
@@ -107,25 +108,44 @@ public class LuceneExample {
 			IndexSearcher searcher = new IndexSearcher(reader);
 			Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
 			// MultiFieldQueryParser is used to search multiple fields
-			String[] filesToSearch = { "name", "middle_name", "surname", "ticker" };
-			MultiFieldQueryParser mqp = new MultiFieldQueryParser(Version.LUCENE_30, filesToSearch, analyzer);
 
-			// Sirve para hacer el LIKE del filter
-			mqp.setAllowLeadingWildcard(true);
+			long acum = 0;
 
-			Query query = mqp.parse(keyword);// search the given keyword
+			Integer iterations = 1000;
 
-			TopDocs hits = searcher.search(query, 100); // run the query
+			for (int i = 0; i < iterations - 1; i++) {
 
-			System.out.println("Results found >> " + hits.totalHits);
+				long startTime = System.nanoTime();
+				String[] filesToSearch = { "name", "middle_name", "surname", "ticker" };
+				MultiFieldQueryParser mqp = new MultiFieldQueryParser(Version.LUCENE_30, filesToSearch, analyzer);
 
-			for (int i = 0; i < hits.totalHits; i++) {
-				Document doc = searcher.doc(hits.scoreDocs[i].doc);// get the
-																	// next
-																	// document
-				System.out.println(
-						"Prisoner: " + doc.get("name") + " " + doc.get("middle_name") + " " + " " + doc.get("surname"));
+				// Sirve para hacer el LIKE del filter
+				mqp.setAllowLeadingWildcard(true);
+
+				Query query = mqp.parse(keyword);// search the given keyword
+
+				TopDocs hits = searcher.search(query, 100); // run the query
+
+				long endTime = System.nanoTime();
+
+				long duration = (endTime - startTime);
+
+				acum += duration;
+
 			}
+
+			System.out.println(acum / iterations + " ns");
+
+			System.out.println("------------------");
+
+			/**
+			 * System.out.println("Results found >> " + hits.totalHits);
+			 *
+			 * for (int i = 0; i < hits.totalHits; i++) { Document doc =
+			 * searcher.doc(hits.scoreDocs[i].doc);// get the // next //
+			 * document System.out.println( "Prisoner: " + doc.get("name") + " "
+			 * + doc.get("middle_name") + " " + " " + doc.get("surname")); }
+			 **/
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -144,28 +164,9 @@ public class LuceneExample {
 
 		// searching keyword
 		obj.search(keyWord);
-		long acum = 0;
 
-		Integer iterations = 1000;
-
-		for (int i = 0; i < iterations - 1; i++) {
-
-			long startTime = System.currentTimeMillis();
-
-			// using wild card serach
-			obj.search("*" + keyWord + "*");
-
-			long endTime = System.currentTimeMillis();
-
-			long duration = (endTime - startTime);
-
-			acum += duration;
-
-		}
-
-		System.out.println(acum / iterations + " miliseconds");
-
-		System.out.println("------------------");
+		// using wild card serach
+		obj.search("*" + keyWord + "*");
 
 	}
 }
