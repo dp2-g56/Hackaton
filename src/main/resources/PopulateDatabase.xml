@@ -2265,7 +2265,7 @@
 				<property name="surname" value="Harrison" />
 				<property name="photo" value="https://www.url.com/example" />
 				<property name="crimeRate" value="-0.4" />
-				<property name="ticker" value="231232-MARHAR" />
+				<property name="ticker" value="231232-MAYHAR" />
 				<property name="incomeDate" value="12/12/2004 23:59" />
 				<property name="exitDate" value="12/12/2025 23:59" />
 				<property name="isIsolated" value="False" />
@@ -2586,7 +2586,7 @@
 					<list>
 					</list>
 				</property>
-				<property name="userAccount" ref="userAccount47" />
+				<property name="userAccount" ref="userAccount33" />
 			</bean>
 			
 			
