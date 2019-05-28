@@ -79,8 +79,11 @@ public class FinderService {
 		Integer iterations = 1000;
 		long acum = 0;
 		List<Prisoner> res = new ArrayList<>();
+		List<Prisoner> voidlist = new ArrayList<Prisoner>();
 
 		for (int i = 0; i < iterations - 1; i++) {
+
+			finder.setPrisoners(voidlist);
 
 			res = this.prisonerService.getIncarceratedPrisoners();
 			List<Prisoner> filter = new ArrayList<>();
