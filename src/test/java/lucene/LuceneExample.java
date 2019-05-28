@@ -73,9 +73,6 @@ public class LuceneExample {
 				doc.add(new Field("surname", rs.getString("surname"), Field.Store.YES, Field.Index.ANALYZED));
 				doc.add(new Field("ticker", rs.getString("ticker"), Field.Store.YES, Field.Index.ANALYZED));
 				doc.add(new Field("middle_name", rs.getString("middle_name"), Field.Store.YES, Field.Index.ANALYZED));
-
-				doc.add(new Field("id", rs.getString("id"), Field.Store.YES, Field.Index.NOT_ANALYZED));
-				doc.add(new Field("id", rs.getString("id"), Field.Store.YES, Field.Index.NOT_ANALYZED));
 				// Adding doc to iWriter
 				iWriter.addDocument(doc);
 				count++;
@@ -149,7 +146,7 @@ public class LuceneExample {
 		obj.search(keyWord);
 		long acum = 0;
 
-		Integer iterations = 100;
+		Integer iterations = 1000;
 
 		for (int i = 0; i < iterations - 1; i++) {
 
