@@ -79,6 +79,8 @@ public class FinderService {
 		List<Prisoner> res = this.prisonerService.getIncarceratedPrisoners();
 		List<Prisoner> filter = new ArrayList<>();
 
+		long startTime = System.currentTimeMillis();
+
 		if (!finder.getKeyWord().equals(null) && !finder.getKeyWord().contentEquals("")) {
 			filter = this.finderRepository.filterByKeyWord("%" + finder.getKeyWord() + "%");
 			res.retainAll(filter);
@@ -88,6 +90,10 @@ public class FinderService {
 			res.retainAll(filter);
 
 		}
+
+		long endTime = System.currentTimeMillis();
+		long duration = (endTime - startTime);
+		System.out.println(duration + " ms");
 		finder.setPrisoners(res);
 
 		Finder finderRes = this.finderRepository.save(finder);
