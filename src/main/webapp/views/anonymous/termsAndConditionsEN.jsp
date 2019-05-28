@@ -102,6 +102,6 @@ p{
 <p>You can review the most current version of the Terms of Service at any time at this page.</p>
 <p>We reserve the right, at our sole discretion, to update, change or replace any part of these Terms of Service by posting updates and changes to our website. It is your responsibility to check our website periodically for changes. Your continued use of or access to our website or the Service following the posting of any changes to these Terms of Service constitutes acceptance of those changes.</p>
 <p><br />SECTION 20 - CONTACT INFORMATION</p>
-<p>Questions about the Terms of Service should be sent to us at alegomcab1@gmail.com.</p>
+<p>Questions about the Terms of Service should be sent to us at juaaloval@gmail.com.</p>
 
 </security:authorize>

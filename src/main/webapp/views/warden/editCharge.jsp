@@ -41,6 +41,6 @@
 	
 	</form:form>
 	
-	<acme:cancel url="/anonymous/prisoner/list.do" code="warden.cancel" /> 
+	<acme:cancel url="/warden/charge/listAll.do" code="warden.cancel" /> 
 	
 </security:authorize>

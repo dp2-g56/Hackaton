@@ -71,8 +71,9 @@ public class PrisonerWardenController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST, params = "save")
-	public ModelAndView save(@ModelAttribute("formPrisoner") @Valid FormObjectPrisoner formPrisoner, BindingResult binding) {
-		ModelAndView result = null;
+	public ModelAndView save(@ModelAttribute("formPrisoner") @Valid FormObjectPrisoner formPrisoner,
+			BindingResult binding) {
+		ModelAndView result;
 
 		Prisoner prisoner = new Prisoner();
 		prisoner = this.prisonerService.reconstruct(formPrisoner, binding);
@@ -178,7 +179,7 @@ public class PrisonerWardenController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/addCharge", method = RequestMethod.POST)
-	public ModelAndView addChargesSave(Charge charge, @RequestParam Integer prisonerId) {
+	public ModelAndView addChargesSave(Charge charge, @RequestParam int prisonerId) {
 
 		ModelAndView result;
 
@@ -194,7 +195,10 @@ public class PrisonerWardenController extends AbstractController {
 			Prisoner realPrisoner = this.prisonerService.findOne(prisonerId);
 			Assert.notNull(charge.getId());
 			Assert.isTrue(!realPrisoner.getCharges().contains(charge));
-			Assert.isTrue(charge.getIsDraftMode() == false);
+
+			Charge testCharge = this.chargeService.findOne(charge.getId());
+
+			Assert.isTrue(testCharge.getIsDraftMode() == false);
 
 			if (realPrisoner == null || !prisoners.contains(realPrisoner))
 				return this.listSuspects();

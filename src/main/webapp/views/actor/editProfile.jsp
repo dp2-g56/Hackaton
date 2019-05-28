@@ -65,8 +65,10 @@
 			<br />
 			
 			<acme:textbox path="photo" code="warden.photo" />
+			<br />
 			
 			<acme:textbox path="email" code="guard.email" />
+			<br />
 			
 			<acme:textbox path="phone" code="guard.phone" />
 			<br />
