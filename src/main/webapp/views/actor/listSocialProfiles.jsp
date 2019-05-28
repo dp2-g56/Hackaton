@@ -102,6 +102,10 @@
 		</tr>
 	</security:authorize>
 	<security:authorize access="hasRole('SOCIALWORKER')">
+		<tr>
+			<td><spring:message code="socialworker.title"/>:</td>
+			<td><jstl:out value="${socialWorker.title}" /></td>
+		</tr>
 	<jstl:choose>
 		<jstl:when test="${curriculum != null}">
 			<tr>
