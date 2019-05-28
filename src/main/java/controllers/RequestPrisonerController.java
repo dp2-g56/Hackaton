@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import domain.Activity;
 import domain.Request;
 import services.ActivityService;
+import services.PrisonerService;
 import services.RequestService;
 
 @Controller
@@ -27,6 +28,9 @@ public class RequestPrisonerController extends AbstractController {
 	@Autowired
 	private ActivityService activityService;
 
+	@Autowired
+	private PrisonerService prisonerService;
+
 	public RequestPrisonerController() {
 		super();
 	}
@@ -37,6 +41,8 @@ public class RequestPrisonerController extends AbstractController {
 	public ModelAndView listRequests() {
 		ModelAndView result;
 		try {
+			this.prisonerService.loggedAsPrisoner();
+
 			List<Request> requests = this.requestService.getLogguedPrisonerRequests();
 
 			result = new ModelAndView("request/prisoner/list");

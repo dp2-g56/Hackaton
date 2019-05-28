@@ -10,7 +10,7 @@
 
 
 <p>
-	<spring:message code="administrator.allCharges" />
+	<spring:message code="administrator.DrafMode" />
 </p>
 
 <security:authorize access="hasRole('WARDEN')">
@@ -39,10 +39,6 @@
 		    
 		    </jstl:choose>
 			
-		</display:column>
-		
-		<display:column titleKey="charge.isDraftMode" > 
-			<jstl:out value="${row.isDraftMode}" />
 		</display:column>
 		
 		<display:column>
@@ -79,6 +75,11 @@
 
 	</display:table>
 	
+	
+	<p>
+	<spring:message code="administrator.FinalMode" />
+</p>
+	
 	<display:table pagesize="5" name="finalCharges" id="rowa" requestURI="${requestURI}" >
 		
 		<display:column titleKey="charge.title" >
@@ -103,10 +104,6 @@
 		    
 		    </jstl:choose>
 			
-		</display:column>
-		
-		<display:column titleKey="charge.isDraftMode" > 
-			<jstl:out value="${rowa.isDraftMode}" />
 		</display:column>
 
 	</display:table>
