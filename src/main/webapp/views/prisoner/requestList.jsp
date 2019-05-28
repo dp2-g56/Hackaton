@@ -16,29 +16,6 @@
 
 	<display:table pagesize="5" name="requests" id="row" requestURI="${requestURI}" >
 	
-	<jstl:choose>
-		<jstl:when test="${row.status=='PENDING'}">
-		
-		<jstl:set var="color" value="grey"/>
-		
-		</jstl:when>
-		
-		<jstl:when test="${row.status=='APPROVED'}">
-		
-		<jstl:set var="color" value="green"/>
-		
-		</jstl:when>
-			
-		<jstl:when test="${row.status=='REJECTED'}">
-		
-		<jstl:set var="color" value="red"/>
-		
-		</jstl:when>
-	
-	
-	
-	</jstl:choose>
-	
 	<display:column titleKey="request.status" style="color:${color}"> 
 		<jstl:out value="${row.status}"/>
 	</display:column>

@@ -35,7 +35,7 @@ public class RequestSocialWorkerCotroller extends AbstractController {
 			Assert.isTrue(StringUtils.isNumeric(activityId));
 			Integer activityId2 = Integer.parseInt(activityId);
 
-			List<Request> requests = this.requestService.getRequestsFromSocialWorker(activityId2);
+			List<Request> requests = this.requestService.findAll();
 
 			result = new ModelAndView("request/socialWorker/list");
 			result.addObject("requests", requests);
