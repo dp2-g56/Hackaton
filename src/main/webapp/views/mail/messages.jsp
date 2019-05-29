@@ -47,7 +47,7 @@
 <jstl:forEach items="${boxes}" var="box">
  
  	<spring:url var="moveMessage" value="/message/actor/move.do?messageId=${row.id}&boxId=${box.id}">
-			<spring:param name="messageId" value="${row.id}"/>
+			
 	</spring:url>
 	
  
@@ -66,7 +66,7 @@
 <jstl:forEach items="${boxes}" var="box">
  
  	<spring:url var="copyMessage" value="/message/actor/copy.do?messageId=${row.id}&boxId=${box.id}">
-			<spring:param name="messageId" value="${row.id}"/>
+			
 	</spring:url>
 	
  
