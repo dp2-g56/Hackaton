@@ -188,9 +188,15 @@ public class MessageController extends AbstractController {
 			int boxIdInt = Integer.parseInt(boxId);
 
 			Message message = this.messageService.findOne(messageIdInt);
+
 			UserAccount userAccount = LoginService.getPrincipal();
 			Box currentBox = this.boxService.findOne(boxIdInt);
 			Actor a = this.actorService.getActorByUsername(userAccount.getUsername());
+
+			List<Message> messagesOfActor = this.messageService.messagesOfActor(a);
+
+			Assert.isTrue(messagesOfActor.contains(message));
+
 			ModelAndView result;
 
 			Box trashBox = this.boxService.getTrashBoxByActor(a);
