@@ -476,4 +476,8 @@ public class MessageService {
 	public void flush() {
 		this.messageRepository.flush();
 	}
+
+	public List<Message> messagesOfActor(Actor a) {
+		return this.messageRepository.messagesOfActor(a);
+	}
 }
