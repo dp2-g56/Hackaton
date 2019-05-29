@@ -37,7 +37,9 @@
 		
 		<!-- BOTONES -->	
 		<input type="submit" name="saveWarden" value="<spring:message code="warden.edit" />"/> 
-		<acme:cancel url="/authenticated/showProfile.do" code="warden.cancel" /> 
+		<button type="button">
+	<spring:message code="warden.cancel" />
+</button> 
 		
 		</form:form>
 	</jstl:if>

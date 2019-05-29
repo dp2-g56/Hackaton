@@ -83,7 +83,7 @@ function conf() {
 		<input type="hidden" id="price" value="${product.price}">
 		
 		<span><spring:message code="product.quantity"/>:</span>
-		<input type="number" id="quantity" name="quantity" min="1" value="1" onchange="mult();">
+		<input type="number" id="quantity" name="quantity" min="0" value="1" onchange="mult();">
 		<br/>
 		
 		<span><spring:message code="product.total"/>:</span>

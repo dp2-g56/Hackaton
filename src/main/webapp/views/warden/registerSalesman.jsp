@@ -45,8 +45,6 @@
 		<acme:textbox path="name" code="warden.name" />
 		<br />
 		
-		<acme:textbox path="middleName" code="warden.middleName" />
-		<br />
 		
 		<acme:textbox path="surname" code="warden.surname" />
 		<br />

@@ -62,7 +62,7 @@ public class ProductController extends AbstractController {
 				return this.listSalesManPrisoner();
 			}
 
-			products = this.productService.getProductsFinalModeWithStockBySalesMan(salesmanIdInt);
+			products = salesMan.getProducts();
 
 			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 

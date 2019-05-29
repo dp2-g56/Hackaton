@@ -77,6 +77,6 @@
 		</tr>
 	</table>
 	
-	<acme:cancel url="/report/warden/list.do" code="warden.back" />
+	<acme:cancel url="/product/anonymous/list.do" code="warden.back" />
 </security:authorize>
 

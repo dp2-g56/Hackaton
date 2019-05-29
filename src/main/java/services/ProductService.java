@@ -183,7 +183,7 @@ public class ProductService {
 		// Comprobaciones de limite de stock y puntos del prisionero
 		Assert.isTrue(quantity <= product.getStock());
 		Assert.isTrue((product.getPrice() * quantity) <= prisoner.getPoints());
-		Assert.isTrue(quantity > 0);
+		Assert.isTrue(quantity >= 0);
 
 		// Aumentamos los puntos del vendedor
 		SalesMan salesman = this.salesManService.getSalesManOfProduct(productId);

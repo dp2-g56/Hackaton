@@ -241,7 +241,7 @@ public class PrisonerService {
 		userAccount.setAuthorities(authorities);
 
 		// locked
-		userAccount.setIsNotLocked(true);
+		userAccount.setIsNotLocked(false);
 
 		// Username
 		userAccount.setUsername(formPrisoner.getUsername());
@@ -314,24 +314,8 @@ public class PrisonerService {
 		Prisoner result;
 		Prisoner founded = this.findOne(prisoner.getId());
 
-		result = prisoner;
+		result = founded;
 
-		result.setVersion(founded.getVersion());
-		result.setBoxes(founded.getBoxes());
-		result.setCharges(founded.getCharges());
-		result.setCrimeRate(founded.getCrimeRate());
-		result.setExitDate(founded.getExitDate());
-		result.setFinderActivities(founded.getFinderActivities());
-		result.setFreedom(founded.getFreedom());
-		result.setIncomeDate(founded.getIncomeDate());
-		result.setIsIsolated(founded.getIsIsolated());
-		result.setIsSuspect(founded.getIsSuspect());
-		result.setPoints(founded.getPoints());
-		result.setProducts(founded.getProducts());
-		result.setRequests(founded.getRequests());
-		result.setTicker(founded.getTicker());
-		result.setUserAccount(founded.getUserAccount());
-		result.setVisits(founded.getVisits());
 
 		this.validator.validate(result, binding);
 
