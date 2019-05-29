@@ -257,7 +257,6 @@ public class PrisonerWardenController extends AbstractController {
 			int prisonerIdInt = Integer.parseInt(prisonerId);
 
 			Prisoner prisoner = this.wardenService.getPrisonerAsWarden(prisonerIdInt);
-			Assert.isTrue(prisoner.getFreedom() == false);
 
 			result = new ModelAndView("warden/editPrisoner");
 			result.addObject("prisoner", prisoner);
@@ -283,7 +282,7 @@ public class PrisonerWardenController extends AbstractController {
 				try {
 					this.prisonerService.savePrisoner(prisonerReconstructed);
 
-					result = new ModelAndView("redirect:/anonymous/prisoner/list.do");
+					result = new ModelAndView("redirect:/prisoner/warden/listSuspects.do");
 				} catch (Throwable oops) {
 					result = new ModelAndView("warden/editPrisoner");
 					result.addObject("prisoner", prisonerReconstructed);
