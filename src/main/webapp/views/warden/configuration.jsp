@@ -11,25 +11,45 @@
 <display:table pagesize="5" name="configuration" id="row" class="displaytag" 
 					requestURI="configuration/warden/list.do">
 					
-	<display:column property="finderResult" titleKey="configuration.finderResult" /> 
+	<display:column titleKey="configuration.finderResult" > 
+		<jstl:out value="${row.finderResult}" />
+	</display:column>
 					
-	<display:column property="minFinderResults" titleKey="configuration.minFinderResults" />
+	<display:column titleKey="configuration.minFinderResults" >
+		<jstl:out value="${row.minFinderResults}" />
+	</display:column>
 	
-	<display:column property="maxFinderResults" titleKey="configuration.maxFinderResults" />
+	<display:column titleKey="configuration.maxFinderResults" >
+		<jstl:out value="${row.maxFinderResults}" />
+	</display:column>
 	
-	<display:column property="timeFinderPrisoners" titleKey="configuration.timeFinderPrisoner" /> 
+	<display:column titleKey="configuration.timeFinderPrisoner" > 
+		<jstl:out value="${row.timeFinderPrisoners}" />
+	</display:column>
 	
-	<display:column property="timeFinderActivities" titleKey="configuration.timeFinderActivities" /> 
+	<display:column titleKey="configuration.timeFinderActivities" > 
+		<jstl:out value="${row.timeFinderActivities}" />
+	</display:column>
 					
-	<display:column property="spainTelephoneCode" titleKey="configuration.spainTelephoneCode" />
+	<display:column titleKey="configuration.spainTelephoneCode" >
+		<jstl:out value="${row.spainTelephoneCode}" />
+	</display:column>
 
-	<display:column property="welcomeMessageEnglish" titleKey="configuration.welcomeMessageEnglish" />
+	<display:column titleKey="configuration.welcomeMessageEnglish" >
+		<jstl:out value="${row.welcomeMessageEnglish}" />
+	</display:column>
 	
-	<display:column property="welcomeMessageSpanish" titleKey="configuration.welcomeMessageSpanish" />
+	<display:column titleKey="configuration.welcomeMessageSpanish" >
+		<jstl:out value="${row.welcomeMessageSpanish}" />
+	</display:column>
 	
-	<display:column property="systemName" titleKey="configuration.systemName" />
+	<display:column titleKey="configuration.systemName" >
+		<jstl:out value="${row.systemName}" />
+	</display:column>
 	
-	<display:column property="imageURL" titleKey="configuration.imageURL" />
+	<display:column titleKey="configuration.imageURL" >
+		<jstl:out value="${row.imageURL}" />
+	</display:column>
 	
 </display:table>
 
