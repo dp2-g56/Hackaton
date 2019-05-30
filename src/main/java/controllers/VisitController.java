@@ -2,6 +2,7 @@
 package controllers;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -429,7 +430,7 @@ public class VisitController extends AbstractController {
 			if (visit == null || visit.getVisitStatus() != VisitStatus.ACCEPTED || visit.getDate().before(thisMoment))
 				return this.listGuardFuture();
 
-			Visit savedVisit = this.visitService.editVisitGuard(visit, false);
+			Visit savedVisit = this.visitService.editVisitGuard(visit, true);
 			this.messageService.sendNotificationChangeStatusOfVisit(savedVisit.getPrisoner(), savedVisit.getVisitor(), savedVisit);
 
 		} catch (Throwable oops) {
@@ -693,33 +694,43 @@ public class VisitController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/report/create", method = RequestMethod.POST, params = "save")
-	public ModelAndView saveReport(int visitId, Report report, BindingResult binding) {
+	public ModelAndView saveReport(@RequestParam(required = false) String visitId, Report report, BindingResult binding) {
 		ModelAndView result;
 
-		Report rep = new Report();
+		try {
+			Assert.isTrue(StringUtils.isNumeric(visitId));
+			int visitIdInt = Integer.parseInt(visitId);
 
-		rep = this.reportService.reconstruct(report, binding);
+			Report rep = new Report();
 
-		if (binding.hasErrors())
-			result = this.createEditModelAndView(report);
-		else
-			try {
+			rep = this.reportService.reconstruct(report, binding);
 
-				Date thisMoment = new Date();
-				thisMoment.setTime(thisMoment.getTime() - 1);
+			if (binding.hasErrors()) {
+				result = this.createEditModelAndView(report);
+				result.addObject("visitId", visitId);
+			} else
+				try {
 
-				this.reportService.saveReport(rep, visitId);
+					Calendar c1 = Calendar.getInstance();
+					c1.add(Calendar.YEAR, -10);
+					Date thisMoment = c1.getTime();
 
-				result = this.listGuard();
+					thisMoment.setTime(thisMoment.getTime() - 1);
 
-			} catch (Throwable oops) {
+					this.reportService.saveReport(rep, visitIdInt);
 
-				result = this.createEditModelAndView(report, "commit.error");
-			}
+					result = this.listGuard();
 
+				} catch (Throwable oops) {
+
+					result = this.createEditModelAndView(report, "commit.error");
+					result.addObject("visitId", visitId);
+				}
+		} catch (Throwable oops) {
+			return this.listGuard();
+		}
 		return result;
 	}
-
 	protected ModelAndView createEditModelAndView(Report report) {
 		ModelAndView result;
 

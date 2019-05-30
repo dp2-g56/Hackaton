@@ -46,7 +46,7 @@
 	
 	<jstl:otherwise>
 		
-	<acme:cancel url="/anonymous/prisoner/list.do" code="visit.cancel" />
+	<acme:cancel url="/product/anonymous/list.do" code="visit.cancel" />
 	
 	</jstl:otherwise>
 	
