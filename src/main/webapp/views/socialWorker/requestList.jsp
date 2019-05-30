@@ -11,8 +11,6 @@
 
 <security:authorize access="hasRole('SOCIALWORKER')">
 
-	<spring:message var ="message" code="request.message" />
-		<h2>   <jstl:out value="${message}" />   </h2> 
 
 	<display:table pagesize="5" name="requests" id="row" requestURI="${requestURI}" >
 	
