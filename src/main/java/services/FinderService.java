@@ -76,9 +76,7 @@ public class FinderService {
 		Assert.isTrue(finder.getId() > 0);
 		Assert.isTrue(visitor.getFinder().getId() == finder.getId());
 
-		List<Prisoner> res = new ArrayList<>();
-
-		res = this.prisonerService.getIncarceratedPrisoners();
+		List<Prisoner> res = this.prisonerService.getIncarceratedPrisoners();
 		List<Prisoner> filter = new ArrayList<>();
 
 		if (!finder.getKeyWord().equals(null) && !finder.getKeyWord().contentEquals("")) {
