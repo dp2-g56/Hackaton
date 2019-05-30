@@ -693,33 +693,41 @@ public class VisitController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/report/create", method = RequestMethod.POST, params = "save")
-	public ModelAndView saveReport(int visitId, Report report, BindingResult binding) {
+	public ModelAndView saveReport(@RequestParam(required = false) String visitId, Report report, BindingResult binding) {
 		ModelAndView result;
 
-		Report rep = new Report();
+		try {
 
-		rep = this.reportService.reconstruct(report, binding);
+			Assert.isTrue(StringUtils.isNumeric(visitId));
+			int visitIdInt = Integer.parseInt(visitId);
 
-		if (binding.hasErrors())
-			result = this.createEditModelAndView(report);
-		else
-			try {
+			Report rep = new Report();
 
-				Date thisMoment = new Date();
-				thisMoment.setTime(thisMoment.getTime() - 1);
+			rep = this.reportService.reconstruct(report, binding);
 
-				this.reportService.saveReport(rep, visitId);
+			if (binding.hasErrors()) {
+				result = this.createEditModelAndView(report);
+				result.addObject("visitId", visitId);
+			} else
+				try {
 
-				result = this.listGuard();
+					Date thisMoment = new Date();
+					thisMoment.setTime(thisMoment.getTime() - 1);
 
-			} catch (Throwable oops) {
+					this.reportService.saveReport(rep, visitIdInt);
 
-				result = this.createEditModelAndView(report, "commit.error");
-			}
+					result = this.listGuard();
 
+				} catch (Throwable oops) {
+
+					result = this.createEditModelAndView(report, "commit.error");
+					result.addObject("visitId", visitId);
+				}
+		} catch (Throwable oops) {
+			return this.listGuard();
+		}
 		return result;
 	}
-
 	protected ModelAndView createEditModelAndView(Report report) {
 		ModelAndView result;
 
