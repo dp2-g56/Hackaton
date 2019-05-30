@@ -66,7 +66,7 @@ public class ActivityController extends AbstractController {
 			return result;
 
 		} catch (Throwable oops) {
-			ModelAndView result = new ModelAndView("redirect:/list");
+			ModelAndView result = new ModelAndView("redirect:list");
 			SocialWorker socialWorker = this.socialWorkerService.loggedSocialWorker();
 			result.addObject("activities", socialWorker.getActivities());
 			return result;
@@ -93,7 +93,7 @@ public class ActivityController extends AbstractController {
 			return result;
 
 		} catch (Throwable oops) {
-			ModelAndView result = new ModelAndView("redirect:/list");
+			ModelAndView result = new ModelAndView("redirect:list");
 			SocialWorker socialWorker = this.socialWorkerService.loggedSocialWorker();
 			result.addObject("activities", socialWorker.getActivities());
 			return result;
