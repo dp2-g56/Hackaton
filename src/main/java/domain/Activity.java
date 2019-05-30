@@ -19,17 +19,20 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(indexes = { @Index(columnList = "realizationDate"), @Index(columnList = "title, description") })
+@Table(indexes = {
+	@Index(columnList = "realizationDate"), @Index(columnList = "title, description"), @Index(columnList = "maxAssistant"),
+})
 public class Activity extends DomainEntity {
 
-	private String title;
-	private String description;
-	private Date realizationDate;
-	private int maxAssistant;
-	private int rewardPoints;
-	private Boolean isFinalMode;
+	private String			title;
+	private String			description;
+	private Date			realizationDate;
+	private int				maxAssistant;
+	private int				rewardPoints;
+	private Boolean			isFinalMode;
 
-	private List<Request> requests;
+	private List<Request>	requests;
+
 
 	@NotBlank
 	public String getTitle() {
