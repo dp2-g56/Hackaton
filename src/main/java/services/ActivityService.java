@@ -126,10 +126,15 @@ public class ActivityService {
 			Activity saved = this.save(activity);
 			List<Activity> la = sw.getActivities();
 			la.add(saved);
+			Activity saved2 = this.save(activity);
+			la.add(saved2);
 			sw.setActivities(la);
 			this.socialWorkerService.save(sw);
 		} else {
+			Activity a = sw.getActivities().get(0);
+			a.setTitle(activity.getTitle());
 			Assert.isTrue(sw.getActivities().contains(activity));
+			this.save(a);
 			this.save(activity);
 		}
 	}

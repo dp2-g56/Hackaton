@@ -55,12 +55,6 @@
 		<display:column titleKey="prisoner.name" > 
 			<jstl:out value="${row.name}"/>
 		</display:column>
-		<display:column titleKey="prisoner.middleName" >
-			<jstl:out value="${row.middleName}"/>
-		</display:column> 
-		<display:column titleKey="prisoner.surname" > 
-				<jstl:out value="${row.surname}"/>
-		</display:column>
 		<display:column titleKey="prisoner.photo">
 			<a href="${row.photo}">
 				<spring:message code="prisoner.viewPhoto"/>

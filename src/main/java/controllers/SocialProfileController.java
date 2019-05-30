@@ -75,6 +75,7 @@ public class SocialProfileController extends AbstractController {
 			if (authorities.get(0).toString().equals("SOCIALWORKER")) {
 				SocialWorker socialWorker = this.socialWorkerService.findOne(logguedActor.getId());
 
+				result.addObject("socialWorker", socialWorker);
 				result.addObject("curriculum", socialWorker.getCurriculum());
 			}
 

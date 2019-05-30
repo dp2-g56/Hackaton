@@ -144,6 +144,9 @@ public class ProductService {
 		Assert.notNull(product);
 		Assert.isTrue(configuration.getTypeProducts().contains(pro.getType()) && salesman.getProducts().contains(pro));
 		Assert.isTrue(pro.getStock() >= product.getStock());
+
+		pro.setPrice(1);
+
 		this.save(pro);
 	}
 
@@ -180,7 +183,7 @@ public class ProductService {
 		// Comprobaciones de limite de stock y puntos del prisionero
 		Assert.isTrue(quantity <= product.getStock());
 		Assert.isTrue((product.getPrice() * quantity) <= prisoner.getPoints());
-		Assert.isTrue(quantity > 0);
+		Assert.isTrue(quantity >= 0);
 
 		// Aumentamos los puntos del vendedor
 		SalesMan salesman = this.salesManService.getSalesManOfProduct(productId);

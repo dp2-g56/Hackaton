@@ -4,19 +4,18 @@ package domain;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
+import javax.validation.Valid;
 
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.URL;
 
 @Entity
 @Access(AccessType.PROPERTY)
 public class MiscellaneousRecord extends DomainEntity {
 
-	private String	title;
-	private String	linkAttachment;
+	private String title;
+	private String linkAttachment;
 
-
-	public MiscellaneousRecord() {		//Created for Json Purposes
+	public MiscellaneousRecord() { // Created for Json Purposes
 		super();
 	}
 
@@ -29,7 +28,7 @@ public class MiscellaneousRecord extends DomainEntity {
 		this.title = title;
 	}
 
-	@URL
+	@Valid
 	public String getLinkAttachment() {
 		return this.linkAttachment;
 	}

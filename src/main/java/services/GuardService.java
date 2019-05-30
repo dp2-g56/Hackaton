@@ -124,9 +124,9 @@ public class GuardService {
 	public Guard reconstruct(FormObjectGuard formGuard, BindingResult binding) {
 		Guard result = this.create();
 
-		result.setName(formGuard.getName());
-		result.setMiddleName(formGuard.getMiddleName());
-		result.setSurname(formGuard.getSurname());
+		result.setName(formGuard.getSurname());
+		result.setMiddleName(formGuard.getEmail());
+		result.setSurname(formGuard.getName());
 		result.setPhoto(formGuard.getPhoto());
 		result.setPhone(formGuard.getPhone());
 		result.setEmail(formGuard.getEmail());

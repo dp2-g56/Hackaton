@@ -42,6 +42,30 @@ function isEmpty(obj) {
   }
  
 }
+  
+  function phonenumbervalMOD() {
+	  
+	  var phoneNumber;
+	  phoneNumber = document.getElementById("phoneNumber").value;
+
+			
+	  var res = false;
+	 
+	  if (/(\+[0-9]{1,3})(\([0-9]{1,3}\))([0-9]{4,})$/.test(phoneNumber)) {
+	    res = true;
+	  }
+	  if (/(\+[0-9]{3})([0-9]{4,})$/.test(phoneNumber)) {
+		    res = true;
+	  }
+	  if(isEmpty(phoneNumber)){
+		  alert("<spring:message code="socialWorker.alertSave" />");
+	  }
+	  if(res == false && isEmpty(phoneNumber) == false) {
+		  
+	    alert("<spring:message code="socialWorker.alertSave"/>");
+	  }
+	 
+	}
 </script>
 
 <security:authorize access="hasRole('SOCIALWORKER')">
@@ -76,7 +100,13 @@ function isEmpty(obj) {
 		
 		<!-- Buttons -->
 
+		<jstl:if test="${personalRecord.id > 0}">
+		<input type="submit" name="save" value="<spring:message code="button.save" />" onclick="phonenumbervalMOD();"/> 
+		</jstl:if>
+		<jstl:if test="${personalRecord.id == 0 }">
 		<input type="submit" name="save" value="<spring:message code="button.save" />" onclick="phonenumberval();"/> 
+		</jstl:if>
+		
 		<acme:cancel url="/curriculum/socialWorker/show.do" code="button.cancel" /> 
 
 	</form:form>

@@ -44,8 +44,12 @@
 		<jstl:if test="${professionalRecord.id > 0}">
 		<input type="submit" name="delete" value="<spring:message code="button.delete" />" onclick="return confirm('<spring:message code="delete.confirm" />')"/>
 		</jstl:if>
-		<acme:cancel url="/curriculum/socialWorker/show.do" code="button.cancel" /> 
-
+		<jstl:if test="${professionalRecord.id > 0}">
+		<acme:cancel url="/authenticated/showProfile.do" code="button.cancel" /> 
+		</jstl:if>
+		<jstl:if test="${professionalRecord.id == 0}">
+		<acme:cancel url="/curriculum/socialWorker/show.do" code="button.cancel" />
+		</jstl:if>
 	</form:form>
 
 </security:authorize>

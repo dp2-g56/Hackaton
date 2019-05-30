@@ -50,9 +50,6 @@
 	
 	</jstl:choose>
 	
-	<display:column titleKey="activity.title">
-		<jstl:out value="${row.title}"/>
-	</display:column>
 	<display:column titleKey="activity.description" >
 		<jstl:out value="${row.description}"/>
 	</display:column>

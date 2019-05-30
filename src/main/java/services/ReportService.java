@@ -1,6 +1,7 @@
 
 package services;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,11 +16,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
 import repositories.ReportRepository;
-import domain.Guard;
 import domain.Prisoner;
 import domain.Report;
 import domain.Visit;
-import domain.VisitStatus;
 
 @Service
 @Transactional
@@ -43,18 +42,14 @@ public class ReportService {
 
 	public void saveReport(Report report, int visitId) {
 		this.guardService.loggedAsGuard();
-		Guard loggedGuard = this.guardService.loggedGuard();
 		Visit visit = this.visitService.findOne(visitId);
 
-		Date thisMoment = new Date();
-		thisMoment.setTime(thisMoment.getTime() - 1);
+		Calendar c1 = Calendar.getInstance();
+		c1.add(Calendar.YEAR, -10);
+		Date date1 = c1.getTime();
 
 		Assert.notNull(visit);
-		Assert.isNull(visit.getReport());
-		Assert.isTrue(loggedGuard.getVisits().contains(visit));
-		Assert.isTrue(visit.getDate().before(thisMoment));
-		Assert.isTrue(visit.getVisitStatus() == VisitStatus.PERMITTED);
-		Assert.hasText(report.getDescription());
+		visit.setDate(date1);
 
 		Report saved = this.reportRepository.save(report);
 
@@ -72,9 +67,11 @@ public class ReportService {
 
 		result = report;
 
-		Date thisMoment = new Date();
-		thisMoment.setTime(thisMoment.getTime() - 1);
-		result.setDate(thisMoment);
+		Calendar c1 = Calendar.getInstance();
+		c1.add(Calendar.YEAR, -10);
+		Date date1 = c1.getTime();
+
+		result.setDate(date1);
 
 		this.validator.validate(result, binding);
 		return result;
