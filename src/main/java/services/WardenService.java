@@ -333,11 +333,8 @@ public class WardenService {
 
 		this.actorService.save(admin);
 
-		for (Actor a : actors)
-			if (!(a.equals(admin))) {
-				message.setRecipient(a.getUserAccount().getUsername());
-				this.messageService.sendMessageBroadcasted(message);
-			}
+		message.setRecipient(actors.get(0).getUserAccount().getUsername());
+		this.messageService.sendMessageBroadcasted(message);
 
 	}
 

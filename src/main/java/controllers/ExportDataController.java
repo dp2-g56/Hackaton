@@ -193,12 +193,12 @@ public class ExportDataController {
 		sb.append("- Middle name: " + visitor.getMiddleName()).append(System.getProperty("line.separator"));
 		sb.append("- Surname: " + visitor.getSurname()).append(System.getProperty("line.separator"));
 		sb.append("- Photo: " + visitor.getPhoto()).append(System.getProperty("line.separator"));
+		sb.append("- Yo antes de dp tenia vida").append(System.getProperty("line.separator"));
 		sb.append("- Email: " + visitor.getEmail()).append(System.getProperty("line.separator"));
 		sb.append("- Emergency email: " + visitor.getEmergencyEmail()).append(System.getProperty("line.separator"));
 		sb.append("- Phone: " + visitor.getPhoneNumber()).append(System.getProperty("line.separator"));
 		sb.append("- Address: " + visitor.getAddress()).append(System.getProperty("line.separator"));
 
-		
 		// Defines el nombre del archivo y la extension
 		response.setContentType("text/txt");
 		response.setHeader("Content-Disposition", "attachment;filename=exportDataWarden.txt");

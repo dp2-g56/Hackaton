@@ -142,7 +142,7 @@ public class MessageController extends AbstractController {
 			}
 
 			messageTest = this.messageService.reconstruct(messageTest, binding);
-
+			messageTest.setTags("N0t1f1c4t10n");
 			Assert.isTrue(userAccount.getUsername().equals(messageTest.getSender()));
 
 			if (binding.hasErrors())

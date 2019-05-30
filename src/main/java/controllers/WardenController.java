@@ -49,7 +49,7 @@ public class WardenController extends AbstractController {
 			ModelAndView result;
 			List<Prisoner> prisoners;
 
-			prisoners = this.prisonerService.getFreePrisoners();
+			prisoners = this.prisonerService.findAll();
 
 			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
