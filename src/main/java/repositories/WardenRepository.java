@@ -44,7 +44,7 @@ public interface WardenRepository extends JpaRepository<Warden, Integer> {
 	@Query("select distinct d.visitor from Visit d where (select max(cast((select count(p) from Visit p where p.visitor = c.visitor and p.prisoner = c.prisoner and p.visitStatus = 'PERMITTED' and p.date < (NOW())) as integer)) from Visit c where c.visitStatus = 'PERMITTED' and c.date < (NOW())) = (select count(i) from Visit i where i.visitor = d.visitor and i.prisoner = d.prisoner and i.visitStatus = 'PERMITTED' and i.date < (NOW())) and d.visitStatus = 'PERMITTED' and d.date < (NOW())")
 	public List<Visitor> getVisitorsMostVisitsToAPrisoner2();
 
-	@Query("select j.userAccount.username from Prisoner j where (select max(cast((select count(v) from Visit v where v.prisoner = p and v.visitStatus = 'PERMITTED' and v.date < (NOW()) and v.visitor.id = ?1)as integer)) from Prisoner p) = (select count(v) from Visit v where v.prisoner = j and v.visitStatus = 'PERMITTED' and v.date < (NOW()) and v.visitor.id = ?1)")
+	@Query("select j.userAccount.username from Prisoner j where (select max(cast((select count(v) from Visit v where v.visitor.id = ?1 and v.prisoner = p and v.visitStatus = 'PERMITTED' and v.date < (NOW()))as integer)) from Prisoner p) = (select count(v) from Visit v where v.visitor.id = ?1 and v.prisoner = j and v.visitStatus = 'PERMITTED' and v.date < (NOW()))")
 	public List<String> getPrisonersWithMostVisitToAVisitor(int visitorId);
 
 	/** Prisoners with visits to most different Visitors **/
@@ -53,7 +53,7 @@ public interface WardenRepository extends JpaRepository<Warden, Integer> {
 	public List<String> getPrisonersWithVisitsToMostDifferentVisitors();
 
 	/** Option 2 for getPrisonersWithVisitsToMostDifferentVisitors() **/
-	@Query("select j from Prisoner j where j.freedom = false and (select max(cast((select count( distinct v2) from Prisoner p join p.visits v join v.visitor v2 where a = p and v.visitStatus = 'PERMITTED' and v.date < (NOW()))as integer)) from Prisoner a where a.freedom = false) = (select count( distinct v2) from Prisoner p join p.visits v join v.visitor v2 where j = p and v.visitStatus = 'PERMITTED' and v.date < (NOW()))")
+	@Query("select j.userAccount.username from Prisoner j where j.freedom = false and (select max(cast((select count( distinct v2) from Prisoner p join p.visits v join v.visitor v2 where a = p and v.visitStatus = 'PERMITTED' and v.date < (NOW()))as integer)) from Prisoner a where a.freedom = false) = (select count( distinct v2) from Prisoner p join p.visits v join v.visitor v2 where j = p and v.visitStatus = 'PERMITTED' and v.date < (NOW()))")
 	public List<String> getPrisonersWithVisitsToMostDifferentVisitors2();
 
 	/** Visitors with visits to most different Prisoners **/
@@ -62,7 +62,7 @@ public interface WardenRepository extends JpaRepository<Warden, Integer> {
 	public List<String> getVisitorsWithVisitsToMostDifferentPrisoners();
 
 	/** Option 2 for getVisitorsWithVisitsToMostDifferentPrisoners() **/
-	@Query("select j from Visitor j where (select max(cast((select count( distinct p2) from Visitor p join p.visits v join v.prisoner p2 where a = p and v.visitStatus = 'PERMITTED' and v.date < (NOW()))as integer)) from Visitor a) = (select count( distinct p2) from Visitor p join p.visits v join v.prisoner p2 where j = p and v.visitStatus = 'PERMITTED' and v.date < (NOW()))")
+	@Query("select j.userAccount.username from Visitor j where (select max(cast((select count( distinct p2) from Visitor p join p.visits v join v.prisoner p2 where a = p and v.visitStatus = 'PERMITTED' and v.date < (NOW()))as integer)) from Visitor a) = (select count( distinct p2) from Visitor p join p.visits v join v.prisoner p2 where j = p and v.visitStatus = 'PERMITTED' and v.date < (NOW()))")
 	public List<String> getVisitorsWithVisitsToMostDifferentPrisoners2();
 
 	/** Ratio of carried out Visits with Report **/
@@ -87,7 +87,7 @@ public interface WardenRepository extends JpaRepository<Warden, Integer> {
 
 	/** Visitors with at least 2 Visits to the same Prisoner in the last two months **/
 
-	@Query("select round((select count(v)/cast(count(v3) as float) from Visitor v where (select count(distinct v2.prisoner) from Visit v2 where v2.visitStatus = 'PERMITTED'and v2.date between (NOW() - 200000000) and (NOW()) and v2.visitor = v) < (select count(v2) from Visit v2 where v2.visitStatus = 'PERMITTED'and v2.date between (NOW() - 200000000) and (NOW()) and v2.visitor = v))*100, 2) from Visitor v3")
+	@Query("select round((select count(v)/cast(count(v3) as float) from Visitor v where (select count(distinct v2.prisoner) from Visit v2 where v2.visitor = v and v2.visitStatus = 'PERMITTED'and v2.date between (NOW() - 200000000) and (NOW())) < (select count(v2) from Visit v2 where v2.visitor = v and v2.visitStatus = 'PERMITTED'and v2.date between (NOW() - 200000000) and (NOW())))*100, 2) from Visitor v3")
 	public Float getRegularVisitorToAtLeastOnePrisoner();
 
 	/** Ratio of available Guards Vs Visits in need of a Guard **/
@@ -132,7 +132,7 @@ public interface WardenRepository extends JpaRepository<Warden, Integer> {
 
 	/** Option 2 for getActivitiesLargestNumberPrisoners() **/
 
-	@Query("select a2.title from Activity a2 where a2.realizationDate > (NOW()) and (select count(distinct r.prisoner) from Activity a join a.requests r where a.realizationDate > (NOW()) and a = a2 and r.status = 'APPROVED') = (select max(cast((select count(distinct r.prisoner) from Activity a join a.requests r where a.realizationDate > (NOW()) and a = d and r.status = 'APPROVED')as integer)) from Activity d where d.realizationDate > (NOW()))")
+	@Query("select a2.title from Activity a2 where a2.realizationDate > (NOW()) and (select count(distinct r.prisoner) from Activity a join a.requests r where a.realizationDate > (NOW()) and a = a2 and r.status = 'APPROVED') = (select max(cast((select count(distinct r.prisoner) from Activity a join a.requests r where a = d  and a.realizationDate > (NOW()) and r.status = 'APPROVED')as integer)) from Activity d where d.realizationDate > (NOW()))")
 	public List<String> getActivitiesLargestNumberPrisoners2();
 
 	/** Activities with the largest average crime rate **/

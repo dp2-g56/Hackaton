@@ -214,7 +214,8 @@ public class PrisonerService {
 			boxes.add(box4);
 
 			prisoner.setBoxes(boxes);
-		}
+		} else
+			Assert.isTrue(prisoner.getFreedom() == false);
 
 		this.prisonerRepository.save(prisoner);
 		this.prisonerRepository.flush();
