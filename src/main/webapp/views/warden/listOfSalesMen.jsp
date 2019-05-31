@@ -11,9 +11,15 @@
 			
 	<display:table pagesize="5" name="salesmen" id="row" requestURI="${requestURI}" >
 		
-		<display:column property="name" titleKey="salesman.name" />
-		<display:column property="middleName" titleKey="salesman.middleName" />
-		<display:column property="surname" titleKey="salesman.surname" />
+		<display:column titleKey="salesman.name" >
+			<jstl:out value="${row.name}" />
+		</display:column>
+		<display:column titleKey="salesman.middleName" >
+			<jstl:out value="${row.middleName}" />
+		</display:column>
+		<display:column titleKey="salesman.surname" >
+			<jstl:out value="${row.surname}" />
+		</display:column>
 		
 		<display:column titleKey="salesman.photo">
 			<a href="${row.photo}">
@@ -21,9 +27,13 @@
 			</a>
 		</display:column> 
 		
-		<display:column property="VATNumber" titleKey="salesman.VATNumber" /> 
+		<display:column titleKey="salesman.VATNumber" > 
+			<jstl:out value="${row.VATNumber}" />
+		</display:column>
 		
-		<display:column property="storeName" titleKey="salesman.storeName" /> 
+		<display:column titleKey="salesman.storeName" >
+			<jstl:out value="${row.storeName}" />
+		</display:column> 
         
 	</display:table>
 	
