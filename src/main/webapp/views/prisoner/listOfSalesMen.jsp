@@ -21,7 +21,11 @@
 			</a>
 		</display:column> 
 		
-		<display:column property="storeName" titleKey="salesman.storeName">
+		<display:column titleKey="salesman.VATNumber">
+			<jstl:out value="${row.VATNumber}"/>
+		</display:column> 
+		
+		<display:column titleKey="salesman.storeName">
 			<jstl:out value="${row.storeName}"/>
 		</display:column> 
 		

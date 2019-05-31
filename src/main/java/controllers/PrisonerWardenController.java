@@ -115,6 +115,8 @@ public class PrisonerWardenController extends AbstractController {
 
 			result = new ModelAndView("prisoner/warden/listSuspects");
 			result.addObject("prisoners", prisoners);
+			result.addObject("requestURI", "prisoner/warden/listSuspects.do");
+
 			result.addObject("possibleCharges", possibleCharges);
 
 		} catch (Throwable oops) {
@@ -205,6 +207,7 @@ public class PrisonerWardenController extends AbstractController {
 			charge = this.chargeService.findOne(charge.getId());
 
 			realPrisoner.getCharges().add(charge);
+			this.prisonerService.calculateExitDateForProsioner(realPrisoner);
 
 			this.prisonerService.savePrisoner(realPrisoner);
 			result = new ModelAndView("redirect:/prisoner/warden/listSuspects.do");

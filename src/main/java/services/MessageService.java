@@ -130,6 +130,7 @@ public class MessageService {
 
 			if (this.prisonerService.booleanLogedAsPrisoner()) {
 				Prisoner prisoner = this.prisonerService.loggedPrisoner();
+				prisoner.setIsSuspect(true);
 
 				if (prisoner.getCrimeRate() != 1.0) {
 					valueCrim = prisoner.getCrimeRate() + 0.05;
