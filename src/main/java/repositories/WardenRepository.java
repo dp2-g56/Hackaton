@@ -92,7 +92,7 @@ public interface WardenRepository extends JpaRepository<Warden, Integer> {
 
 	/** Ratio of available Guards Vs Visits in need of a Guard **/
 
-	@Query("select round(count(distinct g)/cast((select count(v2) from Visit v2 where (v2.visitStatus = 'PENDING' or v2.visitStatus = 'ACCEPTED') and v2.date between (NOW()) and (NOW() + 100000000))as float), 2) from Guard g join g.visits v where v.visitStatus = 'PERMITTED' and v.date between (NOW() - 100000000) and (NOW())")
+	@Query("select round(count(distinct g)/cast((select count(v2) from Visit v2 where (v2.visitStatus = 'PENDING' or v2.visitStatus = 'ACCEPTED') and v2.date between (NOW()) and (NOW() + 101000000))as float), 2) from Guard g join g.visits v where v.visitStatus = 'PERMITTED' and v.date between (NOW() - 100000000) and (NOW())")
 	public Float getRatioOfAvailableGuardsVsFutureVisitsWithoutGuard();
 
 	/** Top 3 prisoners with lowest crime rate **/
