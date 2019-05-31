@@ -88,6 +88,7 @@ public class FinderService {
 			res.retainAll(filter);
 
 		}
+
 		finder.setPrisoners(res);
 
 		Finder finderRes = this.finderRepository.save(finder);
