@@ -1041,7 +1041,7 @@
 			<bean id="visit4" class="domain.Visit">
 				<property name="visitStatus" value="ACCEPTED" />
 				<property name="description" value="I need to talk with him" />
-				<property name="date" value="06/19/2019 18:00" />
+				<property name="date" value="06/30/2019 18:00" />
 				<property name="reason" value="BUSSINESS" />
 				<property name="visitor" ref="visitor2" />
 				<property name="prisoner" ref="prisoner1" />
@@ -1091,7 +1091,7 @@
 			<bean id="visit9" class="domain.Visit">
 				<property name="visitStatus" value="PERMITTED" />
 				<property name="description" value="I need to talk with him" />
-				<property name="date" value="05/18/2019 13:00" />
+				<property name="date" value="05/30/2019 13:00" />
 				<property name="reason" value="LEGAL" />
 				<property name="visitor" ref="visitor2" />
 				<property name="report" ref="report2" />
@@ -1102,7 +1102,7 @@
 			<bean id="visit10" class="domain.Visit">
 				<property name="visitStatus" value="PERMITTED" />
 				<property name="description" value="I need to talk with him" />
-				<property name="date" value="05/19/2019 13:00" />
+				<property name="date" value="05/30/2019 13:00" />
 				<property name="reason" value="LEGAL" />
 				<property name="visitor" ref="visitor2" />
 				<property name="prisoner" ref="prisoner3" />
