@@ -354,61 +354,46 @@ public class WardenServiceTest extends AbstractTest {
 	@Test
 	public void driverRegisterEditPrisoner() {
 
-		Object testingData[][] = { {
+		Object testingData[][] = {
+			{
 				// Positive test, create a prisoner
-				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password",
-				"password", "Murder", true, null },
-				{
-						// Positive test, blank middleName
-						"warden1", "name", "", "surname", "https://www.youtube.com", "username", "password", "password",
-						"Murder", true, null },
-				{
-						// Negative test, Blank name
-						"warden1", "", "middleName", "surname", "https://www.youtube.com", "username", "password",
-						"password", "Murder", true, ConstraintViolationException.class },
-				{
-						// Negative test, Blank surname
-						"warden1", "name", "middleName", "", "https://www.youtube.com", "username", "password",
-						"password", "Murder", true, ConstraintViolationException.class },
-				{
-						// Negative test, no URL photo
-						"warden1", "name", "middleName", "surname", "notURL", "username", "password", "password",
-						"Murder", true, ConstraintViolationException.class },
-				{
-						// Negative test, Blank username
-						"warden1", "name", "middleName", "surname", "https://www.youtube.com", "", "password",
-						"password", "Murder", true, ConstraintViolationException.class },
-				{
-						// Negative test, Blank password
-						"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "", "sasa",
-						"Murder", true, NullPointerException.class },
-				{
-						// Negative test, not equal password
-						"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "sav",
-						"sasa", "Murder", true, NullPointerException.class },
-				{
-						// Negative test, false terms
-						"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password",
-						"password", "Murder", false, NullPointerException.class },
-				{
-						// Negative test, no charges selected
-						"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password",
-						"password", "", true, NullPointerException.class },
-				{
-						// Negative test, not a warden creating prisoner
-						"prisoner1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password",
-						"password", "Murder", true, IllegalArgumentException.class } };
+				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password", "password", "Murder", true, null
+			}, {
+				// Negative test, Blank name
+				"warden1", "", "middleName", "surname", "https://www.youtube.com", "username", "password", "password", "Murder", true, ConstraintViolationException.class
+			}, {
+				// Negative test, Blank surname
+				"warden1", "name", "middleName", "", "https://www.youtube.com", "username", "password", "password", "Murder", true, ConstraintViolationException.class
+			}, {
+				// Negative test, no URL photo
+				"warden1", "name", "middleName", "surname", "notURL", "username", "password", "password", "Murder", true, ConstraintViolationException.class
+			}, {
+				// Negative test, Blank username
+				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "", "password", "password", "Murder", true, ConstraintViolationException.class
+			}, {
+				// Negative test, Blank password
+				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "", "sasa", "Murder", true, NullPointerException.class
+			}, {
+				// Negative test, not equal password
+				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "sav", "sasa", "Murder", true, NullPointerException.class
+			}, {
+				// Negative test, false terms
+				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password", "password", "Murder", false, NullPointerException.class
+			}, {
+				// Negative test, no charges selected
+				"warden1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password", "password", "", true, NullPointerException.class
+			}, {
+				// Negative test, not a warden creating prisoner
+				"prisoner1", "name", "middleName", "surname", "https://www.youtube.com", "username", "password", "password", "Murder", true, IllegalArgumentException.class
+			}
+		};
 
 		for (int i = 0; i < testingData.length; i++)
-			this.templateRegisterPrisoner((String) testingData[i][0], (String) testingData[i][1],
-					(String) testingData[i][2], (String) testingData[i][3], (String) testingData[i][4],
-					(String) testingData[i][5], (String) testingData[i][6], (String) testingData[i][7],
-					(String) testingData[i][8], (Boolean) testingData[i][9], (Class<?>) testingData[i][10]);
+			this.templateRegisterPrisoner((String) testingData[i][0], (String) testingData[i][1], (String) testingData[i][2], (String) testingData[i][3], (String) testingData[i][4], (String) testingData[i][5], (String) testingData[i][6],
+				(String) testingData[i][7], (String) testingData[i][8], (Boolean) testingData[i][9], (Class<?>) testingData[i][10]);
 	}
 
-	protected void templateRegisterPrisoner(String loggedUsername, String name, String middleName, String surname,
-			String photo, String username, String password, String confirmPassword, String charge, Boolean terms,
-			Class<?> expected) {
+	protected void templateRegisterPrisoner(String loggedUsername, String name, String middleName, String surname, String photo, String username, String password, String confirmPassword, String charge, Boolean terms, Class<?> expected) {
 
 		Class<?> caught = null;
 
