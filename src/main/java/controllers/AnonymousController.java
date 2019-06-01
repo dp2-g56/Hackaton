@@ -88,6 +88,16 @@ public class AnonymousController extends AbstractController {
 			// Reconstruccion
 			socialWorker = this.socialWorkerService.reconstruct(formObjectSocialWorker, binding);
 
+			List<String> usernames = this.actorService.getAllUsernamesInTheSystem();
+
+			if (usernames.contains(formObjectSocialWorker.getUsername())) {
+				result = new ModelAndView("anonymous/socialWorker/create");
+				result.addObject("formObjectSocialWorker", formObjectSocialWorker);
+				result.addObject("message", "warden.duplicatedUsername");
+
+				return result;
+			}
+
 			if (binding.hasErrors())
 				result = this.createEditModelAndView(formObjectSocialWorker);
 			else
@@ -250,6 +260,16 @@ public class AnonymousController extends AbstractController {
 
 			Configuration configuration = this.configurationService.getConfiguration();
 			String prefix = configuration.getSpainTelephoneCode();
+
+			List<String> usernames = this.actorService.getAllUsernamesInTheSystem();
+
+			if (usernames.contains(formObjectVisitor.getUsername())) {
+				result = new ModelAndView("anonymous/visitor/create");
+				result.addObject("formObjectVisitor", formObjectVisitor);
+				result.addObject("message", "warden.duplicatedUsername");
+
+				return result;
+			}
 
 			// Reconstruccion
 			visitor = this.visitorService.reconstruct(formObjectVisitor, binding);

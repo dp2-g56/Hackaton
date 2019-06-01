@@ -17,29 +17,34 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import domain.Charge;
-import domain.Prisoner;
-import forms.FormObjectPrisoner;
+import services.ActorService;
 import services.ChargeService;
 import services.ConfigurationService;
 import services.PrisonerService;
 import services.WardenService;
+import domain.Charge;
+import domain.Prisoner;
+import forms.FormObjectPrisoner;
 
 @Controller
 @RequestMapping("/prisoner/warden")
 public class PrisonerWardenController extends AbstractController {
 
 	@Autowired
-	private ChargeService chargeService;
+	private ChargeService			chargeService;
 
 	@Autowired
-	private WardenService wardenService;
+	private WardenService			wardenService;
 
 	@Autowired
-	private PrisonerService prisonerService;
+	private PrisonerService			prisonerService;
 
 	@Autowired
-	private ConfigurationService configurationService;
+	private ConfigurationService	configurationService;
+
+	@Autowired
+	private ActorService			actorService;
+
 
 	public PrisonerWardenController() {
 		super();
@@ -79,6 +84,17 @@ public class PrisonerWardenController extends AbstractController {
 
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 		List<Charge> finalCharges = this.chargeService.getFinalCharges();
+
+		List<String> usernames = this.actorService.getAllUsernamesInTheSystem();
+
+		if (usernames.contains(formPrisoner.getUsername())) {
+			result = new ModelAndView("warden/registerPrisoner");
+			result.addObject("formPrisoner", formPrisoner);
+			result.addObject("locale", locale);
+			result.addObject("message", "warden.duplicatedUsername");
+
+			return result;
+		}
 
 		if (binding.hasErrors()) {
 			result = new ModelAndView("warden/registerPrisoner");
