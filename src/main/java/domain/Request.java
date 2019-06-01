@@ -6,7 +6,9 @@ import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Index;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -14,6 +16,10 @@ import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
 @Access(AccessType.PROPERTY)
+@Table(indexes = {
+	@Index(columnList = "activity, status"), @Index(columnList = "prisoner, status"),
+	@Index(columnList = "status"), @Index(columnList = "prisoner"), @Index(columnList = "activity")
+})
 public class Request extends DomainEntity {
 
 	private ActivityStatus	status;

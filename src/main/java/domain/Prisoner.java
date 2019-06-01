@@ -9,9 +9,11 @@ import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Index;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -27,6 +29,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Indexed
 @Entity
 @Access(AccessType.PROPERTY)
+@Table(indexes = {
+	@Index(columnList = "crimeRate"), @Index(columnList = "freedom"), @Index(columnList = "isIsolated, freedom")
+})
 public class Prisoner extends Actor {
 
 	private Double crimeRate;

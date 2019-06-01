@@ -79,16 +79,6 @@
 			</jstl:if>
 		</display:column>
 		
-		<security:authorize access="hasRole('WARDEN')">
-			<display:column titleKey="actor.profiles">
-				<spring:url var="prisonerUrl"
-					value="/prisoner/warden/edit.do">
-					<spring:param name="prisonerId" value="${row.id}" />
-				</spring:url>
-				<a href="${prisonerUrl}"><spring:message code="actor.editProfile" /></a>
-			</display:column>
-		</security:authorize>
-		
 		<!-- BOTON DE CREATE VISIT -->
 		<security:authorize access="hasRole('VISITOR')">
 		

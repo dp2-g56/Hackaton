@@ -22,7 +22,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(indexes = {
-	@Index(columnList = "visitor, prisoner, visitStatus, date"), @Index(columnList = "visitStatus, date")
+	@Index(columnList = "visitor, prisoner, visitStatus, date"), @Index(columnList = "visitStatus, date"), 
+	@Index(columnList = "prisoner, visitStatus, date"), @Index(columnList = "visitor, visitStatus, date"), @Index(columnList = "report")
 })
 public class Visit extends DomainEntity {
 

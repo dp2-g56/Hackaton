@@ -10,6 +10,40 @@
 
 <security:authorize access="hasAnyRole('ROLE_ANONYMOUS')">
 
+<script type="text/javascript">
+
+function isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+
+
+function phonenumberval() {
+	
+	  var phone;
+	  phone = document.getElementById("phoneNumber").value;
+
+			
+	  var res = false;
+	 
+	  if (/(\+[0-9]{1,3})(\([0-9]{1,3}\))([0-9]{4,})$/.test(phone)) {
+	    res = true;
+	  }
+	  if (/(\+[0-9]{3})([0-9]{4,})$/.test(phone)) {
+		    res = true;
+	  }
+	  if(res == false && isEmpty(phone) == false) {
+		  
+	    alert("<spring:message code="admin.confirmationPhone"/>");
+	  }
+	 
+}
+
+</script>
+
 
 <form:form modelAttribute="formObjectVisitor" action="anonymous/visitor/create.do">
 
@@ -82,7 +116,7 @@
 	<br />
 
 	<!-- BOTONES -->	
-	<input type="submit" name="save" value="<spring:message code="warden.save" />" /> 
+	<input type="submit" name="save" value="<spring:message code="warden.save" />"  onclick="phonenumberval();" /> 
 	
 	<acme:cancel url="/" code="warden.cancel" /> 
 	

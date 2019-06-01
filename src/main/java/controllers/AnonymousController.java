@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import security.Authority;
+import security.LoginService;
+import security.UserAccount;
+import services.ActorService;
 import services.ConfigurationService;
 import services.PrisonerService;
 import services.SocialWorkerService;
@@ -44,6 +48,9 @@ public class AnonymousController extends AbstractController {
 
 	@Autowired
 	private VisitorService			visitorService;
+
+	@Autowired
+	private ActorService			actorService;
 
 
 	public AnonymousController() {
@@ -80,6 +87,16 @@ public class AnonymousController extends AbstractController {
 			socialWorker = this.socialWorkerService.create();
 			// Reconstruccion
 			socialWorker = this.socialWorkerService.reconstruct(formObjectSocialWorker, binding);
+
+			List<String> usernames = this.actorService.getAllUsernamesInTheSystem();
+
+			if (usernames.contains(formObjectSocialWorker.getUsername())) {
+				result = new ModelAndView("anonymous/socialWorker/create");
+				result.addObject("formObjectSocialWorker", formObjectSocialWorker);
+				result.addObject("message", "warden.duplicatedUsername");
+
+				return result;
+			}
 
 			if (binding.hasErrors())
 				result = this.createEditModelAndView(formObjectSocialWorker);
@@ -130,6 +147,13 @@ public class AnonymousController extends AbstractController {
 		ModelAndView result;
 		List<Prisoner> prisoners;
 
+		if (this.actorService.loggedAsActorBoolean()) {
+			UserAccount user = LoginService.getPrincipal();
+			List<Authority> authorities = (List<Authority>) user.getAuthorities();
+			if (authorities.get(0).toString().equals("PRISONER"))
+				return new ModelAndView("redirect:/");
+		}
+
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
 		prisoners = this.prisonerService.getIncarceratedPrisoners();
@@ -141,7 +165,6 @@ public class AnonymousController extends AbstractController {
 
 		return result;
 	}
-
 	// Listar todos los cargos de un prisionero
 	@RequestMapping(value = "/charge/list", method = RequestMethod.GET)
 	public ModelAndView listCharge(@RequestParam(required = false) String prisonerId) {
@@ -237,6 +260,16 @@ public class AnonymousController extends AbstractController {
 
 			Configuration configuration = this.configurationService.getConfiguration();
 			String prefix = configuration.getSpainTelephoneCode();
+
+			List<String> usernames = this.actorService.getAllUsernamesInTheSystem();
+
+			if (usernames.contains(formObjectVisitor.getUsername())) {
+				result = new ModelAndView("anonymous/visitor/create");
+				result.addObject("formObjectVisitor", formObjectVisitor);
+				result.addObject("message", "warden.duplicatedUsername");
+
+				return result;
+			}
 
 			// Reconstruccion
 			visitor = this.visitorService.reconstruct(formObjectVisitor, binding);

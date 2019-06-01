@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import services.ActorService;
 import services.ChargeService;
 import services.ConfigurationService;
 import services.PrisonerService;
@@ -40,6 +41,9 @@ public class PrisonerWardenController extends AbstractController {
 
 	@Autowired
 	private ConfigurationService	configurationService;
+
+	@Autowired
+	private ActorService			actorService;
 
 
 	public PrisonerWardenController() {
@@ -81,6 +85,17 @@ public class PrisonerWardenController extends AbstractController {
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 		List<Charge> finalCharges = this.chargeService.getFinalCharges();
 
+		List<String> usernames = this.actorService.getAllUsernamesInTheSystem();
+
+		if (usernames.contains(formPrisoner.getUsername())) {
+			result = new ModelAndView("warden/registerPrisoner");
+			result.addObject("formPrisoner", formPrisoner);
+			result.addObject("locale", locale);
+			result.addObject("message", "warden.duplicatedUsername");
+
+			return result;
+		}
+
 		if (binding.hasErrors()) {
 			result = new ModelAndView("warden/registerPrisoner");
 			result.addObject("formPrisoner", formPrisoner);
@@ -116,6 +131,8 @@ public class PrisonerWardenController extends AbstractController {
 
 			result = new ModelAndView("prisoner/warden/listSuspects");
 			result.addObject("prisoners", prisoners);
+			result.addObject("requestURI", "prisoner/warden/listSuspects.do");
+
 			result.addObject("possibleCharges", possibleCharges);
 
 		} catch (Throwable oops) {
@@ -206,6 +223,7 @@ public class PrisonerWardenController extends AbstractController {
 			charge = this.chargeService.findOne(charge.getId());
 
 			realPrisoner.getCharges().add(charge);
+			this.prisonerService.calculateExitDateForProsioner(realPrisoner);
 
 			this.prisonerService.savePrisoner(realPrisoner);
 			result = new ModelAndView("redirect:/prisoner/warden/listSuspects.do");
@@ -220,32 +238,32 @@ public class PrisonerWardenController extends AbstractController {
 	/*
 	 * @RequestMapping(value = "/addCharge", method = RequestMethod.GET) public
 	 * ModelAndView addCharges(@RequestParam int prisonerId) {
-	 * 
+	 *
 	 * ModelAndView result;
-	 * 
+	 *
 	 * try {
-	 * 
+	 *
 	 * Prisoner prisoner = this.prisonerService.findOne(prisonerId);
 	 * List<Prisoner> prisoners =
 	 * this.prisonerService.getIncarceratedPrisoners();
-	 * 
+	 *
 	 * if (prisoner == null || !prisoners.contains(prisoner)) return
 	 * this.listSuspects();
-	 * 
+	 *
 	 * List<Charge> allCharges =
 	 * this.chargeService.getChargesNotAssignedToPrisoner(prisoner);
-	 * 
+	 *
 	 * String locale =
 	 * LocaleContextHolder.getLocale().getLanguage().toUpperCase();
-	 * 
+	 *
 	 * result = new ModelAndView("prisoner/warden/addCharge");
 	 * result.addObject("charges", allCharges); result.addObject("prisoner",
 	 * prisoner); result.addObject("locale", locale); result.addObject("warden",
 	 * true); result.addObject("suspect", true);
-	 * 
+	 *
 	 * } catch (Throwable oops) { result = new
 	 * ModelAndView("redirect:/prisoner/warden/listSuspectCharges.do"); }
-	 * 
+	 *
 	 * return result; }
 	 */
 
@@ -283,7 +301,7 @@ public class PrisonerWardenController extends AbstractController {
 				try {
 					this.prisonerService.savePrisoner(prisonerReconstructed);
 
-					result = new ModelAndView("redirect:/anonymous/prisoner/list.do");
+					result = new ModelAndView("redirect:/prisoner/warden/listSuspects.do");
 				} catch (Throwable oops) {
 					result = new ModelAndView("warden/editPrisoner");
 					result.addObject("prisoner", prisonerReconstructed);

@@ -178,14 +178,25 @@ public class MessageController extends AbstractController {
 
 	//Save
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
-	public ModelAndView delete(@RequestParam int rowId, @RequestParam int boxId) {
+	public ModelAndView delete(@RequestParam(required = false) String rowId, @RequestParam(required = false) String boxId) {
 		try {
 			this.actorService.loggedAsActor();
+			Assert.isTrue(StringUtils.isNumeric(rowId));
+			int messageIdInt = Integer.parseInt(rowId);
 
-			Message message = this.messageService.findOne(rowId);
+			Assert.isTrue(StringUtils.isNumeric(boxId));
+			int boxIdInt = Integer.parseInt(boxId);
+
+			Message message = this.messageService.findOne(messageIdInt);
+
 			UserAccount userAccount = LoginService.getPrincipal();
-			Box currentBox = this.boxService.findOne(boxId);
+			Box currentBox = this.boxService.findOne(boxIdInt);
 			Actor a = this.actorService.getActorByUsername(userAccount.getUsername());
+
+			List<Message> messagesOfActor = this.messageService.messagesOfActor(a);
+
+			Assert.isTrue(messagesOfActor.contains(message));
+
 			ModelAndView result;
 
 			Box trashBox = this.boxService.getTrashBoxByActor(a);
@@ -194,11 +205,13 @@ public class MessageController extends AbstractController {
 				return new ModelAndView("redirect:/box/actor/list.do");
 
 			try {
-				if (currentBox.equals(trashBox))
+				if (currentBox.equals(trashBox)) {
 					this.messageService.deleteMessageFinal(message);
-				else
+					this.messageService.flush();
+				} else {
 					this.messageService.deleteMessageToTrashBox(message);
-
+					this.messageService.flush();
+				}
 				result = new ModelAndView("redirect:/box/actor/list.do");
 			} catch (Throwable oops) {
 				result = this.createEditModelAndView(message, "message.commit.error");
@@ -209,7 +222,6 @@ public class MessageController extends AbstractController {
 			return new ModelAndView("redirect:/list.do");
 		}
 	}
-
 	//Create
 	@RequestMapping(value = "/createmove", method = RequestMethod.GET)
 	public ModelAndView createMove() {
@@ -247,10 +259,10 @@ public class MessageController extends AbstractController {
 
 			try {
 				this.messageService.updateMessage(message, box);
+				this.messageService.flush();
 				result = new ModelAndView("redirect:/box/actor/list.do");
 			} catch (Throwable oops) {
 				result = this.createEditModelAndViewMove(message, "message.commit.error");
-
 			}
 			return result;
 		} catch (Throwable oops2) {
@@ -276,10 +288,10 @@ public class MessageController extends AbstractController {
 
 			try {
 				this.messageService.copyMessage(message, box);
+				this.messageService.flush();
 				result = new ModelAndView("redirect:/box/actor/list.do");
 			} catch (Throwable oops) {
 				result = this.createEditModelAndViewMove(message, "message.commit.error");
-
 			}
 			return result;
 		} catch (Throwable oops2) {

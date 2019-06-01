@@ -64,7 +64,9 @@
 		<jstl:out value="${row.startDateStudy.getDate()}/${row.startDateStudy.getMonth()+1}/${row.startDateStudy.getYear()+1900}"></jstl:out>
 	</display:column>
 	<display:column titleKey="educationRecord.endDateStudy">
-		<jstl:out value="${row.endDateStudy.getDate()}/${row.endDateStudy.getMonth()+1}/${row.endDateStudy.getYear()+1900}"></jstl:out>
+		<jstl:if test="${row.endDateStudy != null}">
+			<jstl:out value="${row.endDateStudy.getDate()}/${row.endDateStudy.getMonth()+1}/${row.endDateStudy.getYear()+1900}"></jstl:out>
+		</jstl:if>
 	</display:column>
 	
 
@@ -106,7 +108,9 @@
 		<jstl:out value="${row.startDate.getDate()}/${row.startDate.getMonth()+1}/${row.startDate.getYear()+1900}"></jstl:out>
 	</display:column>
 	<display:column titleKey="educationRecord.endDateStudy">
-		<jstl:out value="${row.endDate.getDate()}/${row.endDate.getMonth()+1}/${row.endDate.getYear()+1900}"></jstl:out>
+		<jstl:if test="${row.endDate != null}">
+			<jstl:out value="${row.endDate.getDate()}/${row.endDate.getMonth()+1}/${row.endDate.getYear()+1900}"></jstl:out>
+		</jstl:if>
 	</display:column>
 	
 

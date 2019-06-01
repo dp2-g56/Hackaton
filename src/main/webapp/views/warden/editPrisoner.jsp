@@ -34,7 +34,7 @@
 
 	<!-- BOTONES -->	
 	<input type="submit" name="save" value="<spring:message code="warden.edit" />"/> 
-	<acme:cancel url="/anonymous/prisoner/list.do" code="warden.cancel" /> 
+	<acme:cancel url="/prisoner/warden/listSuspects.do" code="warden.cancel" /> 
 	
 	</form:form>
 	

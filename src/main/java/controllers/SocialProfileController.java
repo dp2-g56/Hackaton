@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -74,6 +75,7 @@ public class SocialProfileController extends AbstractController {
 			if (authorities.get(0).toString().equals("SOCIALWORKER")) {
 				SocialWorker socialWorker = this.socialWorkerService.findOne(logguedActor.getId());
 
+				result.addObject("socialWorker", socialWorker);
 				result.addObject("curriculum", socialWorker.getCurriculum());
 			}
 
@@ -230,7 +232,7 @@ public class SocialProfileController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/editProfile", method = RequestMethod.POST, params = "saveSalesMan")
-	public ModelAndView saveSalesman(SalesMan salesman, BindingResult binding) {
+	public ModelAndView saveSalesman(@ModelAttribute("salesman") SalesMan salesman, BindingResult binding) {
 		ModelAndView result;
 
 		SalesMan salesmanActor;

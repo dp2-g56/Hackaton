@@ -76,34 +76,19 @@ public class FinderService {
 		Assert.isTrue(finder.getId() > 0);
 		Assert.isTrue(visitor.getFinder().getId() == finder.getId());
 
-		Integer iterations = 1000;
-		long acum = 0;
-		List<Prisoner> res = new ArrayList<>();
+		List<Prisoner> res = this.prisonerService.getIncarceratedPrisoners();
+		List<Prisoner> filter = new ArrayList<>();
 
-		for (int i = 0; i < iterations - 1; i++) {
-
-			res = this.prisonerService.getIncarceratedPrisoners();
-			List<Prisoner> filter = new ArrayList<>();
-
-			long startTime = System.nanoTime();
-
-			if (!finder.getKeyWord().equals(null) && !finder.getKeyWord().contentEquals("")) {
-				filter = this.finderRepository.filterByKeyWord("%" + finder.getKeyWord() + "%");
-				res.retainAll(filter);
-			}
-			if (!finder.getCharge().equals(null) && !finder.getCharge().contentEquals("")) {
-				filter = this.finderRepository.filterByCharge("%" + finder.getCharge() + "%");
-				res.retainAll(filter);
-
-			}
-
-			long endTime = System.nanoTime();
-			long duration = (endTime - startTime);
-
-			acum += duration;
+		if (!finder.getKeyWord().equals(null) && !finder.getKeyWord().contentEquals("")) {
+			filter = this.finderRepository.filterByKeyWord("%" + finder.getKeyWord() + "%");
+			res.retainAll(filter);
+		}
+		if (!finder.getCharge().equals(null) && !finder.getCharge().contentEquals("")) {
+			filter = this.finderRepository.filterByCharge("%" + finder.getCharge() + "%");
+			res.retainAll(filter);
 
 		}
-		System.out.println(acum / iterations + " ns");
+
 		finder.setPrisoners(res);
 
 		Finder finderRes = this.finderRepository.save(finder);
