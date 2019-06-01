@@ -14,20 +14,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import domain.SalesMan;
-import forms.FormObjectSalesman;
+import services.ActorService;
 import services.SalesManService;
 import services.WardenService;
+import domain.SalesMan;
+import forms.FormObjectSalesman;
 
 @Controller
 @RequestMapping("/salesman/warden")
 public class SalesmanWardenController extends AbstractController {
 
 	@Autowired
-	private WardenService wardenService;
+	private WardenService	wardenService;
 
 	@Autowired
-	private SalesManService salesManService;
+	private SalesManService	salesManService;
+
+	@Autowired
+	private ActorService	actorService;
+
 
 	public SalesmanWardenController() {
 		super();
@@ -55,14 +60,23 @@ public class SalesmanWardenController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST, params = "save")
-	public ModelAndView save(@ModelAttribute("formSalesman") @Valid FormObjectSalesman formSalesman,
-			BindingResult binding) {
+	public ModelAndView save(@ModelAttribute("formSalesman") @Valid FormObjectSalesman formSalesman, BindingResult binding) {
 		ModelAndView result;
 
 		SalesMan salesman = new SalesMan();
 		salesman = this.salesManService.reconstruct(formSalesman, binding);
 
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+		List<String> usernames = this.actorService.getAllUsernamesInTheSystem();
+
+		if (usernames.contains(formSalesman.getUsername())) {
+			result = new ModelAndView("warden/registerSalesman");
+			result.addObject("formSalesman", formSalesman);
+			result.addObject("locale", locale);
+			result.addObject("message", "warden.duplicatedUsername");
+
+			return result;
+		}
 
 		if (binding.hasErrors()) {
 			result = new ModelAndView("warden/registerSalesman");
@@ -73,7 +87,7 @@ public class SalesmanWardenController extends AbstractController {
 				this.salesManService.saveSalesman(salesman);
 				result = new ModelAndView("redirect:/");
 			} catch (Throwable oops) {
-				result = new ModelAndView("warden/registerWarden");
+				result = new ModelAndView("warden/registerSalesman");
 				result.addObject("formSalesman", formSalesman);
 				result.addObject("locale", locale);
 				result.addObject("message", "warden.register.commit.error");

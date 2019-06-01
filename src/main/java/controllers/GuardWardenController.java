@@ -1,6 +1,8 @@
 
 package controllers;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import services.ActorService;
 import services.ConfigurationService;
 import services.GuardService;
 import services.WardenService;
@@ -30,6 +33,9 @@ public class GuardWardenController extends AbstractController {
 
 	@Autowired
 	private ConfigurationService	configurationService;
+
+	@Autowired
+	private ActorService			actorService;
 
 
 	public GuardWardenController() {
@@ -67,6 +73,17 @@ public class GuardWardenController extends AbstractController {
 		String prefix = this.configurationService.getConfiguration().getSpainTelephoneCode();
 
 		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+
+		List<String> usernames = this.actorService.getAllUsernamesInTheSystem();
+
+		if (usernames.contains(formGuard.getUsername())) {
+			result = new ModelAndView("warden/registerGuard");
+			result.addObject("formGuard", formGuard);
+			result.addObject("locale", locale);
+			result.addObject("message", "warden.duplicatedUsername");
+
+			return result;
+		}
 
 		if (binding.hasErrors()) {
 			result = new ModelAndView("warden/registerGuard");

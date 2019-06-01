@@ -120,4 +120,8 @@ public class ActorService {
 	public List<String> getUsernamesOfActorsAndGoodPrisoners() {
 		return this.actorRepository.getUsernamesOfActorsAndGoodPrisoners();
 	}
+
+	public List<String> getAllUsernamesInTheSystem() {
+		return this.actorRepository.getAllUsernamesInTheSystem();
+	}
 }
