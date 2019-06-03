@@ -30,21 +30,25 @@ public class VisitorController extends AbstractController {
 	@RequestMapping(value = "/prisoner/list", method = RequestMethod.GET)
 	public ModelAndView listMyVisitors() {
 
-		ModelAndView result;
-		List<Visitor> visitors;
+		try {
+			ModelAndView result;
+			List<Visitor> visitors;
 
-		Prisoner prisoner = this.prisonerService.loggedPrisoner();
+			Prisoner prisoner = this.prisonerService.loggedPrisoner();
 
-		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
-		visitors = this.prisonerService.getVisitorsToCreateVisit(prisoner);
+			visitors = this.prisonerService.getVisitorsToCreateVisit(prisoner);
 
-		result = new ModelAndView("visitor/prisoner/list");
-		result.addObject("visitors", visitors);
-		result.addObject("locale", locale);
-		result.addObject("requestURI", "visitor/prisoner/list.do");
+			result = new ModelAndView("visitor/prisoner/list");
+			result.addObject("visitors", visitors);
+			result.addObject("locale", locale);
+			result.addObject("requestURI", "visitor/prisoner/list.do");
 
-		return result;
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:/");
+		}
 	}
 
 }

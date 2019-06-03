@@ -14,31 +14,32 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import services.ConfigurationService;
+import services.PrisonerService;
+import services.ProductService;
+import services.SalesManService;
 import domain.Configuration;
 import domain.Prisoner;
 import domain.Product;
 import domain.SalesMan;
 import domain.TypeProduct;
-import services.ConfigurationService;
-import services.PrisonerService;
-import services.ProductService;
-import services.SalesManService;
 
 @Controller
 @RequestMapping("/product")
 public class ProductController extends AbstractController {
 
 	@Autowired
-	private ProductService productService;
+	private ProductService			productService;
 
 	@Autowired
-	private SalesManService salesManService;
+	private SalesManService			salesManService;
 
 	@Autowired
-	private PrisonerService prisonerService;
+	private PrisonerService			prisonerService;
 
 	@Autowired
-	private ConfigurationService configurationService;
+	private ConfigurationService	configurationService;
+
 
 	public ProductController() {
 		super();
@@ -58,9 +59,8 @@ public class ProductController extends AbstractController {
 
 			SalesMan salesMan = this.salesManService.findOne(salesmanIdInt);
 
-			if (salesMan == null) {
+			if (salesMan == null)
 				return this.listSalesManPrisoner();
-			}
 
 			products = this.productService.getProductsFinalModeWithStockBySalesMan(salesmanIdInt);
 
@@ -85,39 +85,47 @@ public class ProductController extends AbstractController {
 	@RequestMapping(value = "/anonymous/list", method = RequestMethod.GET)
 	public ModelAndView listAnonymous() {
 
-		ModelAndView result;
-		List<Product> products;
+		try {
+			ModelAndView result;
+			List<Product> products;
 
-		products = this.productService.getProductsFinalModeOfSalesMen();
+			products = this.productService.getProductsFinalModeOfSalesMen();
 
-		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
-		result = new ModelAndView("anonymous/product/list");
-		result.addObject("products", products);
-		result.addObject("locale", locale);
-		result.addObject("prisoner", false);
-		result.addObject("requestURI", "product/anonymous/list.do");
+			result = new ModelAndView("anonymous/product/list");
+			result.addObject("products", products);
+			result.addObject("locale", locale);
+			result.addObject("prisoner", false);
+			result.addObject("requestURI", "product/anonymous/list.do");
 
-		return result;
+			return result;
+		} catch (Throwable oops2) {
+			return new ModelAndView("redirect:/");
+		}
 	}
 
 	// Listar Visitantes del prisionero logueado
 	@RequestMapping(value = "/salesman/prisoner/list", method = RequestMethod.GET)
 	public ModelAndView listSalesManPrisoner() {
 
-		ModelAndView result;
-		List<SalesMan> salesMen;
+		try {
+			ModelAndView result;
+			List<SalesMan> salesMen;
 
-		salesMen = this.salesManService.findAll();
+			salesMen = this.salesManService.findAll();
 
-		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
-		result = new ModelAndView("prisoner/salesMen/list");
-		result.addObject("salesMen", salesMen);
-		result.addObject("locale", locale);
-		result.addObject("requestURI", "product/salesman/prisoner/list.do");
+			result = new ModelAndView("prisoner/salesMen/list");
+			result.addObject("salesMen", salesMen);
+			result.addObject("locale", locale);
+			result.addObject("requestURI", "product/salesman/prisoner/list.do");
 
-		return result;
+			return result;
+		} catch (Throwable oops2) {
+			return new ModelAndView("redirect:/");
+		}
 	}
 
 	// TODO: TESTING DAVID
@@ -144,14 +152,18 @@ public class ProductController extends AbstractController {
 
 	@RequestMapping(value = "/salesman/create", method = RequestMethod.GET)
 	public ModelAndView create() {
+		try {
 
-		ModelAndView result;
+			ModelAndView result;
 
-		Product product = this.productService.create();
+			Product product = this.productService.create();
 
-		result = this.createEditModelAndView(product);
+			result = this.createEditModelAndView(product);
 
-		return result;
+			return result;
+		} catch (Throwable oops2) {
+			return new ModelAndView("redirect:/");
+		}
 	}
 
 	@RequestMapping(value = "/salesman/edit", method = RequestMethod.GET)
@@ -194,23 +206,27 @@ public class ProductController extends AbstractController {
 	public ModelAndView save(Product product, BindingResult binding) {
 		ModelAndView result;
 
-		Product pro = this.productService.reconstruct(product, binding);
+		try {
+			Product pro = this.productService.reconstruct(product, binding);
 
-		if (binding.hasErrors())
-			result = this.createEditModelAndView(pro);
-		else
-			try {
-				if (product.getId() == 0)
-					this.productService.addProduct(pro);
-				else
-					this.productService.updateProduct(pro);
+			if (binding.hasErrors())
+				result = this.createEditModelAndView(pro);
+			else
+				try {
+					if (product.getId() == 0)
+						this.productService.addProduct(pro);
+					else
+						this.productService.updateProduct(pro);
 
-				result = new ModelAndView("redirect:list.do");
+					result = new ModelAndView("redirect:list.do");
 
-			} catch (Throwable oops) {
-				result = this.createEditModelAndView(product, "commit.error");
-			}
-		return result;
+				} catch (Throwable oops) {
+					result = this.createEditModelAndView(product, "commit.error");
+				}
+			return result;
+		} catch (Throwable oops2) {
+			return new ModelAndView("redirect:/");
+		}
 	}
 
 	@RequestMapping(value = "/salesman/edit", method = RequestMethod.POST, params = "delete")
@@ -234,20 +250,24 @@ public class ProductController extends AbstractController {
 	public ModelAndView restock(Product product, BindingResult binding) {
 		ModelAndView result;
 
-		Product pro = this.productService.reconstruct(product, binding);
+		try {
+			Product pro = this.productService.reconstruct(product, binding);
 
-		if (binding.hasErrors())
-			result = this.restockModelAndView(pro);
-		else
-			try {
-				this.productService.restockProduct(pro);
+			if (binding.hasErrors())
+				result = this.restockModelAndView(pro);
+			else
+				try {
+					this.productService.restockProduct(pro);
 
-				result = new ModelAndView("redirect:list.do");
+					result = new ModelAndView("redirect:list.do");
 
-			} catch (Throwable oops) {
-				result = this.restockModelAndView(product, "commit.error");
-			}
-		return result;
+				} catch (Throwable oops) {
+					result = this.restockModelAndView(product, "commit.error");
+				}
+			return result;
+		} catch (Throwable oops2) {
+			return new ModelAndView("redirect:/");
+		}
 	}
 
 	protected ModelAndView createEditModelAndView(Product product) {
