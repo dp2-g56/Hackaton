@@ -71,11 +71,15 @@ public class CurriculumController extends AbstractController {
 	@RequestMapping(value = "/socialWorker/register", method = RequestMethod.GET)
 	public ModelAndView addCurriculum() {
 
-		ModelAndView result;
-		PersonalRecord personalRecord = this.personalRecordService.create();
+		try {
+			ModelAndView result;
+			PersonalRecord personalRecord = this.personalRecordService.create();
 
-		result = this.createEditModelAndView(personalRecord);
-		return result;
+			result = this.createEditModelAndView(personalRecord);
+			return result;
+		} catch (Throwable oops2) {
+			return new ModelAndView("redirect:/socialWorker/register");
+		}
 
 	}
 

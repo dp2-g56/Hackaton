@@ -49,13 +49,16 @@ public class MessageController extends AbstractController {
 
 	//List
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public ModelAndView list(@RequestParam int boxId) {
+	public ModelAndView list(@RequestParam(required = false) String boxId) {
 		try {
+
+			Assert.isTrue(StringUtils.isNumeric(boxId));
+			int boxIdInt = Integer.parseInt(boxId);
 
 			String locale = LocaleContextHolder.getLocale().getLanguage();
 			this.actorService.loggedAsActor();
 			Box box = new Box();
-			box = this.boxService.findOne(boxId);
+			box = this.boxService.findOne(boxIdInt);
 			UserAccount userAccount = LoginService.getPrincipal();
 			Boolean crimRate = false;
 
@@ -87,7 +90,7 @@ public class MessageController extends AbstractController {
 			result.addObject("crimRate", crimRate);
 			result.addObject("boxName", box.getName());
 			result.addObject("currentBox", box);
-			result.addObject("boxId", boxId);
+			result.addObject("boxId", boxIdInt);
 			result.addObject("boxes", boxes);
 			result.addObject("locale", locale);
 			result.addObject("requestURI", "message/actor/list.do");

@@ -1,9 +1,11 @@
+
 package controllers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
@@ -14,36 +16,37 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import services.ChargeService;
+import services.FinderService;
+import services.PrisonerService;
+import services.VisitService;
+import services.VisitorService;
 import domain.Charge;
 import domain.Finder;
 import domain.Prisoner;
 import domain.Reason;
 import domain.Visit;
 import domain.Visitor;
-import services.ChargeService;
-import services.FinderService;
-import services.PrisonerService;
-import services.VisitService;
-import services.VisitorService;
 
 @Controller
 @RequestMapping("/finder/visitor")
 public class FinderVisitorController extends AbstractController {
 
 	@Autowired
-	private FinderService finderService;
+	private FinderService	finderService;
 
 	@Autowired
-	private VisitorService visitorService;
+	private VisitorService	visitorService;
 
 	@Autowired
-	private ChargeService chargeService;
+	private ChargeService	chargeService;
 
 	@Autowired
-	private PrisonerService prisonerService;
+	private PrisonerService	prisonerService;
 
 	@Autowired
-	private VisitService visitService;
+	private VisitService	visitService;
+
 
 	// Constructors -----------------------------------------------------------
 
@@ -95,73 +98,96 @@ public class FinderVisitorController extends AbstractController {
 	public ModelAndView save(Finder finderForm, BindingResult binding) {
 		ModelAndView result;
 
-		Finder finder = this.finderService.reconstruct(finderForm, binding);
+		try {
 
-		if (binding.hasErrors())
-			result = this.createEditModelAndView(finderForm);
-		else
-			try {
-				this.finderService.filter(finder);
-				result = new ModelAndView("redirect:list.do");
-			} catch (Throwable oops) {
+			Finder finder = this.finderService.reconstruct(finderForm, binding);
+
+			if (binding.hasErrors())
+				result = this.createEditModelAndView(finderForm);
+			else
 				try {
-					result = this.createEditModelAndView(finder, "finder.commit.error");
-				} catch (Throwable oops2) {
-					result = new ModelAndView("redirect:/");
+					this.finderService.filter(finder);
+					result = new ModelAndView("redirect:list.do");
+				} catch (Throwable oops) {
+					try {
+						result = this.createEditModelAndView(finder, "finder.commit.error");
+					} catch (Throwable oops2) {
+						result = new ModelAndView("redirect:/");
+					}
 				}
-			}
-		return result;
+			return result;
+		} catch (Throwable oops2) {
+			return new ModelAndView("redirect:/");
+		}
 	}
 
 	@RequestMapping(value = "/charges", method = RequestMethod.GET)
-	public ModelAndView listCharge(@RequestParam int prisonerId) {
+	public ModelAndView listCharge(@RequestParam(required = false) String prisonerId) {
 
-		ModelAndView result;
+		try {
 
-		Prisoner prisoner = this.prisonerService.findOne(prisonerId);
+			ModelAndView result;
 
-		if (prisoner == null)
-			return this.list();
+			Assert.isTrue(StringUtils.isNumeric(prisonerId));
+			int prisonerIdInt = Integer.parseInt(prisonerId);
 
-		List<Charge> charges = prisoner.getCharges();
+			Prisoner prisoner = this.prisonerService.findOne(prisonerIdInt);
 
-		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+			if (prisoner == null)
+				return this.list();
 
-		result = new ModelAndView("anonymous/charge/list");
-		result.addObject("charges", charges);
-		result.addObject("locale", locale);
-		result.addObject("finder", true);
-		result.addObject("requestURI", "anonymous/charge/list.do");
-		result.addObject("warden", false);
+			List<Charge> charges = prisoner.getCharges();
 
-		return result;
+			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+
+			result = new ModelAndView("anonymous/charge/list");
+			result.addObject("charges", charges);
+			result.addObject("locale", locale);
+			result.addObject("finder", true);
+			result.addObject("requestURI", "anonymous/charge/list.do");
+			result.addObject("warden", false);
+
+			return result;
+
+		} catch (Throwable oops2) {
+			return new ModelAndView("redirect:/");
+		}
+
 	}
 
 	// Create as Visitor
 	@RequestMapping(value = "/createVisit", method = RequestMethod.GET)
-	public ModelAndView createVisitVisitor(@RequestParam int prisonerId) {
+	public ModelAndView createVisitVisitor(@RequestParam(required = false) String prisonerId) {
 		ModelAndView result;
 
-		Prisoner prisoner = this.prisonerService.findOne(prisonerId);
+		try {
 
-		if (prisoner == null)
-			return this.list();
+			Assert.isTrue(StringUtils.isNumeric(prisonerId));
+			int prisonerIdInt = Integer.parseInt(prisonerId);
 
-		if (prisoner.getFreedom() || prisoner.getIsIsolated())
-			return this.list();
+			Prisoner prisoner = this.prisonerService.findOne(prisonerIdInt);
 
-		Visit visit = this.visitService.createAsVisitor(prisoner);
+			if (prisoner == null)
+				return this.list();
 
-		List<Reason> reasons = Arrays.asList(Reason.values());
+			if (prisoner.getFreedom() || prisoner.getIsIsolated())
+				return this.list();
 
-		result = this.createEditModelAndView(visit);
-		result.addObject("visit", visit);
-		result.addObject("prisoner", visit.getPrisoner());
-		result.addObject("finder", true);
-		result.addObject("reasons", reasons);
-		result.addObject("requestURI", "visit/visitor/create.do");
+			Visit visit = this.visitService.createAsVisitor(prisoner);
 
-		return result;
+			List<Reason> reasons = Arrays.asList(Reason.values());
+
+			result = this.createEditModelAndView(visit);
+			result.addObject("visit", visit);
+			result.addObject("prisoner", visit.getPrisoner());
+			result.addObject("finder", true);
+			result.addObject("reasons", reasons);
+			result.addObject("requestURI", "visit/visitor/create.do");
+
+			return result;
+		} catch (Throwable oops2) {
+			return new ModelAndView("redirect:/");
+		}
 	}
 
 	// PROTECTED MODEL AND VIEW AS VISITOR

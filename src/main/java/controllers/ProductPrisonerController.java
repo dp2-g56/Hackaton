@@ -1,3 +1,4 @@
+
 package controllers;
 
 import java.util.List;
@@ -12,20 +13,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import domain.Prisoner;
-import domain.Product;
 import services.PrisonerService;
 import services.ProductService;
+import domain.Prisoner;
+import domain.Product;
 
 @Controller
 @RequestMapping("/product/prisoner")
 public class ProductPrisonerController extends AbstractController {
 
 	@Autowired
-	private PrisonerService prisonerService;
+	private PrisonerService	prisonerService;
 
 	@Autowired
-	private ProductService productService;
+	private ProductService	productService;
+
 
 	public ProductPrisonerController() {
 		super();
@@ -67,24 +69,35 @@ public class ProductPrisonerController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/buy", method = RequestMethod.POST, params = "save")
-	public ModelAndView buyProductSave(@RequestParam(required = false) int productId,
-			@RequestParam(required = false) int quantity) {
+	public ModelAndView buyProductSave(@RequestParam(required = false) String productId, @RequestParam(required = false) String quantity) {
 		ModelAndView result;
 
 		try {
-			this.productService.buyProductAsPrisoner(productId, quantity);
+			Assert.isTrue(StringUtils.isNumeric(productId));
+			int productIdInt = Integer.parseInt(productId);
+
+			Assert.isTrue(StringUtils.isNumeric(quantity));
+			int quantityInt = Integer.parseInt(quantity);
+
+			this.productService.buyProductAsPrisoner(productIdInt, quantityInt);
 
 			result = new ModelAndView("redirect:/product/prisoner/store.do");
 		} catch (Throwable oops) {
 			try {
-				Product product = this.productService.getProductAsPrisonerToBuy(productId);
+				Assert.isTrue(StringUtils.isNumeric(productId));
+				int productIdInt = Integer.parseInt(productId);
+
+				Assert.isTrue(StringUtils.isNumeric(quantity));
+				int quantityInt = Integer.parseInt(quantity);
+
+				Product product = this.productService.getProductAsPrisonerToBuy(productIdInt);
 				Prisoner prisoner = this.prisonerService.securityAndPrisoner();
 
 				String message = "";
 
-				Boolean stock = quantity <= product.getStock();
-				Boolean points = (product.getPrice() * quantity) <= prisoner.getPoints();
-				Boolean zeroOrNegative = quantity > 0;
+				Boolean stock = quantityInt <= product.getStock();
+				Boolean points = (product.getPrice() * quantityInt) <= prisoner.getPoints();
+				Boolean zeroOrNegative = quantityInt > 0;
 
 				if (!stock && !points)
 					message = "prisoner.purchase.stockAndPoints.error";

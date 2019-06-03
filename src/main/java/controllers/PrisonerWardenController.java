@@ -75,45 +75,49 @@ public class PrisonerWardenController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST, params = "save")
-	public ModelAndView save(@ModelAttribute("formPrisoner") @Valid FormObjectPrisoner formPrisoner,
-			BindingResult binding) {
-		ModelAndView result;
+	public ModelAndView save(@ModelAttribute("formPrisoner") @Valid FormObjectPrisoner formPrisoner, BindingResult binding) {
 
-		Prisoner prisoner = new Prisoner();
-		prisoner = this.prisonerService.reconstruct(formPrisoner, binding);
+		try {
+			ModelAndView result;
 
-		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
-		List<Charge> finalCharges = this.chargeService.getFinalCharges();
+			Prisoner prisoner = new Prisoner();
+			prisoner = this.prisonerService.reconstruct(formPrisoner, binding);
 
-		List<String> usernames = this.actorService.getAllUsernamesInTheSystem();
+			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+			List<Charge> finalCharges = this.chargeService.getFinalCharges();
 
-		if (usernames.contains(formPrisoner.getUsername())) {
-			result = new ModelAndView("warden/registerPrisoner");
-			result.addObject("formPrisoner", formPrisoner);
-			result.addObject("locale", locale);
-			result.addObject("message", "warden.duplicatedUsername");
+			List<String> usernames = this.actorService.getAllUsernamesInTheSystem();
 
-			return result;
-		}
+			if (usernames.contains(formPrisoner.getUsername())) {
+				result = new ModelAndView("warden/registerPrisoner");
+				result.addObject("formPrisoner", formPrisoner);
+				result.addObject("locale", locale);
+				result.addObject("message", "warden.duplicatedUsername");
 
-		if (binding.hasErrors()) {
-			result = new ModelAndView("warden/registerPrisoner");
-			result.addObject("formPrisoner", formPrisoner);
-			result.addObject("locale", locale);
-			result.addObject("finalCharges", finalCharges);
-		} else
-			try {
-				this.prisonerService.savePrisoner(prisoner);
-				result = new ModelAndView("redirect:/");
-			} catch (Throwable oops) {
+				return result;
+			}
+
+			if (binding.hasErrors()) {
 				result = new ModelAndView("warden/registerPrisoner");
 				result.addObject("formPrisoner", formPrisoner);
 				result.addObject("locale", locale);
 				result.addObject("finalCharges", finalCharges);
-				result.addObject("message", "warden.register.commit.error");
-			}
+			} else
+				try {
+					this.prisonerService.savePrisoner(prisoner);
+					result = new ModelAndView("redirect:/");
+				} catch (Throwable oops) {
+					result = new ModelAndView("warden/registerPrisoner");
+					result.addObject("formPrisoner", formPrisoner);
+					result.addObject("locale", locale);
+					result.addObject("finalCharges", finalCharges);
+					result.addObject("message", "warden.register.commit.error");
+				}
 
-		return result;
+			return result;
+		} catch (Throwable oops2) {
+			return new ModelAndView("redirect:/");
+		}
 	}
 
 	@RequestMapping(value = "/listSuspects", method = RequestMethod.GET)
@@ -141,7 +145,6 @@ public class PrisonerWardenController extends AbstractController {
 
 		return result;
 	}
-
 	@RequestMapping(value = "/isolate", method = RequestMethod.GET)
 	public ModelAndView isolate(@RequestParam(required = false) String prisonerId) {
 		ModelAndView result;
@@ -238,32 +241,32 @@ public class PrisonerWardenController extends AbstractController {
 	/*
 	 * @RequestMapping(value = "/addCharge", method = RequestMethod.GET) public
 	 * ModelAndView addCharges(@RequestParam int prisonerId) {
-	 *
+	 * 
 	 * ModelAndView result;
-	 *
+	 * 
 	 * try {
-	 *
+	 * 
 	 * Prisoner prisoner = this.prisonerService.findOne(prisonerId);
 	 * List<Prisoner> prisoners =
 	 * this.prisonerService.getIncarceratedPrisoners();
-	 *
+	 * 
 	 * if (prisoner == null || !prisoners.contains(prisoner)) return
 	 * this.listSuspects();
-	 *
+	 * 
 	 * List<Charge> allCharges =
 	 * this.chargeService.getChargesNotAssignedToPrisoner(prisoner);
-	 *
+	 * 
 	 * String locale =
 	 * LocaleContextHolder.getLocale().getLanguage().toUpperCase();
-	 *
+	 * 
 	 * result = new ModelAndView("prisoner/warden/addCharge");
 	 * result.addObject("charges", allCharges); result.addObject("prisoner",
 	 * prisoner); result.addObject("locale", locale); result.addObject("warden",
 	 * true); result.addObject("suspect", true);
-	 *
+	 * 
 	 * } catch (Throwable oops) { result = new
 	 * ModelAndView("redirect:/prisoner/warden/listSuspectCharges.do"); }
-	 *
+	 * 
 	 * return result; }
 	 */
 

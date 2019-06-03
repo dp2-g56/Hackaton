@@ -1,3 +1,4 @@
+
 package controllers;
 
 import java.util.List;
@@ -12,25 +13,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import domain.Activity;
-import domain.Prisoner;
-import domain.SocialWorker;
 import services.ActivityService;
 import services.PrisonerService;
 import services.SocialWorkerService;
+import domain.Activity;
+import domain.Prisoner;
+import domain.SocialWorker;
 
 @Controller
 @RequestMapping("/activity/socialworker")
 public class ActivityController extends AbstractController {
 
 	@Autowired
-	private ActivityService activityService;
+	private ActivityService		activityService;
 
 	@Autowired
-	private PrisonerService prisonerService;
+	private PrisonerService		prisonerService;
 
 	@Autowired
-	private SocialWorkerService socialWorkerService;
+	private SocialWorkerService	socialWorkerService;
+
 
 	public ActivityController() {
 		super();
@@ -123,7 +125,7 @@ public class ActivityController extends AbstractController {
 
 			return result;
 		} catch (Throwable oops) {
-			return new ModelAndView("redirect:/");
+			return new ModelAndView("redirect:/list");
 		}
 	}
 
@@ -152,26 +154,34 @@ public class ActivityController extends AbstractController {
 
 			return result;
 		} catch (Throwable oops) {
-			return new ModelAndView("redirect:/");
+			return new ModelAndView("redirect:/list");
 		}
 	}
 
 	@RequestMapping(value = "/listAssistants", method = RequestMethod.GET)
-	public ModelAndView listAssistants(@RequestParam int activityId) {
-		ModelAndView result;
-		List<Prisoner> prisoners;
-		Activity a;
+	public ModelAndView listAssistants(@RequestParam(required = false) String activityId) {
 
-		SocialWorker sw = this.socialWorkerService.loggedSocialWorker();
+		try {
+			Assert.isTrue(StringUtils.isNumeric(activityId));
+			int activityIdInt = Integer.parseInt(activityId);
 
-		a = this.activityService.findOne(activityId);
-		prisoners = this.activityService.getPrisonersPerActivity(a);
+			ModelAndView result;
+			List<Prisoner> prisoners;
+			Activity a;
 
-		result = new ModelAndView("activity/socialworker/listAssistants");
-		result.addObject("prisoners", prisoners);
-		result.addObject("requestURI", "activity/socialworker/listAssistants.do");
+			SocialWorker sw = this.socialWorkerService.loggedSocialWorker();
 
-		return result;
+			a = this.activityService.findOne(activityIdInt);
+			prisoners = this.activityService.getPrisonersPerActivity(a);
+
+			result = new ModelAndView("activity/socialworker/listAssistants");
+			result.addObject("prisoners", prisoners);
+			result.addObject("requestURI", "activity/socialworker/listAssistants.do");
+
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:/list");
+		}
 	}
 
 	protected ModelAndView createEditModelAndView(Activity activity) {
