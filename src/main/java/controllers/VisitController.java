@@ -67,81 +67,94 @@ public class VisitController extends AbstractController {
 	// Listar Visitas del prisionero logueado, pasadas y futuras
 	@RequestMapping(value = "/prisoner/list", method = RequestMethod.GET)
 	public ModelAndView listPrisoner() {
+		try {
+			ModelAndView result;
+			List<Visit> visits;
 
-		ModelAndView result;
-		List<Visit> visits;
+			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
-		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+			Prisoner loggedPrisoner = this.prisonerService.loggedPrisoner();
+			visits = loggedPrisoner.getVisits();
 
-		Prisoner loggedPrisoner = this.prisonerService.loggedPrisoner();
-		visits = loggedPrisoner.getVisits();
+			result = new ModelAndView("visit/list");
+			result.addObject("visits", visits);
+			result.addObject("locale", locale);
+			result.addObject("requestURI", "visit/prisoner/list.do");
 
-		result = new ModelAndView("visit/list");
-		result.addObject("visits", visits);
-		result.addObject("locale", locale);
-		result.addObject("requestURI", "visit/prisoner/list.do");
-
-		return result;
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:/");
+		}
 	}
 
 	// Listar Visitas del visitante logueado, pasadas y futuras
 	@RequestMapping(value = "/visitor/list", method = RequestMethod.GET)
 	public ModelAndView listVisitor() {
+		try {
+			ModelAndView result;
+			List<Visit> visits;
 
-		ModelAndView result;
-		List<Visit> visits;
+			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
-		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+			Visitor loggedVisitor = this.visitorService.loggedVisitor();
+			visits = loggedVisitor.getVisits();
 
-		Visitor loggedVisitor = this.visitorService.loggedVisitor();
-		visits = loggedVisitor.getVisits();
+			result = new ModelAndView("visit/list");
+			result.addObject("visits", visits);
+			result.addObject("locale", locale);
+			result.addObject("requestURI", "visit/visitor/list.do");
 
-		result = new ModelAndView("visit/list");
-		result.addObject("visits", visits);
-		result.addObject("locale", locale);
-		result.addObject("requestURI", "visit/visitor/list.do");
-
-		return result;
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:/");
+		}
 	}
 
 	// Listar Visitas aceptadas futuras que no tienen ningun guardia asociado
 	@RequestMapping(value = "/guard/listFuture", method = RequestMethod.GET)
 	public ModelAndView listGuardFuture() {
+		try {
+			ModelAndView result;
+			List<Visit> visits;
 
-		ModelAndView result;
-		List<Visit> visits;
+			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
-		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+			visits = this.guardService.getFutureAcceptedVisits();
 
-		visits = this.guardService.getFutureAcceptedVisits();
+			result = new ModelAndView("visit/list");
+			result.addObject("visits", visits);
+			result.addObject("locale", locale);
+			result.addObject("requestURI", "visit/guard/listFuture.do");
 
-		result = new ModelAndView("visit/list");
-		result.addObject("visits", visits);
-		result.addObject("locale", locale);
-		result.addObject("requestURI", "visit/guard/listFuture.do");
-
-		return result;
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:/");
+		}
 	}
 
 	// Listar Visitas aceptadas futuras que no tienen ningun guardia asociado
 	@RequestMapping(value = "/guard/list", method = RequestMethod.GET)
 	public ModelAndView listGuard() {
 
-		ModelAndView result;
-		List<Visit> visits;
+		try {
+			ModelAndView result;
+			List<Visit> visits;
 
-		Guard loggedGuard = this.guardService.loggedGuard();
+			Guard loggedGuard = this.guardService.loggedGuard();
 
-		String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
 
-		visits = loggedGuard.getVisits();
+			visits = loggedGuard.getVisits();
 
-		result = new ModelAndView("visit/list");
-		result.addObject("visits", visits);
-		result.addObject("locale", locale);
-		result.addObject("requestURI", "visit/guard/list.do");
+			result = new ModelAndView("visit/list");
+			result.addObject("visits", visits);
+			result.addObject("locale", locale);
+			result.addObject("requestURI", "visit/guard/list.do");
 
-		return result;
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:/");
+		}
 	}
 
 	//Ver el Report
@@ -207,66 +220,73 @@ public class VisitController extends AbstractController {
 	@RequestMapping(value = "/prisoner/filter", method = {
 		RequestMethod.POST, RequestMethod.GET
 	}, params = "refresh")
-	public ModelAndView requestsFilter(@RequestParam String fselect) {
+	public ModelAndView requestsFilter(@RequestParam(required = false) String fselect) {
 		ModelAndView result;
 
-		//Visit status
-		if (fselect.equals("ALL"))
-			return this.listPrisoner();
-		else {
-			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
-			VisitStatus visitStatus = VisitStatus.PERMITTED;
-			if (fselect.equals("ACCEPTED"))
-				visitStatus = VisitStatus.ACCEPTED;
-			else if (fselect.equals("PENDING"))
-				visitStatus = VisitStatus.PENDING;
-			else if (fselect.equals("REJECTED"))
-				visitStatus = VisitStatus.REJECTED;
+		try {
+			//Visit status
+			if (fselect.equals("ALL"))
+				return this.listPrisoner();
+			else {
+				String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+				VisitStatus visitStatus = VisitStatus.PERMITTED;
+				if (fselect.equals("ACCEPTED"))
+					visitStatus = VisitStatus.ACCEPTED;
+				else if (fselect.equals("PENDING"))
+					visitStatus = VisitStatus.PENDING;
+				else if (fselect.equals("REJECTED"))
+					visitStatus = VisitStatus.REJECTED;
 
-			Prisoner loggedPrisoner = this.prisonerService.loggedPrisoner();
-			List<Visit> visits = this.visitService.getVisitsByPrisonerAndStatus(visitStatus, loggedPrisoner.getId());
+				Prisoner loggedPrisoner = this.prisonerService.loggedPrisoner();
+				List<Visit> visits = this.visitService.getVisitsByPrisonerAndStatus(visitStatus, loggedPrisoner.getId());
 
-			result = new ModelAndView("visit/list");
+				result = new ModelAndView("visit/list");
 
-			result.addObject("visits", visits);
-			result.addObject("locale", locale);
-			result.addObject("requestURI", "visit/prisoner/list.do");
+				result.addObject("visits", visits);
+				result.addObject("locale", locale);
+				result.addObject("requestURI", "visit/prisoner/list.do");
+			}
+
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:/");
 		}
-
-		return result;
 	}
 
 	//Refresh Visitor
 	@RequestMapping(value = "/visitor/filter", method = {
 		RequestMethod.POST, RequestMethod.GET
 	}, params = "refresh")
-	public ModelAndView requestsFilterVisitor(@RequestParam String fselect) {
+	public ModelAndView requestsFilterVisitor(@RequestParam(required = false) String fselect) {
 		ModelAndView result;
+		try {
+			//Visit status
+			if (fselect.equals("ALL"))
+				return this.listVisitor();
+			else {
+				String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
+				VisitStatus visitStatus = VisitStatus.PERMITTED;
+				if (fselect.equals("ACCEPTED"))
+					visitStatus = VisitStatus.ACCEPTED;
+				else if (fselect.equals("PENDING"))
+					visitStatus = VisitStatus.PENDING;
+				else if (fselect.equals("REJECTED"))
+					visitStatus = VisitStatus.REJECTED;
 
-		//Visit status
-		if (fselect.equals("ALL"))
-			return this.listVisitor();
-		else {
-			String locale = LocaleContextHolder.getLocale().getLanguage().toUpperCase();
-			VisitStatus visitStatus = VisitStatus.PERMITTED;
-			if (fselect.equals("ACCEPTED"))
-				visitStatus = VisitStatus.ACCEPTED;
-			else if (fselect.equals("PENDING"))
-				visitStatus = VisitStatus.PENDING;
-			else if (fselect.equals("REJECTED"))
-				visitStatus = VisitStatus.REJECTED;
+				Visitor loggedVisitor = this.visitorService.loggedVisitor();
+				List<Visit> visits = this.visitService.getVisitsByVisitorAndStatus(visitStatus, loggedVisitor.getId());
 
-			Visitor loggedVisitor = this.visitorService.loggedVisitor();
-			List<Visit> visits = this.visitService.getVisitsByVisitorAndStatus(visitStatus, loggedVisitor.getId());
+				result = new ModelAndView("visit/list");
 
-			result = new ModelAndView("visit/list");
+				result.addObject("visits", visits);
+				result.addObject("locale", locale);
+				result.addObject("requestURI", "visit/visitor/list.do");
+			}
 
-			result.addObject("visits", visits);
-			result.addObject("locale", locale);
-			result.addObject("requestURI", "visit/visitor/list.do");
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:/");
 		}
-
-		return result;
 	}
 
 	//-------------------------------------CHANGE STATUS--------------------------------------------
@@ -512,97 +532,104 @@ public class VisitController extends AbstractController {
 	public ModelAndView saveAsVisitor(Visit visit, BindingResult binding) {
 		ModelAndView result;
 
-		Visit a = new Visit();
+		try {
+			Visit a = new Visit();
 
-		a = this.visitService.reconstructAsVisitor(visit, binding);
+			a = this.visitService.reconstructAsVisitor(visit, binding);
 
-		if (binding.hasErrors())
-			result = this.createEditModelAndView(visit);
-		else
-			try {
+			if (binding.hasErrors())
+				result = this.createEditModelAndView(visit);
+			else
+				try {
 
-				Date thisMoment = new Date();
-				thisMoment.setTime(thisMoment.getTime() - 1);
+					Date thisMoment = new Date();
+					thisMoment.setTime(thisMoment.getTime() - 1);
 
-				//Comprobacion es futuro
-				if (visit.getDate().before(thisMoment))
-					if (LocaleContextHolder.getLocale().getLanguage().toUpperCase().contains("ES")) {
-						binding.addError(new FieldError("visit", "date", visit.getDate(), false, null, null, "La fecha debe ser futura"));
-						return this.createEditModelAndView(visit);
-					} else {
-						binding.addError(new FieldError("visit", "date", visit.getDate(), false, null, null, "The Visit must take place in the future"));
-						return this.createEditModelAndView(visit);
-					}
+					//Comprobacion es futuro
+					if (visit.getDate().before(thisMoment))
+						if (LocaleContextHolder.getLocale().getLanguage().toUpperCase().contains("ES")) {
+							binding.addError(new FieldError("visit", "date", visit.getDate(), false, null, null, "La fecha debe ser futura"));
+							return this.createEditModelAndView(visit);
+						} else {
+							binding.addError(new FieldError("visit", "date", visit.getDate(), false, null, null, "The Visit must take place in the future"));
+							return this.createEditModelAndView(visit);
+						}
 
-				//Comprobacion es anterior a la fecha de salida
-				if (visit.getDate().after(visit.getPrisoner().getExitDate()))
-					if (LocaleContextHolder.getLocale().getLanguage().toUpperCase().contains("ES")) {
-						binding.addError(new FieldError("visit", "date", visit.getDate(), false, null, null, "La fecha debe ser anterior a la fecha de salida"));
-						return this.createEditModelAndView(visit);
-					} else {
-						binding.addError(new FieldError("visit", "date", visit.getDate(), false, null, null, "The date must be before the exit date"));
-						return this.createEditModelAndView(visit);
-					}
+					//Comprobacion es anterior a la fecha de salida
+					if (visit.getDate().after(visit.getPrisoner().getExitDate()))
+						if (LocaleContextHolder.getLocale().getLanguage().toUpperCase().contains("ES")) {
+							binding.addError(new FieldError("visit", "date", visit.getDate(), false, null, null, "La fecha debe ser anterior a la fecha de salida"));
+							return this.createEditModelAndView(visit);
+						} else {
+							binding.addError(new FieldError("visit", "date", visit.getDate(), false, null, null, "The date must be before the exit date"));
+							return this.createEditModelAndView(visit);
+						}
 
-				this.visitService.saveVisitAsVisitor(a);
+					this.visitService.saveVisitAsVisitor(a);
 
-				result = new ModelAndView("redirect:list.do");
+					result = new ModelAndView("redirect:list.do");
 
-			} catch (Throwable oops) {
+				} catch (Throwable oops) {
 
-				result = this.createEditModelAndView(visit, "commit.error");
-			}
+					result = this.createEditModelAndView(visit, "commit.error");
+				}
 
-		return result;
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:/");
+		}
 	}
 
 	//SAVE VISIT AS PRISONER
 	@RequestMapping(value = "/prisoner/create", method = RequestMethod.POST, params = "save")
 	public ModelAndView saveAsPrisoner(Visit visit, BindingResult binding) {
 		ModelAndView result;
+		try {
+			Visit a = new Visit();
 
-		Visit a = new Visit();
+			a = this.visitService.reconstructAsPrisoner(visit, binding);
 
-		a = this.visitService.reconstructAsPrisoner(visit, binding);
+			if (binding.hasErrors())
+				result = this.createEditModelAndViewAsPrisoner(visit);
+			else
+				try {
 
-		if (binding.hasErrors())
-			result = this.createEditModelAndViewAsPrisoner(visit);
-		else
-			try {
+					Date thisMoment = new Date();
+					thisMoment.setTime(thisMoment.getTime() - 1);
 
-				Date thisMoment = new Date();
-				thisMoment.setTime(thisMoment.getTime() - 1);
+					//Comprobacion es futuro
+					if (visit.getDate().before(thisMoment))
+						if (LocaleContextHolder.getLocale().getLanguage().toUpperCase().contains("ES")) {
+							binding.addError(new FieldError("visit", "date", visit.getDate(), false, null, null, "La fecha debe ser futura"));
+							return this.createEditModelAndViewAsPrisoner(visit);
+						} else {
+							binding.addError(new FieldError("visit", "date", visit.getDate(), false, null, null, "The Visit must take place in the future"));
+							return this.createEditModelAndViewAsPrisoner(visit);
+						}
 
-				//Comprobacion es futuro
-				if (visit.getDate().before(thisMoment))
-					if (LocaleContextHolder.getLocale().getLanguage().toUpperCase().contains("ES")) {
-						binding.addError(new FieldError("visit", "date", visit.getDate(), false, null, null, "La fecha debe ser futura"));
-						return this.createEditModelAndViewAsPrisoner(visit);
-					} else {
-						binding.addError(new FieldError("visit", "date", visit.getDate(), false, null, null, "The Visit must take place in the future"));
-						return this.createEditModelAndViewAsPrisoner(visit);
-					}
+					//Comprobacion es anterior a la fecha de salida
+					if (visit.getDate().after(visit.getPrisoner().getExitDate()))
+						if (LocaleContextHolder.getLocale().getLanguage().toUpperCase().contains("ES")) {
+							binding.addError(new FieldError("visit", "date", visit.getDate(), false, null, null, "La fecha debe ser anterior a la fecha de salida"));
+							return this.createEditModelAndViewAsPrisoner(visit);
+						} else {
+							binding.addError(new FieldError("visit", "date", visit.getDate(), false, null, null, "The date must be before the exit date"));
+							return this.createEditModelAndViewAsPrisoner(visit);
+						}
 
-				//Comprobacion es anterior a la fecha de salida
-				if (visit.getDate().after(visit.getPrisoner().getExitDate()))
-					if (LocaleContextHolder.getLocale().getLanguage().toUpperCase().contains("ES")) {
-						binding.addError(new FieldError("visit", "date", visit.getDate(), false, null, null, "La fecha debe ser anterior a la fecha de salida"));
-						return this.createEditModelAndViewAsPrisoner(visit);
-					} else {
-						binding.addError(new FieldError("visit", "date", visit.getDate(), false, null, null, "The date must be before the exit date"));
-						return this.createEditModelAndViewAsPrisoner(visit);
-					}
+					this.visitService.saveVisitAsPrisoner(a);
 
-				this.visitService.saveVisitAsPrisoner(a);
+					result = this.listPrisoner();
 
-				result = this.listPrisoner();
+				} catch (Throwable oops) {
 
-			} catch (Throwable oops) {
+					result = this.createEditModelAndViewAsPrisoner(visit, "commit.error");
+				}
 
-				result = this.createEditModelAndViewAsPrisoner(visit, "commit.error");
-			}
-
-		return result;
+			return result;
+		} catch (Throwable oops) {
+			return new ModelAndView("redirect:/");
+		}
 	}
 
 	//PROTECTED MODEL AND VIEW AS VISITOR
