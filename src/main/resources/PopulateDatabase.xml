@@ -362,7 +362,7 @@
 				<property name="name" value="Juan Carlos" />
 				<property name="middleName" value="El de Cuba" />
 				<property name="surname" value="Alonso Valenzuela" />
-				<property name="photo" value="https://www.url.com/example" />
+				<property name="photo" value="https://i.imgur.com/P6t2k18.png" />
 				<property name="email" value="warden@email.com" />
 			
 				<property name="boxes">
@@ -383,7 +383,7 @@
 				<property name="name" value="Roberto" />
 				<property name="middleName" value="El que esta fuera" />
 				<property name="surname" value="Hermoso" />
-				<property name="photo" value="https://www.finiquito.com/example" />
+				<property name="photo" value="https://i.imgur.com/CeMrDl4.png" />
 				<property name="email" value="warden@email.com" />
 			
 				<property name="boxes">
@@ -403,7 +403,7 @@
 				<property name="name" value="Kevin" />
 				<property name="middleName" value="Bodyguard" />
 				<property name="surname" value="Costner" />
-				<property name="photo" value="https://www.vigilante.com/example" />
+				<property name="photo" value="https://i.imgur.com/U5VWtIg.png" />
 				<property name="phone" value="+34667887558" />
 				<property name="email" value="costner@gmail.com" />
 				<property name="boxes">
@@ -431,7 +431,7 @@
 				<property name="name" value="Jose" />
 				<property name="middleName" value="Luis" />
 				<property name="surname" value="Torrente" />
-				<property name="photo" value="https://www.vigilante2.com/example" />
+				<property name="photo" value="https://i.imgur.com/76O17FO.jpg" />
 				<property name="phone" value="+34667887885" />
 				<property name="email" value="guard2@gmail.com" />
 				<property name="boxes">
@@ -454,7 +454,7 @@
 				<property name="name" value="Quincy" />
 				<property name="middleName" value="Hand" />
 				<property name="surname" value="Sharp" />
-				<property name="photo" value="https://www.arkam.com/example" />
+				<property name="photo" value="https://i.imgur.com/pQt4WwZ.jpg" />
 				<property name="phone" value="+34689887885" />
 				<property name="email" value="guard3@gmail.com" />
 				<property name="boxes">
@@ -479,7 +479,7 @@
 				<property name="name" value="Yuri" />
 				<property name="middleName" value="Wrath" />
 				<property name="surname" value="Watanabe" />
-				<property name="photo" value="https://www.nypd.com/example" />
+				<property name="photo" value="https://i.imgur.com/HUVQFXS.jpg" />
 				<property name="phone" value="+34689666885" />
 				<property name="email" value="guard4@gmail.com" />
 				<property name="boxes">
@@ -503,7 +503,7 @@
 				<property name="name" value="Juanvi" />
 				<property name="middleName" value="Cuidaooo" />
 				<property name="surname" value="Gutierrez" />
-				<property name="photo" value="https://www.url.com/example" />
+				<property name="photo" value="https://i.imgur.com/xHrXFWX.jpg" />
 				
 				<property name="emergencyEmail" value="wals@gmail.com" />
 				<property name="phoneNumber" value="+34655999777" />
@@ -536,7 +536,7 @@
 				<property name="name" value="Not" />
 				<property name="middleName" value="A Mafia" />
 				<property name="surname" value="Leader" />
-				<property name="photo" value="https://www.url.com/example" />
+				<property name="photo" value="https://i.imgur.com/QQck9m9.png" />
 				
 				<property name="emergencyEmail" value="email@gmail.com" />
 				<property name="phoneNumber" value="+34655888777" />
@@ -570,8 +570,7 @@
 				<property name="name" value="Not a" />
 				<property name="middleName" value="Mafia" />
 				<property name="surname" value="Killer" />
-				<property name="photo" value="https://www.url.com/example" />
-				
+				<property name="photo" value="https://i.imgur.com/uS3BR2G.jpg" />
 				<property name="emergencyEmail" value="email@gmail.com" />
 				<property name="phoneNumber" value="+34655888777" />
 				<property name="email" value="email@gmail.com" />
@@ -600,7 +599,7 @@
 				<property name="name" value="Funny" />
 				<property name="middleName" value="Dirty Deeds" />
 				<property name="surname" value="Valentine" />
-				<property name="photo" value="https://www.url.com/example" />
+				<property name="photo" value="https://i.imgur.com/iXfJBX9.jpg" />
 				
 				<property name="emergencyEmail" value="email@gmail.com" />
 				<property name="phoneNumber" value="+34655888777" />
@@ -630,7 +629,7 @@
 				<property name="name" value="El Buhonero" />
 				<property name="middleName" value="----" />
 				<property name="surname" value="De Resident Evil 4" />
-				<property name="photo" value="https://www.RE4.com/example" />
+				<property name="photo" value="https://i.imgur.com/YAUtUtL.png" />
 				<property name="VATNumber" value="SE123456789" />
 				<property name="points" value="100" />
 				<property name="storeName" value="Legal Store 1" />
@@ -656,7 +655,7 @@
 				<property name="name" value="David" />
 				<property name="middleName" value="Drebin" />
 				<property name="surname" value="Monkey" />
-				<property name="photo" value="https://www.MGS4.com/example" />
+				<property name="photo" value="https://i.imgur.com/tYMcArr.png" />
 				<property name="VATNumber" value="SE123456987" />
 				<property name="points" value="100" />
 				<property name="storeName" value="Legal Store 2" />
@@ -680,7 +679,7 @@
 				<property name="name" value="System" />
 				<property name="middleName" value="NPC" />
 				<property name="surname" value="Number1" />
-				<property name="photo" value="https://www.NPC.com/example" />
+				<property name="photo" value="https://i.imgur.com/8oZgs2A.png" />
 				<property name="VATNumber" value="SE321456987" />
 				<property name="points" value="100" />
 				<property name="storeName" value="Legal Store 3" />
@@ -707,7 +706,7 @@
 				<property name="name" value="Social" />
 				<property name="middleName" value="----" />
 				<property name="surname" value="Worker1" />
-				<property name="photo" value="https://www.url.com/example" />
+				<property name="photo" value="https://i.imgur.com/dMSVIEA.png" />
 				<property name="title" value="Social Enterprise 1" />
 				<property name="curriculum" ref="curriculum1" />
 				<property name="activities">
@@ -735,7 +734,7 @@
 				<property name="name" value="Social" />
 				<property name="middleName" value="----" />
 				<property name="surname" value="Worker2" />
-				<property name="photo" value="https://www.url.com/example" />
+				<property name="photo" value="https://i.imgur.com/yf7LeGI.png" />
 				<property name="title" value="Social Enterprise 2" />
 				<property name="curriculum" ref="curriculum2" />
 				<property name="activities">
@@ -759,7 +758,7 @@
 				<property name="name" value="Social" />
 				<property name="middleName" value="----" />
 				<property name="surname" value="Worker3" />
-				<property name="photo" value="https://www.url.com/example" />
+				<property name="photo" value="https://i.imgur.com/1pWq4zf.png" />
 				<property name="title" value="Social Enterprise 3" />
 				<property name="activities">
 					<list>
@@ -783,7 +782,7 @@
 				<property name="name" value="Boris" />
 				<property name="middleName" value="El Animal" />
 				<property name="surname" value="Gonzalez" />
-				<property name="photo" value="https://www.url.com/example" />
+				<property name="photo" value="https://i.imgur.com/Q6VAyOT.png" />
 			
 				<property name="crimeRate" value="0.7" />
 				<property name="ticker" value="231232-ABCDEF" />
@@ -850,7 +849,7 @@
 				<property name="name" value="John" />
 				<property name="middleName" value="El Negro" />
 				<property name="surname" value="Coffee" />
-				<property name="photo" value="https://www.url.com/example" />
+				<property name="photo" value="https://i.imgur.com/WqjcjXW.jpg" />
 			
 				<property name="crimeRate" value="-0.9" />
 				<property name="ticker" value="231232-CBADEF" />
@@ -903,7 +902,7 @@
 				<property name="name" value="Wals" />
 				<property name="middleName" value="---" />
 				<property name="surname" value="Wals" />
-				<property name="photo" value="https://www.url.com/example" />
+				<property name="photo" value="https://i.imgur.com/H66MkMl.png" />
 			
 				<property name="crimeRate" value="-0.65" />
 				<property name="ticker" value="231232-FFFFFF" />
@@ -955,10 +954,10 @@
 			
 		<!-- PRISONER4 -->
 			<bean id="prisoner4" class="domain.Prisoner">
-				<property name="name" value="Spoderman" />
-				<property name="middleName" value="El Abuelo de Boruto" />
+				<property name="name" value="Juan" />
+				<property name="middleName" value="El amigos" />
 				<property name="surname" value="Pocholo" />
-				<property name="photo" value="https://www.url.com/example" />
+				<property name="photo" value="https://i.imgur.com/Yq3VXRy.jpg" />
 			
 				<property name="crimeRate" value="-0.4" />
 				<property name="ticker" value="231232-EEEEEE" />
@@ -1197,9 +1196,8 @@
 	<!-- FINDER OF ACTIVITIES -->
 		<!-- FINDER1 -->
 			<bean id="finderPrisoner1" class="domain.FinderActivities">
-				<property name="keyWord" value="keyWord1" />
-				<property name="minDate" value="12/12/2009 23:59" />
-				<property name="maxDate" value="12/12/2019 23:59" />
+				<property name="keyWord" value="" />
+			
 				<property name="activities">	
 					<list>
 					</list>
@@ -1208,9 +1206,8 @@
 		
 		<!-- FINDER2 -->
 			<bean id="finderPrisoner2" class="domain.FinderActivities">
-				<property name="keyWord" value="keyWord2" />
-				<property name="minDate" value="12/12/2009 23:59" />
-				<property name="maxDate" value="12/12/2019 23:59" />
+				<property name="keyWord" value="" />
+				
 				<property name="activities">	
 					<list>
 					</list>
@@ -1219,9 +1216,8 @@
 		
 		<!-- FINDER3 -->
 			<bean id="finderPrisoner3" class="domain.FinderActivities">
-				<property name="keyWord" value="keyWord3" />
-				<property name="minDate" value="12/12/2009 23:59" />
-				<property name="maxDate" value="12/12/2019 23:59" />
+				<property name="keyWord" value="" />
+				
 				<property name="activities">	
 					<list>
 					</list>
@@ -1230,9 +1226,8 @@
 			
 		<!-- FINDER4 -->
 			<bean id="finderPrisoner4" class="domain.FinderActivities">
-				<property name="keyWord" value="keyWord4" />
-				<property name="minDate" value="12/12/2009 23:59" />
-				<property name="maxDate" value="12/12/2019 23:59" />
+				<property name="keyWord" value="" />
+				
 				<property name="activities">	
 					<list>
 					</list>
@@ -1242,7 +1237,7 @@
 	<!-- FINDER OF PRISONERS -->
 		<!-- FINDER1 -->
 			<bean id="finderVisitor1" class="domain.Finder">
-				<property name="keyWord" value="keyWord1" />
+				<property name="keyWord" value="" />
 				<property name="charge" value="charge1" />
 				<property name="prisoners">	
 					<list>
@@ -1252,7 +1247,7 @@
 			
 		<!-- FINDER2 -->
 			<bean id="finderVisitor2" class="domain.Finder">
-				<property name="keyWord" value="keyWord1" />
+				<property name="keyWord" value="" />
 				<property name="charge" value="charge1" />
 				<property name="prisoners">	
 					<list>
@@ -1262,7 +1257,7 @@
 			
 		<!-- FINDER3 -->
 			<bean id="finderVisitor3" class="domain.Finder">
-				<property name="keyWord" value="keyWord1" />
+				<property name="keyWord" value="" />
 				<property name="charge" value="charge1" />
 				<property name="prisoners">	
 					<list>
@@ -1272,7 +1267,7 @@
 			
 		<!-- FINDER4 -->
 			<bean id="finderVisitor4" class="domain.Finder">
-				<property name="keyWord" value="keyWord1" />
+				<property name="keyWord" value="" />
 				<property name="charge" value="charge1" />
 				<property name="prisoners">	
 					<list>

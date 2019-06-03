@@ -192,7 +192,7 @@ public class PrisonerWardenController extends AbstractController {
 			result.addObject("suspect", true);
 
 		} catch (Throwable oops) {
-			result = new ModelAndView("redirect:/prisoner/warden/listSuspectCharges.do");
+			result = new ModelAndView("redirect:/prisoner/warden/listSuspects.do");
 		}
 
 		return result;
