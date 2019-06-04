@@ -111,7 +111,7 @@ java.sql.Timestamp now = new java.sql.Timestamp(utilDate.getTime());
 			<jstl:if test="${row.visitStatus=='PENDING'}">
 				<jstl:set var="status" value="PENDING"/>
 				<jstl:if test="${locale=='ES'}">
-					<jstl:set var="status" value="PENDING"/>
+					<jstl:set var="status" value="PENDIENTE"/>
 				</jstl:if>
 			</jstl:if>
 			<jstl:out value="${status}"/>
