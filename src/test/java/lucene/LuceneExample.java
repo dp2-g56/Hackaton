@@ -51,7 +51,6 @@ public class LuceneExample {
 		try {
 			// JDBC Section
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			// Assuming database bookstore exists
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/acme-alcatraz", "root", "root");
 			Statement stmt = conn.createStatement();
 			String sql = "select DISTINCT p.* from Prisoner p join prisoner_charges pc on pc.prisoner=p.id join charge c"
