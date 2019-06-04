@@ -13,26 +13,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import services.ActivityService;
-import services.PrisonerService;
-import services.SocialWorkerService;
 import domain.Activity;
 import domain.Prisoner;
 import domain.SocialWorker;
+import services.ActivityService;
+import services.PrisonerService;
+import services.SocialWorkerService;
 
 @Controller
 @RequestMapping("/activity/socialworker")
 public class ActivityController extends AbstractController {
 
 	@Autowired
-	private ActivityService		activityService;
+	private ActivityService activityService;
 
 	@Autowired
-	private PrisonerService		prisonerService;
+	private PrisonerService prisonerService;
 
 	@Autowired
-	private SocialWorkerService	socialWorkerService;
-
+	private SocialWorkerService socialWorkerService;
 
 	public ActivityController() {
 		super();
@@ -95,7 +94,7 @@ public class ActivityController extends AbstractController {
 			return result;
 
 		} catch (Throwable oops) {
-			ModelAndView result = new ModelAndView("redirect:list");
+			ModelAndView result = new ModelAndView("redirect:list.do");
 			SocialWorker socialWorker = this.socialWorkerService.loggedSocialWorker();
 			result.addObject("activities", socialWorker.getActivities());
 			return result;
@@ -125,7 +124,7 @@ public class ActivityController extends AbstractController {
 
 			return result;
 		} catch (Throwable oops) {
-			return new ModelAndView("redirect:/list");
+			return new ModelAndView("redirect:list.do");
 		}
 	}
 
@@ -149,12 +148,12 @@ public class ActivityController extends AbstractController {
 				result = new ModelAndView("redirect:list.do");
 
 			} catch (Throwable oops) {
-				result = this.createEditModelAndView(activity, "commit.error");
+				result = new ModelAndView("redirect:list.do");
 			}
 
 			return result;
 		} catch (Throwable oops) {
-			return new ModelAndView("redirect:/list");
+			return new ModelAndView("redirect:list.do");
 		}
 	}
 
@@ -180,7 +179,7 @@ public class ActivityController extends AbstractController {
 
 			return result;
 		} catch (Throwable oops) {
-			return new ModelAndView("redirect:/list");
+			return new ModelAndView("redirect:list.do");
 		}
 	}
 

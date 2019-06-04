@@ -14,10 +14,10 @@ public interface FinderActivitiesRepository extends JpaRepository<FinderActiviti
 	@Query("select distinct(a) from Activity a where a.title like ?1 or a.description like ?1")
 	public List<Activity> filterByKeyWord(String keyWord);
 
-	@Query("select distinct(a) from Activity a where a.realizationDate > ?1")
+	@Query("select distinct(a) from Activity a where a.realizationDate > ?1 or a.realizationDate = ?1")
 	public List<Activity> filterByDateMin(Date min);
 
-	@Query("select distinct(a) from Activity a where a.realizationDate < ?1")
+	@Query("select distinct(a) from Activity a where a.realizationDate < ?1 or a.realizationDate = ?1")
 	public List<Activity> filterByDateMax(Date max);
 
 }

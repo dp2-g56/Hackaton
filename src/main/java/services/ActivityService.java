@@ -35,6 +35,9 @@ public class ActivityService {
 	private RequestService requestService;
 
 	@Autowired
+	private FinderActivitiesService finderActivitiesService;
+
+	@Autowired
 	private Validator validator;
 
 	// CRUDS
@@ -143,6 +146,16 @@ public class ActivityService {
 		}
 		sw.getActivities().remove(activity);
 		this.socialWorkerService.save(sw);
+
+		List<FinderActivities> findersOfActivity = this.getFinderActivitiesByActivity(activity);
+		for (int i = 0; i < findersOfActivity.size(); i++) {
+			FinderActivities finder = findersOfActivity.get(i);
+			List<Activity> activities = finder.getActivities();
+			activities.remove(activity);
+			finder.setActivities(activities);
+			this.finderActivitiesService.save(finder);
+		}
+
 		this.delete(activity);
 	}
 }
