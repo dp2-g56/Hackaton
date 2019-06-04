@@ -66,12 +66,14 @@ public class WardenController extends AbstractController {
 		}
 	}
 	@RequestMapping(value = "/charge/list", method = RequestMethod.GET)
-	public ModelAndView listChargePrisoner(@RequestParam int prisonerId) {
+	public ModelAndView listChargePrisoner(@RequestParam(required = false) String prisonerId) {
 
 		try {
 			ModelAndView result;
+			Assert.isTrue(StringUtils.isNumeric(prisonerId));
+			int prisonerIdInt = Integer.parseInt(prisonerId);
 
-			Prisoner prisoner = this.prisonerService.findOne(prisonerId);
+			Prisoner prisoner = this.prisonerService.findOne(prisonerIdInt);
 
 			if (prisoner == null)
 				return this.listFreePrisoners();

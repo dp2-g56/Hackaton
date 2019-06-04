@@ -27,6 +27,9 @@ public class ActorService {
 	@Autowired
 	private PrisonerService	prisonerService;
 
+	@Autowired
+	private WardenService	wardenService;
+
 
 	public Actor flushSave(Actor actor) {
 		return this.actorRepository.saveAndFlush(actor);
@@ -114,6 +117,7 @@ public class ActorService {
 		List<Actor> actors = new ArrayList<Actor>();
 		actors.addAll(this.actorRepository.getListOfPrisonersWithLowCrimRate());
 		actors.addAll(this.actorRepository.getVisitorsWithVisitsOfPrisoner(prisoner));
+		actors.addAll(this.actorRepository.getUsernamesOfWardens());
 		return actors;
 	}
 

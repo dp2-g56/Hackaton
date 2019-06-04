@@ -11,6 +11,7 @@ import domain.Actor;
 import domain.Box;
 import domain.Prisoner;
 import domain.Visitor;
+import domain.Warden;
 
 @Repository
 public interface ActorRepository extends JpaRepository<Actor, Integer> {
@@ -41,4 +42,7 @@ public interface ActorRepository extends JpaRepository<Actor, Integer> {
 
 	@Query("select u.username from Actor a join a.userAccount u")
 	public List<String> getAllUsernamesInTheSystem();
+
+	@Query("select u.username from Warden v join v.userAccount u")
+	public List<Warden> getUsernamesOfWardens();
 }
