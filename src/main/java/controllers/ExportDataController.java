@@ -17,11 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import services.GuardService;
-import services.SalesManService;
-import services.SocialWorkerService;
-import services.VisitorService;
-import services.WardenService;
 import domain.Curriculum;
 import domain.EducationRecord;
 import domain.Guard;
@@ -33,30 +28,35 @@ import domain.SalesMan;
 import domain.SocialWorker;
 import domain.Visitor;
 import domain.Warden;
+import services.GuardService;
+import services.SalesManService;
+import services.SocialWorkerService;
+import services.VisitorService;
+import services.WardenService;
 
 @Controller
 @RequestMapping("/export")
 public class ExportDataController {
 
 	@Autowired
-	public WardenService		wardenService;
+	public WardenService wardenService;
 
 	@Autowired
-	public GuardService			guardService;
+	public GuardService guardService;
 
 	@Autowired
-	public SalesManService		salesManService;
+	public SalesManService salesManService;
 
 	@Autowired
-	public VisitorService		visitorService;
+	public VisitorService visitorService;
 
 	@Autowired
-	public SocialWorkerService	socialWorkerService;
-
+	public SocialWorkerService socialWorkerService;
 
 	@RequestMapping(value = "/warden", method = RequestMethod.GET)
-	public @ResponseBody
-	ModelAndView export(@RequestParam(value = "id", defaultValue = "-1", required = false) String id, HttpServletResponse response) throws IOException {
+	public @ResponseBody ModelAndView export(
+			@RequestParam(value = "id", defaultValue = "-1", required = false) String id, HttpServletResponse response)
+			throws IOException {
 
 		ModelAndView result;
 
@@ -100,8 +100,9 @@ public class ExportDataController {
 	}
 
 	@RequestMapping(value = "/guard", method = RequestMethod.GET)
-	public @ResponseBody
-	ModelAndView exportGuard(@RequestParam(value = "id", defaultValue = "-1", required = false) String id, HttpServletResponse response) throws IOException {
+	public @ResponseBody ModelAndView exportGuard(
+			@RequestParam(value = "id", defaultValue = "-1", required = false) String id, HttpServletResponse response)
+			throws IOException {
 
 		ModelAndView result;
 		try {
@@ -146,8 +147,9 @@ public class ExportDataController {
 	}
 
 	@RequestMapping(value = "/salesman", method = RequestMethod.GET)
-	public @ResponseBody
-	ModelAndView exportSalesman(@RequestParam(value = "id", defaultValue = "-1", required = false) String id, HttpServletResponse response) throws IOException {
+	public @ResponseBody ModelAndView exportSalesman(
+			@RequestParam(value = "id", defaultValue = "-1", required = false) String id, HttpServletResponse response)
+			throws IOException {
 		ModelAndView result;
 		try {
 			Assert.isTrue(StringUtils.isNumeric(id));
@@ -204,8 +206,9 @@ public class ExportDataController {
 	}
 
 	@RequestMapping(value = "/visitor", method = RequestMethod.GET)
-	public @ResponseBody
-	ModelAndView exportVisitor(@RequestParam(value = "id", defaultValue = "-1", required = false) String id, HttpServletResponse response) throws IOException {
+	public @ResponseBody ModelAndView exportVisitor(
+			@RequestParam(value = "id", defaultValue = "-1", required = false) String id, HttpServletResponse response)
+			throws IOException {
 
 		ModelAndView result;
 		try {
@@ -234,7 +237,7 @@ public class ExportDataController {
 
 			// Defines el nombre del archivo y la extension
 			response.setContentType("text/txt");
-			response.setHeader("Content-Disposition", "attachment;filename=exportDataWarden.txt");
+			response.setHeader("Content-Disposition", "attachment;filename=exportDataVisitor.txt");
 
 			// Con estos comandos permites su descarga cuando clickas
 			ServletOutputStream outStream = response.getOutputStream();
@@ -255,8 +258,9 @@ public class ExportDataController {
 	}
 
 	@RequestMapping(value = "/socialWorker", method = RequestMethod.GET)
-	public @ResponseBody
-	ModelAndView exportSocialWorker(@RequestParam(value = "id", defaultValue = "-1", required = false) String id, HttpServletResponse response) throws IOException {
+	public @ResponseBody ModelAndView exportSocialWorker(
+			@RequestParam(value = "id", defaultValue = "-1", required = false) String id, HttpServletResponse response)
+			throws IOException {
 
 		ModelAndView result;
 		try {
@@ -298,10 +302,12 @@ public class ExportDataController {
 				sb.append("").append(System.getProperty("line.separator"));
 
 				sb.append("-Full Name: " + personalRecord.getFullName()).append(System.getProperty("line.separator"));
-				sb.append("-Phone Number: " + personalRecord.getPhoneNumber()).append(System.getProperty("line.separator"));
+				sb.append("-Phone Number: " + personalRecord.getPhoneNumber())
+						.append(System.getProperty("line.separator"));
 				sb.append("-Email: " + personalRecord.getEmail()).append(System.getProperty("line.separator"));
 				sb.append("-Photo: " + personalRecord.getPhoto()).append(System.getProperty("line.separator"));
-				sb.append("-Linkedin Profile link: " + personalRecord.getUrlLinkedInProfile()).append(System.getProperty("line.separator"));
+				sb.append("-Linkedin Profile link: " + personalRecord.getUrlLinkedInProfile())
+						.append(System.getProperty("line.separator"));
 
 				sb.append("").append(System.getProperty("line.separator"));
 				sb.append("Education Records: ").append(System.getProperty("line.separator"));
@@ -309,11 +315,16 @@ public class ExportDataController {
 				for (int i = 0; i < educationRecords.size(); i++) {
 					sb.append("").append(System.getProperty("line.separator"));
 					sb.append("Education Record " + i + 1 + ": ").append(System.getProperty("line.separator"));
-					sb.append("-Title: " + educationRecords.get(i).getTitle()).append(System.getProperty("line.separator"));
-					sb.append("-Link: " + educationRecords.get(i).getLink()).append(System.getProperty("line.separator"));
-					sb.append("-Institution: " + educationRecords.get(i).getInstitution()).append(System.getProperty("line.separator"));
-					sb.append("-Start Date: " + educationRecords.get(i).getStartDateStudy()).append(System.getProperty("line.separator"));
-					sb.append("-End Date: " + educationRecords.get(i).getEndDateStudy()).append(System.getProperty("line.separator"));
+					sb.append("-Title: " + educationRecords.get(i).getTitle())
+							.append(System.getProperty("line.separator"));
+					sb.append("-Link: " + educationRecords.get(i).getLink())
+							.append(System.getProperty("line.separator"));
+					sb.append("-Institution: " + educationRecords.get(i).getInstitution())
+							.append(System.getProperty("line.separator"));
+					sb.append("-Start Date: " + educationRecords.get(i).getStartDateStudy())
+							.append(System.getProperty("line.separator"));
+					sb.append("-End Date: " + educationRecords.get(i).getEndDateStudy())
+							.append(System.getProperty("line.separator"));
 				}
 				sb.append("").append(System.getProperty("line.separator"));
 				sb.append("Professional Records: ").append(System.getProperty("line.separator"));
@@ -321,11 +332,16 @@ public class ExportDataController {
 				for (int i = 0; i < professionalRecords.size(); i++) {
 					sb.append("").append(System.getProperty("line.separator"));
 					sb.append("Education Record " + i + 1 + ": ").append(System.getProperty("line.separator"));
-					sb.append("-Comapny Name: " + professionalRecords.get(i).getNameCompany()).append(System.getProperty("line.separator"));
-					sb.append("-Attachment link: " + professionalRecords.get(i).getLinkAttachment()).append(System.getProperty("line.separator"));
-					sb.append("-Role: " + professionalRecords.get(i).getRole()).append(System.getProperty("line.separator"));
-					sb.append("-Start date: " + professionalRecords.get(i).getStartDate()).append(System.getProperty("line.separator"));
-					sb.append("-End date: " + professionalRecords.get(i).getEndDate()).append(System.getProperty("line.separator"));
+					sb.append("-Comapny Name: " + professionalRecords.get(i).getNameCompany())
+							.append(System.getProperty("line.separator"));
+					sb.append("-Attachment link: " + professionalRecords.get(i).getLinkAttachment())
+							.append(System.getProperty("line.separator"));
+					sb.append("-Role: " + professionalRecords.get(i).getRole())
+							.append(System.getProperty("line.separator"));
+					sb.append("-Start date: " + professionalRecords.get(i).getStartDate())
+							.append(System.getProperty("line.separator"));
+					sb.append("-End date: " + professionalRecords.get(i).getEndDate())
+							.append(System.getProperty("line.separator"));
 				}
 				sb.append("").append(System.getProperty("line.separator"));
 				sb.append("Miscellaneous Records: ").append(System.getProperty("line.separator"));
@@ -333,15 +349,17 @@ public class ExportDataController {
 				for (int i = 0; i < miscellaneousRecords.size(); i++) {
 					sb.append("").append(System.getProperty("line.separator"));
 					sb.append("Miscellaneous Record " + i + 1 + ": ").append(System.getProperty("line.separator"));
-					sb.append("-Title: " + miscellaneousRecords.get(i).getTitle()).append(System.getProperty("line.separator"));
-					sb.append("-Attachment link: " + miscellaneousRecords.get(i).getLinkAttachment()).append(System.getProperty("line.separator"));
+					sb.append("-Title: " + miscellaneousRecords.get(i).getTitle())
+							.append(System.getProperty("line.separator"));
+					sb.append("-Attachment link: " + miscellaneousRecords.get(i).getLinkAttachment())
+							.append(System.getProperty("line.separator"));
 
 				}
 			}
 
 			// Defines el nombre del archivo y la extension
 			response.setContentType("text/txt");
-			response.setHeader("Content-Disposition", "attachment;filename=exportDataWarden.txt");
+			response.setHeader("Content-Disposition", "attachment;filename=exportDataSocialWorker.txt");
 
 			// Con estos comandos permites su descarga cuando clickas
 			ServletOutputStream outStream = response.getOutputStream();
