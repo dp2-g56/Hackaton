@@ -101,5 +101,8 @@ p{
 <p>Nos reservamos el derecho, a nuestra sola discreci&oacute;n, de actualizar, modificar o reemplazar cualquier parte de estas Condiciones del servicio mediante la publicaci&oacute;n de las actualizaciones y los cambios en nuestro sitio web. Es tu responsabilidad revisar nuestro sitio web peri&oacute;dicamente para verificar los cambios. El uso cont&iacute;nuo de o el acceso a nuestro sitio Web o el Servicio despu&eacute;s de la publicaci&oacute;n de cualquier cambio en estas Condiciones de servicio implica la aceptaci&oacute;n de dichos cambios.</p>
 <p><br />SECCI&Oacute;N 20 - INFORMACI&Oacute;N DE CONTACTO</p>
 <p>Preguntas acerca de los T&eacute;rminos de Servicio deben ser enviadas a juaaloval@gmail.com.</p>
-
+<p><br />SECCI&Oacute;N 21 - INFORMACI&Oacute;N ESPECIFICA PARA LOS VISITANTES</p>
+<p>Los visitantes deberan de tener en cuenta que cualquier infraccion legal dentro de la prision tendra como consecuencia la expulsion de la misma y la prohibicion de volver a entrar en ella.</p>
+<p>Esta prohibido el portar cualquier tipo de objeto punzante y o afilado dentro de la prision. Como protocolo de seguridad, el visitante sera cacheado y debera de pasar por un arco detector de metales</p>
+<p>Todas las visitas seran supervisadas por un guardia. Las visitas podran ser canceladas si se considera un peligro para el preso, para el visitante o para la prision</p>
 </security:authorize>
