@@ -103,5 +103,9 @@ p{
 <p>We reserve the right, at our sole discretion, to update, change or replace any part of these Terms of Service by posting updates and changes to our website. It is your responsibility to check our website periodically for changes. Your continued use of or access to our website or the Service following the posting of any changes to these Terms of Service constitutes acceptance of those changes.</p>
 <p><br />SECTION 20 - CONTACT INFORMATION</p>
 <p>Questions about the Terms of Service should be sent to us at juaaloval@gmail.com.</p>
+<p><br />SECTION 21 - ABOUT THE VISITORS</p>
+<p>Visitors should be aware that any legal infraction within the prison will result in the expulsion of the prison and a ban on re-entry.</p>
+<p>It is forbidden to carry any kind of sharp object inside the prison. As a security protocol, the visitor will be searched and must pass through a metal detector.</p>
+<p>All visits will be supervised by a guard. Visits may be cancelled if it is considered a danger to the prisoner, the visitor or the prison.</p>
 
 </security:authorize>
